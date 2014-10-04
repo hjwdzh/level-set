@@ -50,6 +50,12 @@ public:
             v += data[i] * data[i];
         return v;
     }
+    VECTOR Normal() const {
+        return (*this) / Magnitude();
+    }
+    void Normalize() {
+        (*this) /= Magnitude();
+    }
 	VECTOR(const T& a, const T& b, const T& c) {
 		assert(d == 3);
 		data = new T[d];

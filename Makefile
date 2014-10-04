@@ -40,6 +40,7 @@ Objs =  RANGE.o \
  GRID.o \
  TRIANGULATED_SURFACE.o \
  tri2phi.o \
+ FLOOD_FILL.o \
  LEVELSET_MAKER.o \
  LEVELSET.o
 

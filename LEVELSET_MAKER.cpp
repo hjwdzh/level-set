@@ -2,6 +2,7 @@
 #include "INTERSECTION.h"
 #include "SEGMENT.h"
 #include "LEVELSET.h"
+#include "FLOOD_FILL.h"
 
 using namespace SimLib;
 
@@ -132,11 +133,10 @@ void LEVELSET_MAKER<T>::Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_
     
     if(need_flood_fill){ // Need flood fill to determine sign (inside/outside)
         ARRAY<3,int> colors(grid.Domain_Indices());
-        FLOOD_FILL_3D flood_fill;
-        flood_fill.Optimize_Fill_For_Single_Cell_Regions(true);
+        FLOOD_FILL flood_fill;
         int number_of_colors=flood_fill.Flood_Fill(colors,edge_is_blocked_x,edge_is_blocked_y,edge_is_blocked_z);
         if(number_of_colors==1 && !phi_offset){ // there is only one color. check if the whole domain is inside or outside then return
-            if(triangulated_surface.Inside(grid.X(1,1,1)))
+            if(triangulated_surface.bounding_box.Contain(grid.X(1,1,1)))
                 phi.Fill(-1e30);
             else
                 phi.Fill(1e30);
@@ -145,7 +145,7 @@ void LEVELSET_MAKER<T>::Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_
         std::vector<bool> color_is_inside(number_of_colors);
         if(boundary_outside){
             std::vector<bool> color_touches_boundary(number_of_colors);
-            flood_fill.Identify_Colors_Touching_Boundary(number_of_colors,colors,edge_is_blocked_x,edge_is_blocked_y,edge_is_blocked_z,color_touches_boundary);
+            flood_fill.Identify_Colors_Touching_Boundary(number_of_colors,colors,color_touches_boundary);
             for(int i=0;i<number_of_colors;i++)
                 color_is_inside[i]=!color_touches_boundary[i];
         }
@@ -160,15 +160,12 @@ void LEVELSET_MAKER<T>::Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_
                             color_representatives[colors(i,j,k)-1]=TV_INT(i,j,k);
                         }
             for(int color=1;color<=number_of_colors;color++){
-                if(color_maximum_distance(color)<0){
+                if(color_maximum_distance[color-1]<0){
                     phi.Fill(0);
                     return;
                 }
                 else {
-                    color_is_inside[color-1]=triangulated_surface.Inside_Relative_To_Triangle(
-                        grid.X(color_representatives[color-1]),
-                        closest_triangle_index(color_representatives[color-1]),
-                        surface_thickness_over_two);
+                    color_is_inside[color-1]=triangulated_surface.Inside(grid.X(color_representatives[color-1]));
                 }
             }
         }

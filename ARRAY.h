@@ -75,6 +75,7 @@ public:
     ARRAY& operator-=(const TV& f) {
         for (int i = 0; i < data.size(); ++i)
             data[i] -= f;
+        return (*this);
     }
     const TV& operator() (int x, int y, int z) const {
         assert(d == 3);
@@ -91,6 +92,9 @@ public:
     void Fill(TV r) {
         for (int i = 0; i < data.size(); ++i)
             data[i] = r;
+    }
+    RANGE<TV_INT> domain() const {
+        return RANGE<TV_INT>(TV_INT(bx,by,bz), TV_INT(bx,by,bz) + dim - TV_INT(1,1,1));
     }
     VECTOR<int, d> dim;
     std::vector<TV> data;

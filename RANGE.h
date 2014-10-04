@@ -29,6 +29,9 @@ public:
     }
     void Change_Size(T delta);
 	void include(const RANGE& a);
+    bool Contain(const TV& v) {
+        return (v >= min) && (v <= max);
+    }
     bool Lazy_Intersection(RANGE& r) const {
         return min <= r.max && r.min <= max;
     }

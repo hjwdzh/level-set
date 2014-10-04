@@ -1,4 +1,6 @@
 #include "TRIANGULATED_SURFACE.h"
+#include "INTERSECTION.h"
+#include <algorithm>
 
 using namespace SimLib;
 
@@ -68,5 +70,33 @@ void TRIANGULATED_SURFACE<T>::Update_Bounding_Box() {
 	for (int i = 1; i < triangle_list.size(); ++i)
 		bounding_box.include(triangle_list[i].Bounding_Box());
 }
+
+template<class T>
+bool TRIANGULATED_SURFACE<T>::Test_Inside_Using_Ray(RAY<T>& ray) {
+    std::vector<T> intersects;
+    for (int i = 0; i < triangle_list.size(); ++i) {
+        if (INTERSECTION<T>::Intersects(ray, triangle_list[i])) {
+            intersects.push_back(ray.intersect);
+        }
+    }
+    std::sort(intersects.begin(), intersects.end());
+    int t = 1, i = 1;
+    for (; i < intersects.size(); ++i) {
+        if (intersects[i] - intersects[i - 1] > 1e-4) {
+            ++t;
+        }
+    }
+    return (t % 2 == 1);
+}
+
+template<class T>
+bool TRIANGULATED_SURFACE<T>::Inside(const TV& point) {
+    if (!bounding_box.Contain(point))
+        return false;
+    RAY<T> ray(point,TV(0,0,1),true);
+    return Test_Inside_Using_Ray(ray);
+}
+
+
 
 template class SimLib::TRIANGULATED_SURFACE<float>;
