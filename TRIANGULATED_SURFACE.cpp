@@ -1,16 +1,21 @@
 #include "TRIANGULATED_SURFACE.h"
 #include "INTERSECTION.h"
 #include <algorithm>
+#include <iostream>
 
 using namespace SimLib;
+using namespace std;
 
 template<class T>
 bool TRIANGULATED_SURFACE<T>::loadOBJ(char * path){
 	printf("Loading OBJ file %s...\n", path);
 
 	std::vector<unsigned int> vertexIndices;
-	std::vector<VECTOR<T,3> > temp_vertices; 
+	std::vector<unsigned int> normalIndices;
+	std::vector<VECTOR<T,3> > temp_normal;
+	std::vector<VECTOR<T,2> > temp_tex;
 
+	vertices.clear();
 
 	FILE * file = fopen(path, "r");
 	if( file == NULL ){
@@ -32,10 +37,19 @@ bool TRIANGULATED_SURFACE<T>::loadOBJ(char * path){
 		if ( strcmp( lineHeader, "v" ) == 0 ){
 			VECTOR<T, 3> vertex;
 			fscanf(file, "%f %f %f\n", &vertex(1), &vertex(2), &vertex(3) );
-			temp_vertices.push_back(vertex);
-		}else if ( strcmp( lineHeader, "f" ) == 0 ){
-			unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
-			int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2] );
+			vertices.push_back(vertex);
+		}else if (strcmp(lineHeader, "vn") == 0) {
+            VECTOR<T, 3> normal;
+			fscanf(file, "%f %f %f\n", &normal(1), &normal(2), &normal(3) );
+			temp_normal.push_back(normal);
+        }else if (strcmp(lineHeader, "vt") == 0) {
+            VECTOR<T, 2> tex;
+            fscanf(file, "%f %f\n", &tex(1), &tex(2));
+            temp_tex.push_back(tex);
+        }
+        else if( strcmp( lineHeader, "f" ) == 0 ){
+			unsigned int vertexIndex[3], normalIndex[3], texIndex[3];
+			int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &texIndex[0], &normalIndex[0], &vertexIndex[1], &texIndex[1], &normalIndex[1], &vertexIndex[2], &texIndex[2], &normalIndex[2] );
 			if (matches != 9){
 				printf("File can't be read by our simple parser :-( Try exporting with other options\n");
 				return false;
@@ -43,6 +57,9 @@ bool TRIANGULATED_SURFACE<T>::loadOBJ(char * path){
 			vertexIndices.push_back(vertexIndex[0]);
 			vertexIndices.push_back(vertexIndex[1]);
 			vertexIndices.push_back(vertexIndex[2]);
+            normalIndices.push_back(normalIndex[0]);
+            normalIndices.push_back(normalIndex[1]);
+            normalIndices.push_back(normalIndex[2]);
 		}else{
 			// Probably a comment, eat up the rest of the line
 			char stupidBuffer[1000];
@@ -53,22 +70,28 @@ bool TRIANGULATED_SURFACE<T>::loadOBJ(char * path){
 
 	// For each vertex of each triangle
 	for( unsigned int i=0; i<vertexIndices.size(); i += 3){
-
-		triangle_list.push_back(TRIANGLE<T>(temp_vertices[vertexIndices[i]-1],temp_vertices[vertexIndices[i+1]-1],temp_vertices[vertexIndices[i+2]-1]));
+		triangle_list.push_back(TRIANGLE<T>(vertices[vertexIndices[i]-1],vertices[vertexIndices[i+1]-1],vertices[vertexIndices[i+2]-1],temp_normal[normalIndices[i]-1],temp_normal[normalIndices[i+1]-1],temp_normal[normalIndices[i+2]-1]));
 	}
 
 	return true;
 }
 
 template<class T>
-void TRIANGULATED_SURFACE<T>::Update_Bounding_Box() {
+void TRIANGULATED_SURFACE<T>::Update_Bounding_Box_And_Gravity_Center() {
 	if (triangle_list.size() == 0) {
 		bounding_box = RANGE<VECTOR<T, 3> >();
 		return;
 	}
 	bounding_box = triangle_list[0].Bounding_Box();
-	for (int i = 1; i < triangle_list.size(); ++i)
+    T area = 0;
+    gravity_center = TV();
+	for (int i = 1; i < triangle_list.size(); ++i) {
 		bounding_box.include(triangle_list[i].Bounding_Box());
+        T w = triangle_list[i].Area();
+        gravity_center += w * triangle_list[i].center();
+        area += w;
+    }
+    gravity_center *= (1 / area);
 }
 
 template<class T>

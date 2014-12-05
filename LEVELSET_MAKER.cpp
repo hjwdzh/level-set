@@ -3,7 +3,8 @@
 #include "SEGMENT.h"
 #include "LEVELSET.h"
 #include "FLOOD_FILL.h"
-
+#include <iostream>
+using namespace std;
 using namespace SimLib;
 
 template<class T>
@@ -52,6 +53,7 @@ void LEVELSET_MAKER<T>::Set_Phi_Offset(T phi_offset) {
 template<class T>
 void LEVELSET_MAKER<T>::Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_surface, GRID<TV>& grid, ARRAY<3,T>& phi) {
     typedef VECTOR<int, 3> TV_INT;
+    phi.Fill(1e30);
     T fmm_stopping_distance=fmm_band*grid.dx.Max();
     bool need_flood_fill=compute_signed_distance_function || compute_heaviside_function;
     ARRAY<3,int> edge_is_blocked_x,edge_is_blocked_y,edge_is_blocked_z;
@@ -74,7 +76,7 @@ void LEVELSET_MAKER<T>::Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_
     
     const T surface_thickness_over_two=(T).5*(surface_thickness>0?surface_thickness:grid.min_dX/100);
     const T surface_padding_for_flood_fill=padding;
-    
+    cout << "Start \n";
     const RANGE<TV>& grid_domain=RANGE<TV>(grid.dom_min, grid.dom_max);
     for(int t=1;t<=triangulated_surface.triangle_list.size();t++){
         const TRIANGLE<T>& triangle=triangulated_surface.triangle_list[t-1];
@@ -120,7 +122,7 @@ void LEVELSET_MAKER<T>::Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_
                             edge_is_blocked_z(i,j,k)=INTERSECTION<T>::Intersects(SEGMENT<T>(grid.X(i,j,k),grid.X(i,j,k-1)),enlarged_triangle,surface_thickness_over_two);
         }
     }
-    
+
     if((compute_signed_distance_function || compute_unsigned_distance_function) && use_fmm && fmm_stopping_distance) {
         for(int i=1;i<=grid.counts(1);i++)
             for(int j=1;j<=grid.counts(2);j++)
@@ -130,7 +132,7 @@ void LEVELSET_MAKER<T>::Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_
     else if(compute_heaviside_function) {
         phi.Fill(grid.dx.Max());
     }
-    
+
     if(need_flood_fill){ // Need flood fill to determine sign (inside/outside)
         ARRAY<3,int> colors(grid.Domain_Indices());
         FLOOD_FILL flood_fill;
@@ -165,6 +167,9 @@ void LEVELSET_MAKER<T>::Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_
                     return;
                 }
                 else {
+                    if (color == 1) {
+                        color = color;
+                    }
                     color_is_inside[color-1]=triangulated_surface.Inside(grid.X(color_representatives[color-1]));
                 }
             }
@@ -200,27 +205,10 @@ void LEVELSET_MAKER<T>::Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_
         for(int i=1;i<=grid.counts(1);i++)
             for(int j=1;j<=grid.counts(2);j++)
                 for(int k=1;k<=grid.counts(3);k++)
-                    if(color_is_inside[colors(i,j,k)-1])
+                    if(color_is_inside[colors(i,j,k)-1]) {
                         phi(i,j,k)*=-1;
-    }
-    
-    if(use_fmm && (compute_unsigned_distance_function || compute_signed_distance_function)){
-        for(int i=1;i<=grid.counts(1);i++)
-            for(int j=1;j<=grid.counts(2);j++)
-                for(int k=1;k<=grid.counts(3);k++)
-                    phi(i,j,k)=std::min(std::max(phi(i,j,k),-10*grid.min_dX),10*grid.min_dX);
-        GRID<TV> grid_copy=grid;
-        LEVELSET<GRID<TV> > levelset(grid_copy,phi);
-        if(compute_unsigned_distance_function)
-            levelset.Fast_Marching_Method(0,fmm_stopping_distance,&initialized_indices);
-        else if(compute_signed_distance_function)
-            levelset.Fast_Marching_Method(0,fmm_stopping_distance,phi_offset?&initialized_indices:0);
-    }
-    
-    if(phi_offset){
-        phi-=phi_offset;
-        if(use_fmm && compute_signed_distance_function)
-            LEVELSET<GRID<TV> >(grid,phi).Fast_Marching_Method(0,fmm_stopping_distance);
+                    }
+        TV_INT t = grid.Clamped_Index(TV(0,0,0));
     }
     
     return;

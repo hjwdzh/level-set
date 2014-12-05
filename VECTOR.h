@@ -72,18 +72,23 @@ public:
 		return (*this);
 	}
 	T& operator()(int x) {
-		assert(x <= d);
-		return data[x + 1];
+		assert(x <= d && x > 0);
+		return data[x - 1];
 	}
 	const T& operator()(int x) const {
-		assert(x <= d);
-		return data[x + 1];
+		assert(x <= d && x > 0);
+		return data[x - 1];
 	}
 	VECTOR& operator+=(const VECTOR& a) {
 		for (int i = 0; i < d; ++i)
 			data[i] += a(i+1);
 		return (*this);
 	}
+    VECTOR& operator*=(const T f) {
+        for (int i = 0; i < d; ++i)
+            data[i] *= f;
+        return (*this);
+    }
 	VECTOR& operator*=(const VECTOR& a) {
 		for (int i = 0; i < d; ++i)
 			data[i] *= a(i+1);

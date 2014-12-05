@@ -70,7 +70,7 @@ public:
     }
     TV& operator()(int x, int y, int z) {
         assert(d == 3);
-        return data[(x - bx) * dim(2) + (y - by) * dim(3) + (z - bz)];
+        return data[(x - bx) * dim(2) * dim(3) + (y - by) * dim(3) + (z - bz)];
     }
     ARRAY& operator-=(const TV& f) {
         for (int i = 0; i < data.size(); ++i)
@@ -79,7 +79,7 @@ public:
     }
     const TV& operator() (int x, int y, int z) const {
         assert(d == 3);
-        return data[(x - bx) * dim(2) + (y - by) * dim(3) + (z - bz)];
+        return data[(x - bx) * dim(2) * dim(3) + (y - by) * dim(3) + (z - bz)];
     }
     TV& operator()(const TV_INT& index) {
         if (d == 1)

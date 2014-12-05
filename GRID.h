@@ -1,7 +1,8 @@
-#ifndef GRID_H_
+ #ifndef GRID_H_
 #define GRID_H_
 
 #include "VECTOR.h"
+#include "ARRAY.h"
 #include "RANGE.h"
 
 namespace SimLib {
@@ -33,6 +34,66 @@ public:
     }
     TV X(int a, int b, int c) {
         return dom_min + TV(a,b,c) * dx;
+    }
+    bool Include(const TV& p) const {
+        return (p <= dom_max && dom_min <= p);
+    }
+    T Interpolate(ARRAY<3, T>& phi, const TV& p) {
+        TV ind = (p-dom_min)*one_over_dX;
+        TV_INT ind_int1 = TV_INT(ind(1),ind(2),ind(3));
+        T d1 = phi(ind_int1);
+        if (d1 > 0)
+            return 1e30;
+        T d2 = phi(ind_int1 + TV_INT(0,0,1));
+        if (d2 > 0)
+            return 1e30;
+        T d3 = phi(ind_int1 + TV_INT(0,1,0));
+        if (d3 > 0)
+            return 1e30;
+        T d4 = phi(ind_int1 + TV_INT(0,1,1));
+        if (d4 > 0)
+            return 1e30;
+        T d5 = phi(ind_int1 + TV_INT(1,0,0));
+        if (d5 > 0)
+            return 1e30;
+        T d6 = phi(ind_int1 + TV_INT(1,0,1));
+        if (d6 > 0)
+            return 1e30;
+        T d7 = phi(ind_int1 + TV_INT(1,1,0));
+        if (d7 > 0)
+            return 1e30;
+        T d8 = phi(ind_int1 + TV_INT(1,1,1));
+        if (d8 > 0)
+            return 1e30;
+        TV w = ind - TV(ind_int1(1),ind_int1(2),ind_int1(3));
+        T dis = 0;
+        T f = w(1) * w(2) * w(3);
+        dis += d1 * f;
+        f = w(1) * w(2) * (1 - w(3));
+        dis += d2 * f;
+        f = w(1) * (1 - w(2)) * w(3);
+        dis += d3 * f;
+        f = w(1) * (1 - w(2)) * (1 - w(3));
+        dis += d4 * f;
+        f = (1 - w(1)) * w(2) * w(3);
+        dis += d5 * f;
+        f = (1 - w(1)) * w(2) * (1 - w(3));
+        dis += d6 * f;
+        f = (1 - w(1)) * (1 - w(2)) * w(3);
+        dis += d7 * f;
+        f = (1 - w(1)) * (1 - w(2)) * (1 - w(3));
+        dis += d8 * f;
+        return dis;
+    }
+    TV Gradient(ARRAY<3, T>& phi, const TV& p) {
+        TV ind = (p-dom_min)*one_over_dX;
+        TV_INT ind_int1 = TV_INT(ind(1) + 0.5,ind(2) + 0.5,ind(3) + 0.5);
+        T d1, d2, d3, d4;
+        d1 = phi(ind_int1);
+        d2 = phi(ind_int1 + TV_INT(0,0,1));
+        d3 = phi(ind_int1 + TV_INT(0,1,0));
+        d4 = phi(ind_int1 + TV_INT(1,0,0));
+        return (TV(d4-d1,d3-d1,d2-d1) * one_over_dX).Normal();
     }
 	TV dom_min, dom_max;
 	TV dx;

@@ -44,7 +44,7 @@ public:
             TV normal = TV::Cross_Product(e1,e2).Normal();
             dt += abs(ray.d.Dot_Product(normal));
         }
-        if (ray.semi_infinite || dt < ray.t_max) {
+        if (dt > -1e-4 && (ray.semi_infinite || dt < ray.t_max)) {
             ray.intersect = dt;
             return true;
         }

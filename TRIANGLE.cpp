@@ -4,10 +4,14 @@
 using namespace SimLib;
 
 template<class T>
-TRIANGLE<T>::TRIANGLE(const VECTOR<T,3>& _a, const VECTOR<T,3>& _b, const VECTOR<T,3>& _c) {
+TRIANGLE<T>::TRIANGLE(const VECTOR<T,3>& _a, const VECTOR<T,3>& _b, const VECTOR<T,3>& _c,
+                      const VECTOR<T,3>& _n1, const VECTOR<T,3>& _n2, const VECTOR<T,3>& _n3) {
 	a = _a;
 	b = _b;
 	c = _c;
+    n1 = _n1;
+    n2 = _n2;
+    n3 = _n3;
 }
 
 template<class T>

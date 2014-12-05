@@ -9,12 +9,14 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "../tri2phi.cpp"
-            timestampString = "433673279.058033"
+            filePath = "levelset/Rigid_Geometry.cpp"
+            timestampString = "439480788.38327"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "11"
-            endingLineNumber = "11">
+            startingLineNumber = "220"
+            endingLineNumber = "220"
+            landmarkName = "Rigid_Geometry::collid_detection(Geometric* g)"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -23,13 +25,77 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "../GRID.cpp"
-            timestampString = "433683697.14421"
+            filePath = "levelset/Rigid_Geometry.cpp"
+            timestampString = "439480788.38327"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "17"
-            endingLineNumber = "17"
-            landmarkName = "Domain_Indices(int ghost_cell)"
+            startingLineNumber = "217"
+            endingLineNumber = "217"
+            landmarkName = "Rigid_Geometry::collid_detection(Geometric* g)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../GRID.h"
+            timestampString = "439451425.231107"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "96"
+            endingLineNumber = "96"
+            landmarkName = "Gradient(ARRAY&lt;3, T&gt;&amp; phi, const TV&amp; p)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "levelset/Rigid_Geometry.cpp"
+            timestampString = "439480598.885275"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "213"
+            endingLineNumber = "213"
+            landmarkName = "Rigid_Geometry::collid_detection(Geometric* g)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "levelset/Rigid_Geometry.cpp"
+            timestampString = "439480280.794346"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "206"
+            endingLineNumber = "206"
+            landmarkName = "Rigid_Geometry::collid_detection(Geometric* g)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../LEVELSET_MAKER.cpp"
+            timestampString = "439459401.889255"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "137"
+            endingLineNumber = "137"
+            landmarkName = "Compute_Level_Set(TRIANGULATED_SURFACE&lt;T&gt;&amp; triangulated_surface, GRID&lt;TV&gt;&amp; grid, ARRAY&lt;3,T&gt;&amp; phi)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -39,13 +105,109 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "../VECTOR.h"
-            timestampString = "434131363.277436"
+            filePath = "../LEVELSET_MAKER.cpp"
+            timestampString = "439459432.48311"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "134"
-            endingLineNumber = "134"
-            landmarkName = "Get_Min(const VECTOR&amp; a)"
+            startingLineNumber = "164"
+            endingLineNumber = "164"
+            landmarkName = "Compute_Level_Set(TRIANGULATED_SURFACE&lt;T&gt;&amp; triangulated_surface, GRID&lt;TV&gt;&amp; grid, ARRAY&lt;3,T&gt;&amp; phi)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../LEVELSET_MAKER.cpp"
+            timestampString = "439475092.922465"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "177"
+            endingLineNumber = "177"
+            landmarkName = "Compute_Level_Set(TRIANGULATED_SURFACE&lt;T&gt;&amp; triangulated_surface, GRID&lt;TV&gt;&amp; grid, ARRAY&lt;3,T&gt;&amp; phi)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../TRIANGULATED_SURFACE.cpp"
+            timestampString = "439478269.617736"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "119"
+            endingLineNumber = "119"
+            landmarkName = "Inside(const TV&amp; point)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../LEVELSET_MAKER.cpp"
+            timestampString = "439475092.922465"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "178"
+            endingLineNumber = "178"
+            landmarkName = "Compute_Level_Set(TRIANGULATED_SURFACE&lt;T&gt;&amp; triangulated_surface, GRID&lt;TV&gt;&amp; grid, ARRAY&lt;3,T&gt;&amp; phi)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../LEVELSET_MAKER.cpp"
+            timestampString = "439475092.922465"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "176"
+            endingLineNumber = "176"
+            landmarkName = "Compute_Level_Set(TRIANGULATED_SURFACE&lt;T&gt;&amp; triangulated_surface, GRID&lt;TV&gt;&amp; grid, ARRAY&lt;3,T&gt;&amp; phi)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../LEVELSET_MAKER.cpp"
+            timestampString = "439475092.922465"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "173"
+            endingLineNumber = "173"
+            landmarkName = "Compute_Level_Set(TRIANGULATED_SURFACE&lt;T&gt;&amp; triangulated_surface, GRID&lt;TV&gt;&amp; grid, ARRAY&lt;3,T&gt;&amp; phi)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "levelset/Rigid_Geometry.cpp"
+            timestampString = "439480788.38327"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "215"
+            endingLineNumber = "215"
+            landmarkName = "Rigid_Geometry::collid_detection(Geometric* g)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -55,14 +217,14 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "../VECTOR.h"
-            timestampString = "434131363.277436"
+            filePath = "../LEVELSET_MAKER.cpp"
+            timestampString = "439475666.631211"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "135"
-            endingLineNumber = "135"
-            landmarkName = "Get_Min(const VECTOR&amp; a)"
-            landmarkType = "5">
+            startingLineNumber = "171"
+            endingLineNumber = "171"
+            landmarkName = "Compute_Level_Set(TRIANGULATED_SURFACE&lt;T&gt;&amp; triangulated_surface, GRID&lt;TV&gt;&amp; grid, ARRAY&lt;3,T&gt;&amp; phi)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -71,28 +233,172 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "../INTERSECTION.h"
-            timestampString = "434131363.277436"
+            filePath = "../TRIANGULATED_SURFACE.cpp"
+            timestampString = "439477803.269778"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "15"
-            endingLineNumber = "15"
-            landmarkName = "Intersects(const SEGMENT&lt;T&gt;&amp; segment,const TRIANGLE&lt;T&gt;&amp; triangle,const T thickness_over_two = 0)"
-            landmarkType = "5">
+            startingLineNumber = "100"
+            endingLineNumber = "100"
+            landmarkName = "Test_Inside_Using_Ray(RAY&lt;T&gt;&amp; ray)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../TRIANGULATED_SURFACE.cpp"
+            timestampString = "439478269.617736"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "112"
+            endingLineNumber = "112"
+            landmarkName = "Test_Inside_Using_Ray(RAY&lt;T&gt;&amp; ray)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../TRIANGULATED_SURFACE.cpp"
+            timestampString = "439478269.617736"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "109"
+            endingLineNumber = "109"
+            landmarkName = "Test_Inside_Using_Ray(RAY&lt;T&gt;&amp; ray)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../TRIANGULATED_SURFACE.cpp"
+            timestampString = "439478269.617736"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "107"
+            endingLineNumber = "107"
+            landmarkName = "Test_Inside_Using_Ray(RAY&lt;T&gt;&amp; ray)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../FLOOD_FILL.cpp"
-            timestampString = "434131363.277436"
+            timestampString = "439478267.724191"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "32"
-            endingLineNumber = "32">
+            startingLineNumber = "40"
+            endingLineNumber = "40"
+            landmarkName = "FLOOD_FILL::Expand(int x, int y, int z, RANGE&lt;TV_INT&gt;&amp; r, ARRAY&lt;3,int&gt;&amp; colors,ARRAY&lt;3,int&gt;&amp; edge_is_blocked_x,ARRAY&lt;3,int&gt;&amp; edge_is_blocked_y,ARRAY&lt;3,int&gt;&amp; edge_is_blocked_z, int color)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../LEVELSET_MAKER.cpp"
+            timestampString = "439478292.891416"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "205"
+            endingLineNumber = "205"
+            landmarkName = "Compute_Level_Set(TRIANGULATED_SURFACE&lt;T&gt;&amp; triangulated_surface, GRID&lt;TV&gt;&amp; grid, ARRAY&lt;3,T&gt;&amp; phi)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../LEVELSET_MAKER.cpp"
+            timestampString = "439478486.627171"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "209"
+            endingLineNumber = "209"
+            landmarkName = "Compute_Level_Set(TRIANGULATED_SURFACE&lt;T&gt;&amp; triangulated_surface, GRID&lt;TV&gt;&amp; grid, ARRAY&lt;3,T&gt;&amp; phi)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SimLib::LEVELSET_MAKER&lt;float&gt;::Compute_Level_Set(SimLib::TRIANGULATED_SURFACE&lt;float&gt;&amp;, SimLib::GRID&lt;SimLib::VECTOR&lt;float, 3&gt; &gt;&amp;, SimLib::ARRAY&lt;3, float&gt;&amp;)"
+                  moduleName = "levelset"
+                  urlString = "file://localhost/Users/jingweihuang/Desktop/projects/levelset/LEVELSET_MAKER.cpp"
+                  timestampString = "439478297.012008"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "209"
+                  endingLineNumber = "209"
+                  offsetFromSymbolStart = "17497">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SimLib::LEVELSET_MAKER&lt;float&gt;::Compute_Level_Set(SimLib::TRIANGULATED_SURFACE&lt;float&gt;&amp;, SimLib::GRID&lt;SimLib::VECTOR&lt;float, 3&gt; &gt;&amp;, SimLib::ARRAY&lt;3, float&gt;&amp;)"
+                  moduleName = "levelset"
+                  urlString = "file://localhost/Users/jingweihuang/Desktop/projects/levelset/LEVELSET_MAKER.cpp"
+                  timestampString = "439478297.012225"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "209"
+                  endingLineNumber = "209"
+                  offsetFromSymbolStart = "17627">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "levelset/Rigid_Geometry.cpp"
+            timestampString = "439480124.022243"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
+            landmarkName = "Rigid_Geometry::Display()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "levelset/Rigid_Geometry.cpp"
+            timestampString = "439480598.885275"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "211"
+            endingLineNumber = "211"
+            landmarkName = "Rigid_Geometry::collid_detection(Geometric* g)"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

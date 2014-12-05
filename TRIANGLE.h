@@ -9,11 +9,14 @@ class TRIANGLE{
 public:
     typedef VECTOR<T,3> TV;
 	TRIANGLE(){}
-	TRIANGLE(const VECTOR<T,3>& _a, const VECTOR<T,3>& _b, const VECTOR<T,3>& _c);
+	TRIANGLE(const VECTOR<T,3>& _a, const VECTOR<T,3>& _b, const VECTOR<T,3>& _c, const TV& _n1, const TV& _n2, const TV& _n3);
 	RANGE<VECTOR<T,3> > Bounding_Box();
     void Change_Size(const T delta);
     VECTOR<T,3> Closest_Point(const VECTOR<T,3>& location,VECTOR<T,3>& weights) const;
     T Area() const;
+    TV center() const {
+        return (a + b + c) * (1 / 3.0f);
+    }
     TV Barycentric_Coordinates(const TV& location) const {
         TV u=b-a,v=c-a,w=location-a;
         T u_dot_u=u.Dot_Product(u),
@@ -31,7 +34,7 @@ public:
           b=(u_dot_u*v_dot_w-u_dot_v*u_dot_w)*one_over_denominator;
         return TV(1-a-b,a,b);
     }
-	VECTOR<T,3> a, b, c;
+	VECTOR<T,3> a, b, c, n1, n2, n3;
 };
 }
 

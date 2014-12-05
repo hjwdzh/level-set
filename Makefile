@@ -1,57 +1,19 @@
-#Makefile for gcc template
-PROJECT = Level_Set
-DEBUG=
- 
-R = ar
-ARFLAGS = rv
-GFLAGS =
-GET = get
-ASFLAGS =
-MAS = mas
-AS = as
-FC = f77
-CFLAGS = -Wall -g
+CC=g++
+CFLAGS=-c -Wall
+LDFLAGS=
+SOURCES=Bound.cpp Bounds.cpp Camera.cpp control.cpp display.cpp ForceField.cpp Geometric.cpp Geometrics.cpp main.cpp Particle.cpp Plane.cpp Rigid_Geometry.cpp scene.cpp Solver.cpp Spring.cpp Springs.cpp SysDynPtc.cpp SystemPhy.cpp vmath.cpp BOUNDARY.cpp FLOOD_FILL.cpp GRID.cpp LEVELSET_MAKER.cpp LEVELSET.cpp RANGE.cpp TRIANGLE.cpp TRIANGULATED_SURFACE.cpp
 
-CC = g++
-#CC = cc
-LDFLAGS = 
-LD = ld
-LFLAGS =
-LEX = lex
-YFLAGS =
-YACC = yacc
-LOADLIBS =
-MAKE = make
-MAKEARGS = 'SHELL=/bin/sh'
-SHELL = /bin/sh
-MAKEFLAGS = b
-RANLIB      =   ranlib
+OBJECTS=$(SOURCES:.cpp=.o)
+EXECUTABLE=level
 
-IncludeDir =    -I. \
-  -I/usr/include \
-  -I/usr/local/include 
-LibDir = -L. \
- -L/usr/lib\
-  -L/usr/local/lib
-LIBS = -lm
-
-Objs =  RANGE.o \
- TRIANGLE.o \
- GRID.o \
- TRIANGULATED_SURFACE.o \
- tri2phi.o \
- FLOOD_FILL.o \
- LEVELSET_MAKER.o \
- LEVELSET.o
+all: $(SOURCES) $(EXECUTABLE)
+	
+$(EXECUTABLE): $(OBJECTS) 
+	$(CC) -framework OpenGL -framework GLUT $(LDFLAGS) $(OBJECTS) -o $@
 
 .cpp.o:
-	$(CC) $(DEBUG) $(CFLAGS) -c $(IncludeDir) $< -o $@
+	$(CC) $(CFLAGS) $< -o $@
 
-.cc.o:
-	$(CC) $(DEBUG) $(CFLAGS) -c $(IncludeDir) $< -o $@
- 
-$(PROJECT): $(Objs) 
-	$(CC) $(DEBUG) -o   $@ $(LibDir) $(Objs) $(LIBS)
-
-clean: 
-	rm -f $(Objs)  $(PROJECT)
+clean:
+	rm *.o
+	rm level
