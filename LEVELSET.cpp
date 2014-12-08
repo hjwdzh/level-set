@@ -37,11 +37,12 @@ void LEVELSET<T_GRID>::Down_Adjust(int i) {
     int j = (i << 1) + 1;
     TV_INT ind = heap_index[i];
     int k = array_ind(heap_index[i]);
+    T val = phi(ind);
     while (j < heap_index.size()) {
         if (j + 1 < heap_index.size() && phi(heap_index[j + 1]) > phi(heap_index[j])) {
             ++j;
         }
-        if (phi(heap_index[j]) > phi(heap_index[i])) {
+        if (phi(heap_index[j]) > val) {
             int k1 = array_ind(heap_index[j]);
             array_ind(heap_index[j]) = k;
             k = k1;
@@ -61,8 +62,9 @@ void LEVELSET<T_GRID>::Up_Adjust(int i) {
     int j = (i - 1) >> 1;
     TV_INT ind = heap_index[i];
     int k = array_ind(heap_index[i]);
+    T val = phi(ind);
     while (j >= 0) {
-        if (phi(heap_index[i]) > phi(heap_index[j])) {
+        if (val > phi(heap_index[j])) {
             int k1 = array_ind(heap_index[j]);
             array_ind(heap_index[j]) = k;
             k = k1;
@@ -82,12 +84,14 @@ typename LEVELSET<T_GRID>::TV_INT LEVELSET<T_GRID>::Extract() {
     TV_INT ind = heap_index[0];
     heap_index[0] = heap_index.back();
     int k = array_ind(ind);
-    if (k < 0) {
-        Estimate_Distance(ind);
-    }
     array_ind(heap_index.back()) = k;
     array_ind(ind) = 0;
     heap_index.pop_back();
+    Down_Adjust(0);
+
+    if (k < 0) {
+        Estimate_Distance(ind);
+    }
     return ind;
 }
 
@@ -104,6 +108,7 @@ void LEVELSET<T_GRID>::Extend_Distance(TV_INT& ind) {
                     Estimate_Distance(temp_ind);
                     if (t < 0)
                         t = -t;
+                    if (t > 0)
                     Up_Adjust(t - 1);
                 }
             }
@@ -121,8 +126,11 @@ void LEVELSET<T_GRID>::Estimate_Distance(TV_INT& ind) {
     T dx3 = 1 / (grid.dx(3) * grid.dx(3));
     T A = dx1 + dx2 + dx3;
     T B = -2 * (phi1 * dx1 + phi2 * dx2 + phi3 * dx3);
-    T C = phi1 * phi1 * dx1 + phi2 * phi2 * dx2 + phi3 * phi3 * dx3;
+    T C = phi1 * phi1 * dx1 + phi2 * phi2 * dx2 + phi3 * phi3 * dx3 - 1;
     T r = (-B + sqrt(B*B-4*A*C))/(2*A);
+    if (isnan(r)) {
+        r = fmin(fmin(phi1 + grid.dx(1), phi2 + grid.dx(2)), phi3 + grid.dx(3));
+    }
     T t = -phi(ind);
     if (t > r) {
         phi(ind) = -r;

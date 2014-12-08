@@ -134,7 +134,7 @@ namespace VMATH_NAMESPACE
 #define DEG2RAD(x) ((x * M_PI) / 180.0)
 //#define EPSILON (4.37114e-07)
 
-const double epsilon = 4.37114e-05;
+const double epsilon = 1e-4;
 #define EPSILON epsilon
 
 /**
@@ -1642,7 +1642,31 @@ public:
 		for (int i = 0; i < 9; i++)
 			data[i] = (i % 4) ? 0 : 1;
 	}
+    
+    static Matrix3<T> createCrossProductMatrix(const Vector3<T>& r) {
+        Matrix3<T> ret;
+        ret.at(0,0) = 0;
+        ret.at(0,1) = r[2];
+        ret.at(0,2) = -r[1];
+        ret.at(1,0) = -r[2];
+        ret.at(1,1) = 0;
+        ret.at(1,2) = r[0];
+        ret.at(2,0) = r[1];
+        ret.at(2,1) = -r[0];
+        ret.at(2,2) = 0;
+        return ret;
+    }
 
+	static Matrix3<T> createScale(T x, T y, T z)
+	{
+		Matrix3 ret;
+		ret.at(0, 0) = x;
+		ret.at(1, 1) = y;
+		ret.at(2, 2) = z;
+        
+		return ret;
+	}
+    
 	/**
 	 * Creates rotation matrix by rotation around axis.
 	 * @param xDeg Angle (in degrees) of rotation around axis X.
@@ -2204,6 +2228,16 @@ public:
 		return ret;
 	}
 	
+	static Matrix4<T> createScale(T x, T y, T z)
+	{
+		Matrix4 ret;
+		ret.at(0, 0) = x;
+		ret.at(1, 1) = y;
+		ret.at(2, 2) = z;
+        
+		return ret;
+	}
+
 	/**
 	 * Creates new view matrix to look from specified position @a eyePos to specified position @a centerPos
 	 * @param eyePos A position of camera

@@ -77,6 +77,24 @@ public:
             data[i] -= f;
         return (*this);
     }
+    ARRAY& operator+=(const ARRAY& a) {
+        assert(dim == a.dim);
+        for (int i = 0; i < data.size(); ++i)
+            data[i] += a.data[i];
+        return *this;
+    }
+    ARRAY operator*(const ARRAY& a) {
+        assert(dim == a.dim);
+        ARRAY ret(dim);
+        for (int i = 0; i < data.size(); ++i)
+            ret.data[i] = data[i] * a.data[i];
+    }
+    ARRAY operator*(const TV t) {
+        ARRAY ret(dim);
+        for (int i = 0; i < data.size(); ++i)
+            ret.data[i] = data[i] * t;
+        return *this;
+    }
     const TV& operator() (int x, int y, int z) const {
         assert(d == 3);
         return data[(x - bx) * dim(2) * dim(3) + (y - by) * dim(3) + (z - bz)];

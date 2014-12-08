@@ -12,6 +12,7 @@
 #include <iostream>
 #include <vector>
 #include "Geometric.h"
+#include "Rigid_Geometry.h"
 #include "Bounds.h"
 using namespace std;
 
@@ -29,6 +30,7 @@ public:
     void collid_detection(Geometrics& b);
     void collid_detection(Geometric* b);
     void contact_detection(Bounds& b);
+    void contact_detection(Geometrics& b);
     void addElement(Geometric* object);
     
     void clearForce();
@@ -38,6 +40,7 @@ public:
     void clear();
     
     vector<Geometric*> vp;
+    vector<Contact> contacts;
 };
 
 

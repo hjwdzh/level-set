@@ -7,9 +7,10 @@
 //
 
 #include "Geometric.h"
+#include "Rigid_Geometry.h"
 
 Geometric::Geometric()
-: selected(false), nailed(false), kr(1)
+: selected(false), nailed(false), kr(0.8)
 {}
 
 Geometric::~Geometric()
@@ -57,6 +58,10 @@ void Geometric::setKr(double _kr)
     kr = _kr;
 }
 
-void Geometric::collid_detection(Geometric* g) {
+void Geometric::collid_detection(Geometric* g, std::vector<Contact>* contact) {
+    
+}
+
+void Geometric::contact_detection(Geometric* g) {
     
 }

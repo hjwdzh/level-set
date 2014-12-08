@@ -130,6 +130,7 @@ void Animate(int id)
         v = g_camera->lookat.inverse() * v;
         g_selectedObject->setUserForce(Vector3d(v[0], v[1], v[2]) * 5);
     }
-    Solver::EulersStep(*g_sys, 0.03);
+    for (int i = 0; i < 5; ++i)
+        Solver::EulersStep(*g_sys, 0.01);
     glutTimerFunc(33, Animate, 1);
 }

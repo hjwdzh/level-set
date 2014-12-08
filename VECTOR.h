@@ -51,7 +51,7 @@ public:
         return v;
     }
     VECTOR Normal() const {
-        return (*this) / Magnitude();
+        return (*this) * (1 / Magnitude());
     }
     void Normalize() {
         (*this) /= Magnitude();

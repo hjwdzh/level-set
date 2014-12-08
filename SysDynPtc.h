@@ -19,7 +19,7 @@ class SysDynPtc: public SystemPhy
 public:
     SysDynPtc();
     ~SysDynPtc();
-    enum {COLLISION_ITERATION = 9};
+    enum {COLLISION_ITERATION = 9, CONTACT_ITERATION = 9};
     virtual void Initialize();
     virtual void Display();
     virtual Geometric* mouseSelect(double mouseX, double mouseY);

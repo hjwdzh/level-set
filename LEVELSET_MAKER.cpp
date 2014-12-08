@@ -58,9 +58,9 @@ void LEVELSET_MAKER<T>::Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_
     bool need_flood_fill=compute_signed_distance_function || compute_heaviside_function;
     ARRAY<3,int> edge_is_blocked_x,edge_is_blocked_y,edge_is_blocked_z;
     if(need_flood_fill){
-        edge_is_blocked_x.Resize(RANGE<TV_INT>(TV_INT(2,1,1),grid.counts));
-        edge_is_blocked_y.Resize(RANGE<TV_INT>(TV_INT(1,2,1),grid.counts));
-        edge_is_blocked_z.Resize(RANGE<TV_INT>(TV_INT(1,1,2),grid.counts));
+        edge_is_blocked_x.Resize(RANGE<TV_INT>(TV_INT(1,1,1),grid.counts));
+        edge_is_blocked_y.Resize(RANGE<TV_INT>(TV_INT(1,1,1),grid.counts));
+        edge_is_blocked_z.Resize(RANGE<TV_INT>(TV_INT(1,1,1),grid.counts));
     }
     
     bool store_closest_triangle_index=need_flood_fill && !boundary_outside;
@@ -76,7 +76,6 @@ void LEVELSET_MAKER<T>::Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_
     
     const T surface_thickness_over_two=(T).5*(surface_thickness>0?surface_thickness:grid.min_dX/100);
     const T surface_padding_for_flood_fill=padding;
-    cout << "Start \n";
     const RANGE<TV>& grid_domain=RANGE<TV>(grid.dom_min, grid.dom_max);
     for(int t=1;t<=triangulated_surface.triangle_list.size();t++){
         const TRIANGLE<T>& triangle=triangulated_surface.triangle_list[t-1];
@@ -93,8 +92,7 @@ void LEVELSET_MAKER<T>::Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_
             for(int j=min_index(2);j<=max_index(2);j++)
                 for(int k=min_index(3);k<=max_index(3);k++){
                     TV grid_position=grid.X(i,j,k),
-                       weights,
-                       closest_point=triangle.Closest_Point(grid_position,weights);
+                       closest_point=triangle.Closest_Point(grid_position);
                     T distance_squared=(grid_position-closest_point).Magnitude_Squared();
                     if(phi(i,j,k)>1e20 || distance_squared<phi(i,j,k)*phi(i,j,k)){
                         if(store_initialized_indices && phi(i,j,k)>1e20)
@@ -108,21 +106,36 @@ void LEVELSET_MAKER<T>::Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_
             for(int i=min_index(1)+1;i<=max_index(1);i++)
                 for(int j=min_index(2);j<=max_index(2);j++)
                     for(int k=min_index(3);k<=max_index(3);k++)
-                        if(!edge_is_blocked_x(i,j,k))
-                            edge_is_blocked_x(i,j,k)=INTERSECTION<T>::Intersects(SEGMENT<T>(grid.X(i,j,k),grid.X(i-1,j,k)),enlarged_triangle,surface_thickness_over_two);
+                        if(!edge_is_blocked_x(i,j,k)) {
+                            TV t = grid.X(i-1,j,k);
+                            if (t(1) * t(1) + t(2) * t(2) + t(3) * t(3) < 1 && (t(1)+grid.dx(1))*(t(1)+grid.dx(1))+t(2)*t(2)+t(3)*t(3)>1) {
+                                i = i;
+                            }
+                            if (INTERSECTION<T>::Intersects(SEGMENT<T>(grid.X(i,j,k),grid.X(i-1,j,k)),enlarged_triangle,surface_thickness_over_two)) {
+                                edge_is_blocked_x(i,j,k) = 1;
+                                edge_is_blocked_x(i-1,j,k) = 1;
+                            }
+                        }
             for(int i=min_index(1);i<=max_index(1);i++)
                 for(int j=min_index(2)+1;j<=max_index(2);j++)
                     for(int k=min_index(3);k<=max_index(3);k++)
-                        if(!edge_is_blocked_y(i,j,k))
-                            edge_is_blocked_y(i,j,k)=INTERSECTION<T>::Intersects(SEGMENT<T>(grid.X(i,j,k),grid.X(i,j-1,k)),enlarged_triangle,surface_thickness_over_two);
+                        if(!edge_is_blocked_y(i,j,k)) {
+                            if (INTERSECTION<T>::Intersects(SEGMENT<T>(grid.X(i,j,k),grid.X(i,j-1,k)),enlarged_triangle,surface_thickness_over_two)) {
+                                edge_is_blocked_y(i,j,k) = 1;
+                                edge_is_blocked_x(i,j-1,k) = 1;
+                            }
+                        }
             for(int i=min_index(1);i<=max_index(1);i++)
                 for(int j=min_index(2);j<=max_index(2);j++)
                     for(int k=min_index(3)+1;k<=max_index(3);k++)
-                        if(!edge_is_blocked_z(i,j,k))
-                            edge_is_blocked_z(i,j,k)=INTERSECTION<T>::Intersects(SEGMENT<T>(grid.X(i,j,k),grid.X(i,j,k-1)),enlarged_triangle,surface_thickness_over_two);
+                        if(!edge_is_blocked_z(i,j,k)) {
+                            if (INTERSECTION<T>::Intersects(SEGMENT<T>(grid.X(i,j,k),grid.X(i,j,k-1)),enlarged_triangle,surface_thickness_over_two)) {
+                                edge_is_blocked_z(i,j,k) = 1;
+                                edge_is_blocked_x(i,j,k-1) = 1;
+                            }
+                        }
         }
     }
-
     if((compute_signed_distance_function || compute_unsigned_distance_function) && use_fmm && fmm_stopping_distance) {
         for(int i=1;i<=grid.counts(1);i++)
             for(int j=1;j<=grid.counts(2);j++)
@@ -132,7 +145,6 @@ void LEVELSET_MAKER<T>::Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_
     else if(compute_heaviside_function) {
         phi.Fill(grid.dx.Max());
     }
-
     if(need_flood_fill){ // Need flood fill to determine sign (inside/outside)
         ARRAY<3,int> colors(grid.Domain_Indices());
         FLOOD_FILL flood_fill;
@@ -167,9 +179,6 @@ void LEVELSET_MAKER<T>::Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_
                     return;
                 }
                 else {
-                    if (color == 1) {
-                        color = color;
-                    }
                     color_is_inside[color-1]=triangulated_surface.Inside(grid.X(color_representatives[color-1]));
                 }
             }
@@ -208,7 +217,6 @@ void LEVELSET_MAKER<T>::Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_
                     if(color_is_inside[colors(i,j,k)-1]) {
                         phi(i,j,k)*=-1;
                     }
-        TV_INT t = grid.Clamped_Index(TV(0,0,0));
     }
     
     return;

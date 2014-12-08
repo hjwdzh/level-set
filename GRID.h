@@ -40,7 +40,7 @@ public:
     }
     T Interpolate(ARRAY<3, T>& phi, const TV& p) {
         TV ind = (p-dom_min)*one_over_dX;
-        TV_INT ind_int1 = TV_INT(ind(1),ind(2),ind(3));
+        TV_INT ind_int1 = TV_INT(ind(1),ind(2),ind(3)).Get_Max(TV_INT(1,1,1));
         T d1 = phi(ind_int1);
         if (d1 > 0)
             return 1e30;
@@ -87,13 +87,29 @@ public:
     }
     TV Gradient(ARRAY<3, T>& phi, const TV& p) {
         TV ind = (p-dom_min)*one_over_dX;
-        TV_INT ind_int1 = TV_INT(ind(1) + 0.5,ind(2) + 0.5,ind(3) + 0.5);
+        TV_INT ind_int1 = TV_INT(ind(1),ind(2),ind(3)).Get_Max(TV_INT(2,2,2)).Get_Min(counts-TV_INT(1,1,1));
         T d1, d2, d3, d4;
         d1 = phi(ind_int1);
         d2 = phi(ind_int1 + TV_INT(0,0,1));
+        if (d2 > 0) {
+            d2 = phi(ind_int1 + TV_INT(0,0,-1));
+            if (d2 < 0)
+                d2 = 2 * d1 - d2;
+        }
         d3 = phi(ind_int1 + TV_INT(0,1,0));
+        if (d3 > 0) {
+            d3 = phi(ind_int1 + TV_INT(0,-1,0));
+            if (d3 < 0)
+                d3 = 2 * d1 - d3;
+        }
         d4 = phi(ind_int1 + TV_INT(1,0,0));
-        return (TV(d4-d1,d3-d1,d2-d1) * one_over_dX).Normal();
+        if (d4 > 0) {
+            d4 = phi(ind_int1 + TV_INT(-1,0,0));
+            if (d4 < 0)
+                d4 = 2 * d1 - d4;
+        }
+        TV v = (TV(d4-d1,d3-d1,d2-d1) * one_over_dX).Normal();
+        return v;
     }
 	TV dom_min, dom_max;
 	TV dx;

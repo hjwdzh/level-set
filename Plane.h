@@ -19,7 +19,7 @@ class Plane : public Bound
 public:
     Plane();
     Plane(const Vector3d& P, const Vector3d& N);
-    Plane(const Vector3d& _P, const Vector3d& _N, double _kr);
+    Plane(const Vector3d& _P, const Vector3d& _N, double _kr, double _kf);
     bool collid_detection(Geometric* object);
     bool contact_detection(Geometric* object);
     void Display();

@@ -7,7 +7,7 @@ using namespace SimLib;
 using namespace std;
 
 template<class T>
-bool TRIANGULATED_SURFACE<T>::loadOBJ(char * path){
+bool TRIANGULATED_SURFACE<T>::loadOBJ(const char * path){
 	printf("Loading OBJ file %s...\n", path);
 
 	std::vector<unsigned int> vertexIndices;

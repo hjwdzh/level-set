@@ -13,7 +13,7 @@
 #include "Geometric.h"
 
 
-#define CONTACT_THRESHOLD 1.0
+#define CONTACT_THRESHOLD 0.2
 
 class Bound
 {
@@ -21,11 +21,13 @@ public:
     Bound();
     virtual ~Bound() = 0;
     virtual void setKr(double _kr);
+    virtual void setKf(double _kf);
     virtual bool collid_detection(Geometric* object) = 0;
     virtual bool contact_detection(Geometric* object) = 0;
     virtual void Display() = 0;
 protected:
     double kr;
+    double kf;
 };
 
 #endif /* defined(__simulation__Bound__) */

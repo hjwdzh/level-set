@@ -10,8 +10,10 @@
 #define __simulation__Geometric__
 
 #include <iostream>
-#include "Geometric.h"
+#include <vector>
 #include "vmath.h"
+
+class Contact;
 
 class Geometric
 {
@@ -29,7 +31,8 @@ public:
     virtual void Display() = 0;
     virtual void ExcertForce(const Vector3d& force) = 0;
     virtual void ExcertForceField(Vector3d (*forcefunc)(Geometric*)) = 0;
-    virtual void collid_detection(Geometric* g);
+    virtual void collid_detection(Geometric* g, std::vector<Contact>* contact = 0);
+    virtual void contact_detection(Geometric* g);
     double mass, kr;
     bool selected, nailed;
     Vector3d x, v, f, extForce, userForce;

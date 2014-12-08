@@ -49,94 +49,60 @@ T TRIANGLE<T>::Area() const {
 }
 
 template<class T>
-VECTOR<T,3> TRIANGLE<T>::Closest_Point(const VECTOR<T,3>& location,VECTOR<T,3>& weights) const {
-    weights=Barycentric_Coordinates(location);
-    // project closest point to the triangle if it's not already inside it
-    if(weights(1)<0){
-        VECTOR<T,3> v=c-b;
-        T denominator=v.Dot_Product(v);
-        T a23 = (denominator == 0) ? 0 : (location-b).Dot_Product(v)/denominator;
-        if(a23<0){
-            if(weights(3)<0){ // Closest point is on edge x1--x2
-                VECTOR<T,3> v = b - a;
-                T denominator = v.Dot_Product(v);
-                T a12 = (denominator == 0) ? 0 : (location-a).Dot_Product(v)/denominator;
-                if (a12 < 0)
-                    a12 = 0;
-                if (a12 > 1)
-                    a12 = 1;
-                weights=VECTOR<T,3>(1-a12,a12,0);
-                return weights(1)*a+weights(2)*b;
+VECTOR<T,3> TRIANGLE<T>::Closest_Point(const VECTOR<T,3>& location) const {
+    typedef VECTOR<T,3> TV;
+    TV D = a - location;
+    TV E0 = b - a;
+    TV E1 = c - a;
+    T _a = E0.Dot_Product(E0);
+    T _b = E0.Dot_Product(E1);
+    T _c = E1.Dot_Product(E1);
+    T _d = E0.Dot_Product(D);
+    T _e = E1.Dot_Product(D);
+    T _f = D.Dot_Product(D);
+    T det = _a * _c - _b * _b;
+    T s = _b * _e - _c * _d;
+    T t = _b * _d - _a * _e;
+    if (s + t <= det && fabs(det) > 1e-4) {
+        if (s < 0) {
+            if (t < 0) {
+                s = 0;
+                t = 0;
+            } else {
+                s = 0;
+                t = (_e >= 0? 0 : (-_e >=_c ? 1 : -_e/_c));
             }
-            else{
-                weights=VECTOR<T,3>(0,1,0);
-                return b;
+        } else {
+            if (t < 0) {
+                t = 0;
+                s = (_d >= 0? 0 : (-_d >= _a ? 1 : -_d/_a));
+            } else {
+                T invDet = 1 / det;
+                s *= invDet;
+                t *= invDet;
             }
-        } // Closest point is x2
-        else if(a23>1){
-            if(weights(2)<0){ // Closest point is on edge x1--x3
-                VECTOR<T,3> v = c - a;
-                T denominator = v.Dot_Product(v);
-                T a13 = (denominator == 0) ? 0 : (location - a).Dot_Product(v)/denominator;
-                if (a13 < 0)
-                    a13 = 0;
-                if (a13 > 1)
-                    a13 = 1;
-                weights=VECTOR<T,3>(1-a13,0,a13);
-                return weights(1)*a+weights(3)*c;
-            }
-            else{
-                weights=VECTOR<T,3>(0,0,1);
-                return c;
-            }
-        } // Closest point is x3
-        else{
-            weights=VECTOR<T,3>(0,1-a23,a23);
-            return weights(2)*b+weights(3)*c;
         }
-    } // Closest point is on edge x2--x3
-    else if(weights(2)<0){
-        VECTOR<T, 3> v = c - a;
-        T denominator = v.Dot_Product(v);
-        T a13 = (denominator == 0) ? 0 : (location-a).Dot_Product(v)/denominator;
-        if(a13<0){
-            if(weights(3)<0){ // Closest point is on edge x1--x2
-                VECTOR<T,3> v = b - a;
-                T denominator = v.Dot_Product(v);
-                T a12 = (denominator == 0) ? 0 : (location-a).Dot_Product(v)/denominator;
-                if (a12 < 0)
-                    a12 = 0;
-                if (a12 > 1)
-                    a12 = 1;
-                weights=VECTOR<T,3>(1-a12,a12,0);
-                return weights(1)*a+weights(2)*b;
+    } else {
+        if (s < 0) {
+            s = 0;
+            t = 1;
+        } else {
+            if (t < 0) {
+                s = 1;
+                t = 0;
+            } else {
+                s = (_c + _e - _b - _d) / (_a - 2 * _b + _c);
+                if (s > 1) {
+                    s = 1;
+                }
+                if (s < 0) {
+                    s = 0;
+                }
+                t = 1 - s;
             }
-            else{
-                weights=VECTOR<T,3>(1,0,0);
-                return a;
-            }
-        } // Closest point is x1
-        else if(a13>1){
-            weights=VECTOR<T,3>(0,0,1);
-            return c;
-        } // Closest point is x3
-        else{
-            weights=VECTOR<T,3>(1-a13,0,a13);
-            return weights(1)*a+weights(3)*c;
         }
-    } // Closest point is on edge x1--x3
-    else if(weights(3)<0){ // Closest point is on edge x1--x2
-        VECTOR<T,3> v = b - a;
-        T denominator = v.Dot_Product(v);
-        T a12 = (denominator == 0) ? 0 : (location-a).Dot_Product(v)/denominator;
-        if (a12 < 0)
-            a12 = 0;
-        if (a12 > 1)
-            a12 = 1;
-        weights=VECTOR<T,3>(1-a12,a12,0);
-        return weights(1)*a+weights(2)*b;
     }
-    return weights(1)*a+weights(2)*b+weights(3)*c; // Point is interior to the triangle
+    return a + s * E0 + t * E1;
 }
 
 template class SimLib::TRIANGLE<float>;

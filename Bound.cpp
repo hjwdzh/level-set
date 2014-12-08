@@ -19,3 +19,8 @@ void Bound::setKr(double _kr)
 {
     kr = _kr;
 }
+
+void Bound::setKf(double _kf)
+{
+    kf = _kf;
+}

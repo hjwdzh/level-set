@@ -22,10 +22,11 @@ Plane::Plane(const Vector3d& _P, const Vector3d& _N)
     : P(_P), N(_N)
 {}
 
-Plane::Plane(const Vector3d& _P, const Vector3d& _N, double _kr)
+Plane::Plane(const Vector3d& _P, const Vector3d& _N, double _kr, double _kf)
 : P(_P), N(_N)
 {
     kr = _kr;
+    kf = _kf;
 }
 
 bool Plane::collid_detection(Geometric* object)
@@ -47,19 +48,41 @@ bool Plane::collid_detection(Geometric* object)
     if (rgb)
     {
         double dis = 1e30;
+        Vector4d cp;
         for (vector<VECTOR<float, 3> >::iterator it = rgb->triangles.vertices.begin();
              it != rgb->triangles.vertices.end(); ++it) {
             double t = (rgb->ApplyTransform(*it) - P).dotProduct(N);
-            if (t < dis)
+            if (t < dis) {
                 dis = t;
+                cp = Vector4d((*it)(1),(*it)(2),(*it)(3),1);
+            }
         }
-        double collid = N.dotProduct(rgb->v) / rgb->v.length();
-        if (dis < EPSILON && collid < -EPSILON)
+        Vector3d r1(cp[0],cp[1],cp[2]);
+        Matrix3d rot1 = rgb->rotation.rotMatrix();
+        Matrix3d J1 = rot1 * rgb->J * rot1.transpose();
+        double m1 = 1 / rgb->mass;
+        Matrix3d crossM1 = Matrix3d::createCrossProductMatrix(r1);
+        Vector3d V = -(rgb->v + crossM1.transpose() * rgb->w);
+        double collid = N.dotProduct(V);
+        if (dis < EPSILON && collid > EPSILON)
         {
-            Vector3d vn = N * N.dotProduct(rgb->v);
-            Vector3d vt = rgb->v - vn;
-            rgb->v = vt - vn * (kr * rgb->kr);
-            rgb->x = rgb->x - N * dis;
+            cp = rgb->Transform() * cp;
+            Matrix3d K = Matrix3d() * m1 + crossM1.transpose() * J1 * crossM1;
+            double jn = (1 + min(kr, rgb->kr)) * collid / N.dotProduct(K * N);
+            rgb->v += N * (jn * m1);
+            rgb->w += J1 * r1.crossProduct(N) * jn;
+
+            Vector3d Vt = V - N * V.dotProduct(N);
+            if (Vt.length() < 1e-4)
+                return true;
+            Vector3d Vtn = Vt;
+            Vtn.normalize();
+            double jt = Vt.length() / Vtn.dotProduct(K * Vtn);
+            if (jt > jn * max(kf, rgb->kf)) {
+                jt = jn * max(kf, rgb->kf);
+            }
+            rgb->v += Vtn * (jt * m1);
+            rgb->w += J1 * (r1.crossProduct(Vtn) * jt);
         }
     }
     return false;
@@ -77,26 +100,6 @@ bool Plane::contact_detection(Geometric* object)
             ptc->x -= N * dis;
             ptc->v -= N * collid;
             double fn = N.dotProduct(ptc->f);
-            if (fn < 0)
-                object->ExcertForce(N * -fn);
-        }
-    }
-    Rigid_Geometry* rgb = dynamic_cast<Rigid_Geometry*>(object);
-    if (rgb)
-    {
-        double dis = 1e30;
-        for (vector<VECTOR<float, 3> >::iterator it = rgb->triangles.vertices.begin();
-             it != rgb->triangles.vertices.end(); ++it) {
-            double t = (rgb->ApplyTransform(*it) - P).dotProduct(N);
-            if (t < dis)
-                dis = t;
-        }
-        double collid = N.dotProduct(rgb->v);
-        if (dis < EPSILON && abs(collid) < CONTACT_THRESHOLD)
-        {
-            rgb->x -= N * dis;
-            rgb->v -= N * collid;
-            double fn = N.dotProduct(rgb->f);
             if (fn < 0)
                 object->ExcertForce(N * -fn);
         }

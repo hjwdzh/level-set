@@ -14,7 +14,7 @@ public:
 	TRIANGULATED_SURFACE(){}
 	std::vector<TRIANGLE<T> > triangle_list;
 	void Update_Bounding_Box_And_Gravity_Center();
-	bool loadOBJ(char * path);
+	bool loadOBJ(const char * path);
     bool Inside(const TV& point);
     bool Test_Inside_Using_Ray(RAY<T>& ray);
 	RANGE<VECTOR<T, 3> > bounding_box;

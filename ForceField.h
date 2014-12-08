@@ -19,6 +19,7 @@ public:
     static Vector3d gravity(Geometric* p);
     static Vector3d viscous(Geometric* p);
     static double k_drag;
+    static double k_moment_drag;
 };
 
 #endif /* defined(__simulation__ForceField__) */
