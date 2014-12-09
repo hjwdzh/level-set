@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../SysDynPtc.cpp"
-            timestampString = "439801562.253129"
+            timestampString = "439814641.409799"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "141"
-            endingLineNumber = "141"
+            startingLineNumber = "140"
+            endingLineNumber = "140"
             landmarkName = "SysDynPtc::DerivEval(double* state, double t)"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../SysDynPtc.cpp"
-            timestampString = "439801562.253129"
+            timestampString = "439814641.409799"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "128"
-            endingLineNumber = "128"
+            startingLineNumber = "127"
+            endingLineNumber = "127"
             landmarkName = "SysDynPtc::setState(double* state, double t)"
             landmarkType = "5">
          </BreakpointContent>
@@ -90,11 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Rigid_Geometry.cpp"
-            timestampString = "439801707.703084"
+            timestampString = "439812913.039035"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "309"
-            endingLineNumber = "309"
+            startingLineNumber = "313"
+            endingLineNumber = "313"
             landmarkName = "Rigid_Geometry::collid_detection(Geometric* g, std::vector&lt;Contact&gt;* contact)"
             landmarkType = "5">
          </BreakpointContent>
@@ -106,11 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Rigid_Geometry.cpp"
-            timestampString = "439801707.703084"
+            timestampString = "439812913.039035"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "307"
-            endingLineNumber = "307"
+            startingLineNumber = "311"
+            endingLineNumber = "311"
             landmarkName = "Rigid_Geometry::collid_detection(Geometric* g, std::vector&lt;Contact&gt;* contact)"
             landmarkType = "5">
          </BreakpointContent>
@@ -202,11 +202,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../SysDynPtc.cpp"
-            timestampString = "439801562.253129"
+            timestampString = "439814641.409799"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "154"
-            endingLineNumber = "154"
+            startingLineNumber = "153"
+            endingLineNumber = "153"
             landmarkName = "SysDynPtc::DerivEval(double* state, double t)"
             landmarkType = "5">
          </BreakpointContent>
@@ -234,11 +234,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Rigid_Geometry.cpp"
-            timestampString = "439801707.703084"
+            timestampString = "439812913.039035"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "298"
-            endingLineNumber = "298"
+            startingLineNumber = "299"
+            endingLineNumber = "299"
             landmarkName = "Rigid_Geometry::collid_detection(Geometric* g, std::vector&lt;Contact&gt;* contact)"
             landmarkType = "5">
          </BreakpointContent>
@@ -250,11 +250,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Rigid_Geometry.cpp"
-            timestampString = "439801707.703084"
+            timestampString = "439812913.039035"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "297"
-            endingLineNumber = "297"
+            startingLineNumber = "298"
+            endingLineNumber = "298"
             landmarkName = "Rigid_Geometry::collid_detection(Geometric* g, std::vector&lt;Contact&gt;* contact)"
             landmarkType = "5">
          </BreakpointContent>
@@ -326,27 +326,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../SysDynPtc.cpp"
-            timestampString = "439801562.253129"
+            timestampString = "439813839.099384"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "43"
-            endingLineNumber = "43"
-            landmarkName = "SysDynPtc::Initialize()"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../SysDynPtc.cpp"
-            timestampString = "439801562.253129"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "35"
-            endingLineNumber = "35"
+            startingLineNumber = "42"
+            endingLineNumber = "42"
             landmarkName = "SysDynPtc::Initialize()"
             landmarkType = "5">
          </BreakpointContent>
@@ -438,7 +422,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Rigid_Geometry.cpp"
-            timestampString = "439801707.703084"
+            timestampString = "439812778.596737"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "270"
@@ -454,43 +438,43 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Rigid_Geometry.cpp"
-            timestampString = "439801707.703084"
+            timestampString = "439812913.039035"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "280"
+            endingLineNumber = "280"
+            landmarkName = "Rigid_Geometry::collid_detection(Geometric* g, std::vector&lt;Contact&gt;* contact)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Rigid_Geometry.cpp"
+            timestampString = "439812913.039035"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "312"
+            endingLineNumber = "312"
+            landmarkName = "Rigid_Geometry::collid_detection(Geometric* g, std::vector&lt;Contact&gt;* contact)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Rigid_Geometry.cpp"
+            timestampString = "439812913.039035"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "279"
             endingLineNumber = "279"
-            landmarkName = "Rigid_Geometry::collid_detection(Geometric* g, std::vector&lt;Contact&gt;* contact)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../Rigid_Geometry.cpp"
-            timestampString = "439801707.703084"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "308"
-            endingLineNumber = "308"
-            landmarkName = "Rigid_Geometry::collid_detection(Geometric* g, std::vector&lt;Contact&gt;* contact)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../Rigid_Geometry.cpp"
-            timestampString = "439801707.703084"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "278"
-            endingLineNumber = "278"
             landmarkName = "Rigid_Geometry::collid_detection(Geometric* g, std::vector&lt;Contact&gt;* contact)"
             landmarkType = "5">
          </BreakpointContent>
@@ -684,6 +668,22 @@
             startingLineNumber = "62"
             endingLineNumber = "62"
             landmarkName = "Solver::QPSolve(ARRAY&lt;2, double&gt;&amp; a, ARRAY&lt;1, double&gt;&amp; b, ARRAY&lt;1, double&gt;&amp; f)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Rigid_Geometry.cpp"
+            timestampString = "439812892.012655"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "254"
+            endingLineNumber = "254"
+            landmarkName = "Rigid_Geometry::collid_detection(Geometric* g, std::vector&lt;Contact&gt;* contact)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

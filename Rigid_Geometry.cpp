@@ -268,6 +268,7 @@ void Rigid_Geometry::collid_detection(Geometric* g, std::vector<Contact>* contac
                 continue;
             if (contact) {
                 Vector3d N = rgb->Transform() * Vector3d(intersecion.second(1),intersecion.second(2),intersecion.second(3));
+                N.normalize();
                 Vector4d pp = rgb->Transform() * p;
                 Vector3d r1(pp[0] - x[0], pp[1] - x[1], pp[2] - x[2]);
                 Vector3d r2(pp[0] - rgb->x[0], pp[1] - rgb->x[1], pp[2] - rgb->x[2]);
@@ -297,6 +298,9 @@ void Rigid_Geometry::collid_detection(Geometric* g, std::vector<Contact>* contac
         cp = rgb->Transform() * cp;
         Vector3d N = rgb->Transform() * Vector3d(deepest_intersection.second(1),deepest_intersection.second(2),deepest_intersection.second(3));
         N.normalize();
+        if (contact && deepest_intersection.first < -0.2) {
+            x -= N * deepest_intersection.first / 2;
+        }
         Vector3d r1(cp[0] - x[0], cp[1] - x[1], cp[2] - x[2]);
         Vector3d r2(cp[0] - rgb->x[0], cp[1] - rgb->x[1], cp[2] - rgb->x[2]);
         Vector3d v1 = v + w.crossProduct(r1);
@@ -330,7 +334,7 @@ void Rigid_Geometry::collid_detection(Geometric* g, std::vector<Contact>* contac
             v += N * (jn * m1);
             rgb->v -= N * (jn * m2);
             w += J1 * (r1.crossProduct(N) * jn);
-            rgb->w -= J2 * (r1.crossProduct(N) * jn);
+            rgb->w -= J2 * (r2.crossProduct(N) * jn);
             
 /*            Vector3d Vt = V - N * V.dotProduct(N);
             if (Vt.length() < 1e-4)

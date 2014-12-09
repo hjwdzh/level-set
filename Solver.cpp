@@ -22,9 +22,9 @@ void Solver::EulersStep(SystemPhy &sys, double h)
     double* deltaX = sys.DerivEval(x, t);
     for (int i = 0; i < n; ++i)
     {
-        if (i < 6 || i >= 10)
+        if (i % 13 < 6 || i % 13 >= 10)
             x[i] += h * deltaX[i];
-        else if (i == 6){
+        else if (i % 13 == 6){
             Quaternion<double> rotation(x[i+3],x[i],x[i+1],x[i+2]);
             Quaternion<double> rotation1 = Quaternion<double>::fromEulerAngles(h*deltaX[i]*ANGLE_SCALE, h*deltaX[i+1]*ANGLE_SCALE, h*deltaX[i+2]*ANGLE_SCALE);
             rotation = rotation1 * rotation;
