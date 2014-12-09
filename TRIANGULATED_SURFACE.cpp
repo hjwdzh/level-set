@@ -17,7 +17,8 @@ bool TRIANGULATED_SURFACE<T>::loadOBJ(const char * path){
 
 	vertices.clear();
 
-	FILE * file = fopen(path, "r");
+	FILE * file;
+	fopen_s(&file, path, "r");
 	if( file == NULL ){
 		printf("Impossible to open the file ! Are you in the right path ? See Tutorial 1 for details\n");
 		getchar();
@@ -28,7 +29,7 @@ bool TRIANGULATED_SURFACE<T>::loadOBJ(const char * path){
 
 		char lineHeader[128];
 		// read the first word of the line
-		int res = fscanf(file, "%s", lineHeader);
+		int res = fscanf_s(file, "%s", lineHeader);
 		if (res == EOF)
 			break; // EOF = End Of File. Quit the loop.
 
@@ -36,20 +37,20 @@ bool TRIANGULATED_SURFACE<T>::loadOBJ(const char * path){
 		
 		if ( strcmp( lineHeader, "v" ) == 0 ){
 			VECTOR<T, 3> vertex;
-			fscanf(file, "%f %f %f\n", &vertex(1), &vertex(2), &vertex(3) );
+			fscanf_s(file, "%f %f %f\n", &vertex(1), &vertex(2), &vertex(3) );
 			vertices.push_back(vertex);
 		}else if (strcmp(lineHeader, "vn") == 0) {
             VECTOR<T, 3> normal;
-			fscanf(file, "%f %f %f\n", &normal(1), &normal(2), &normal(3) );
+			fscanf_s(file, "%f %f %f\n", &normal(1), &normal(2), &normal(3) );
 			temp_normal.push_back(normal);
         }else if (strcmp(lineHeader, "vt") == 0) {
             VECTOR<T, 2> tex;
-            fscanf(file, "%f %f\n", &tex(1), &tex(2));
+            fscanf_s(file, "%f %f\n", &tex(1), &tex(2));
             temp_tex.push_back(tex);
         }
         else if( strcmp( lineHeader, "f" ) == 0 ){
 			unsigned int vertexIndex[3], normalIndex[3], texIndex[3];
-			int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &texIndex[0], &normalIndex[0], &vertexIndex[1], &texIndex[1], &normalIndex[1], &vertexIndex[2], &texIndex[2], &normalIndex[2] );
+			int matches = fscanf_s(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &texIndex[0], &normalIndex[0], &vertexIndex[1], &texIndex[1], &normalIndex[1], &vertexIndex[2], &texIndex[2], &normalIndex[2] );
 			if (matches != 9){
 				printf("File can't be read by our simple parser :-( Try exporting with other options\n");
 				return false;

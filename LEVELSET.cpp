@@ -2,6 +2,7 @@
 #include "BOUNDARY.h"
 #include "math.h"
 #include <iostream>
+#include <fstream>
 using namespace SimLib;
 
 template<class T_GRID>
@@ -25,11 +26,19 @@ void LEVELSET<T_GRID>::Fast_Marching_Method(const T stopping_distance) {
     for (int i = (int)heap_index.size() / 2 - 1; i >= 0; --i) {
         Down_Adjust(i);
     }
+    std::ofstream os("log.txt");
     while (!heap_index.empty()) {
+        os << heap_index.size() << "\n";
+        os.flush();
         TV_INT ind = Extract();
+        os << heap_index.size() << "\n";
+        os.flush();
         Extend_Distance(ind);
+        os << heap_index.size() << "\n";
+        os.flush();
+        os << "fuck\n";
     }
- 
+    os.close();
 }
 
 template<class T_GRID>
@@ -87,7 +96,8 @@ typename LEVELSET<T_GRID>::TV_INT LEVELSET<T_GRID>::Extract() {
     array_ind(heap_index.back()) = k;
     array_ind(ind) = 0;
     heap_index.pop_back();
-    Down_Adjust(0);
+    if (!heap_index.empty())
+        Down_Adjust(0);
 
     if (k < 0) {
         Estimate_Distance(ind);

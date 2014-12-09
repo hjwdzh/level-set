@@ -1,4 +1,4 @@
- #ifndef GRID_H_
+﻿#ifndef GRID_H_
 #define GRID_H_
 
 #include "VECTOR.h"

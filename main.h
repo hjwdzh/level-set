@@ -1,4 +1,4 @@
-//
+﻿//
 //  main.h
 //  simulation
 //
@@ -13,6 +13,7 @@
 
 #include <iostream>
 using namespace std;
+#define _WINDOWS_PLATFORM_
 #ifndef _WINDOWS_PLATFORM_
 #include <OpenGL/gl.h>
 #include <OpengL/glu.h>

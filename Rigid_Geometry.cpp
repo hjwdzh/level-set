@@ -33,6 +33,7 @@ Rigid_Geometry::Rigid_Geometry()
 Rigid_Geometry::Rigid_Geometry(const char* _name, const char* filename, const Vector3d &_x, double _m, bool showLevelSet)
 : implicit_object(grid, phi), kf(0.3)
 {
+	cout << "Hello\n";
     show_levelset = showLevelSet;
     name = string(_name);
     rotation = Quaternion<double>::fromEulerAngles(0, 0, 0);
