@@ -27,17 +27,17 @@ void SysDynPtc::Initialize()
 {
     ks = 100; kd = 10;
 //    m_objects.addElement(new Rigid_Geometry("obj2", "/Users/jingweihuang/Desktop/projects/levelset/models/monkey.obj",Vector3d(-2.5,10.5,-3),Vector3d(0,0,0),1));
-    Rigid_Geometry* rgd2 = new Rigid_Geometry("obj2", "/Users/jingweihuang/Desktop/projects/levelset/models/cube.obj",Vector3d(-2,0,-3),1);
-    rgd2->Scale(Vector3d(20,1,20));
+    Rigid_Geometry* rgd2 = new Rigid_Geometry("obj6", "/Users/jingweihuang/Desktop/projects/levelset/models/cube.obj",Vector3d(-2,0,-3),1);
+    rgd2->Scale(Vector3d(20,10,20));
+    rgd2->Translate(Vector3d(0,-8,0));
     rgd2->setNailed();
     typedef SimLib::VECTOR<float,3> TV;
     TV gr = rgd2->grid.Gradient(rgd2->phi, TV(0,0.8,0));
-    printf("%f %f %f\n", gr(1), gr(2), gr(3));
-    Rigid_Geometry* rgd1 = new Rigid_Geometry("obj1", "/Users/jingweihuang/Desktop/projects/levelset/models/monkey.obj",Vector3d(-2,10,-3),1);
+    Rigid_Geometry* rgd1 = new Rigid_Geometry("obj2", "/Users/jingweihuang/Desktop/projects/levelset/models/monkey.obj",Vector3d(-2,10,-3),1);
     Rigid_Geometry* rgd3 = new Rigid_Geometry("obj1", "/Users/jingweihuang/Desktop/projects/levelset/models/monkey.obj",Vector3d(-2,5,-3),1);
-    Rigid_Geometry* rgd4 = new Rigid_Geometry("obj1", "/Users/jingweihuang/Desktop/projects/levelset/models/monkey.obj",Vector3d(-2,15,-3),1);
-    Rigid_Geometry* rgd5 = new Rigid_Geometry("obj1", "/Users/jingweihuang/Desktop/projects/levelset/models/monkey.obj",Vector3d(-2,20,-3),1);
-    Rigid_Geometry* rgd6 = new Rigid_Geometry("obj1", "/Users/jingweihuang/Desktop/projects/levelset/models/monkey.obj",Vector3d(-2,25,-3),1);
+    Rigid_Geometry* rgd4 = new Rigid_Geometry("obj3", "/Users/jingweihuang/Desktop/projects/levelset/models/monkey.obj",Vector3d(-2,15,-3),1);
+    Rigid_Geometry* rgd5 = new Rigid_Geometry("obj4", "/Users/jingweihuang/Desktop/projects/levelset/models/monkey.obj",Vector3d(-2,20,-3),1);
+    Rigid_Geometry* rgd6 = new Rigid_Geometry("obj5", "/Users/jingweihuang/Desktop/projects/levelset/models/monkey.obj",Vector3d(-2,25,-3),1);
 //    rgd->Translate(Vector3d(0, 5, 0));
     m_objects.addElement(rgd1);
     m_objects.addElement(rgd2);

@@ -44,27 +44,27 @@ void Solver::QPSolve(ARRAY<2, double>& a, ARRAY<1, double>& b, ARRAY<1, double>&
     set<int> C, NC;
     set<int> ad_minus;
     for (int i = 1; i <= n; ++i) {
-        if (c(i) < 0) {
+        if (c(i) < -1e-4) {
             ad_minus.insert(i);
         }
     }
-    static int tt = 0;
-    tt++;
+    
     while (!ad_minus.empty()) {
         set<int>::iterator it = ad_minus.begin();
         int d = *it;
         while (true) {
             fdirection(d, a, C, delta_f, delta_a);
             pair<double, int> sj = maxstep(f,c,delta_f,delta_a,C,NC,d);
-            f += delta_f * sj.first;
-            c += delta_a * sj.first;
-            for (set<int>::iterator it1 = C.begin(); it1 != C.end(); ++it1) {
-                if (*it1 != d) {
-                    f(*it1) += sj.first * delta_f(*it1);
-                    double t = sj.first * delta_a(*it1);
-                    if (c(*it1) > 0 && c(*it1) + t < 0) {
-                        ad_minus.insert(*it1);
-                    }
+            for (set<int>::iterator it = C.begin(); it != C.end(); ++it)
+                if (*it != d)
+                    f(*it) += sj.first * delta_f(*it);
+            f(d) += sj.first * delta_f(d);
+            for (int i = 1; i <= n; ++i) {
+                c(i) += delta_a(i) * sj.first;
+                if (c(i) < -1e-4) {
+                    ad_minus.insert(i);
+                } else {
+                    ad_minus.erase(i);
                 }
             }
             it = C.find(sj.second);
@@ -87,35 +87,48 @@ void Solver::QPSolve(ARRAY<2, double>& a, ARRAY<1, double>& b, ARRAY<1, double>&
 }
 
 void Solver::fdirection(int d, ARRAY<2, double>& a, set<int> &C, ARRAY<1, double> &delta_f, ARRAY<1, double> &delta_a) {
-    delta_f(d) = 1;
     int n = delta_f.dim(1);
-    for (int i = 1; i <= n; ++i)
+    for (int i = 1; i <= n; ++i) {
         delta_a(i) = a(i,d);
+        delta_f(i) = 0;
+    }
+    delta_f(d) = 1;
+    bool flag = false;
+    for (int i = 1; i <= n; ++i) {
+        double ttt = 0;
+        for (int j = 1; j <= n; ++j)
+            ttt += a(i,j) * delta_f(j);
+        if (fabs(ttt - delta_a(i)) > 1e-4) {
+            flag = true;
+            break;
+        }
+    }
     if (!C.empty()) {
         ARRAY<1, double> vi((int)C.size()), X((int)C.size());
         ARRAY<2, double> A((int)C.size(), (int)C.size());
         int s = 0;
         for (set<int>::iterator it = C.begin(); it != C.end(); ++it) {
             s++;
-            delta_f(*it) = 0;
             int s1 = 0;
             for (set<int>::iterator it1 = C.begin(); it1 != C.end(); ++it1) {
                 s1++;
                 A(s,s1) = a(*it,*it1);
             }
-            vi(s) = -a(s, *it);
+            vi(s) = -a(*it, d);
         }
         LinearSolve(A, vi, X);
         s = 0;
         for (set<int>::iterator it = C.begin(); it != C.end(); ++it) {
             s++;
             delta_f(*it) = X(s);
-            delta_a(*it) = a(*it,d);
+            for (int i = 1; i <= n; ++i) {
+                delta_a(i) += a(i,*it) * X(s);
+            }
         }
     }
 }
 
-void Solver::LinearSolve(ARRAY<2, double>& a, ARRAY<1, double>& b, ARRAY<1, double>& x) {
+void Solver::LinearSolve(ARRAY<2, double> a, ARRAY<1, double> b, ARRAY<1, double>& x) {
     int n = a.dim(1);
     for (int i = 1; i <= n; ++i) {
         int j = i;
@@ -130,7 +143,7 @@ void Solver::LinearSolve(ARRAY<2, double>& a, ARRAY<1, double>& b, ARRAY<1, doub
             swap(b(j), b(i));
         }
         for (int k = j + 1; k <= n; ++k) {
-            if (a(k,i) > 0) {
+            if (a(k,i) != 0) {
                 double w = a(k,i) / a(i,i);
                 for (int l = i; l <= n; ++l) {
                     a(k,l) -= w * a(i,l);

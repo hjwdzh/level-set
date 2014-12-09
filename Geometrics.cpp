@@ -194,13 +194,8 @@ void Geometrics::contact_detection(Geometrics& g) {
     }
     ARRAY<1,double> f((int)contacts.size());
     Solver::QPSolve(a, b, f);
+    return;
     for (int i = 0; i < contacts.size(); ++i) {
-        if (isinf(f(i+1))) {
-            i = i;
-            Solver::QPSolve(a, b, f);
-            double t = f(i+1);
-            t = t;
-        }
         Contact &ci = contacts[i];
         Vector3d force = ci.n * f(i+1);
         ci.a->ExcertForce(force);

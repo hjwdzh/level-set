@@ -244,11 +244,17 @@ template <class T,int d>
     }
 template <class T,int d>
     inline bool operator>(const VECTOR<T, d>& a, const VECTOR<T, d>& b) {
-        return !(a <= b);
+        for (int i = 1; i <= d; ++i)
+            if (a(i) <= b(i))
+                return false;
+        return true;
     }
 template <class T,int d>
     inline bool operator>=(const VECTOR<T, d>& a, const VECTOR<T, d>& b) {
-        return !(a < b);
+        for (int i = 1; i <= d; ++i)
+            if (a(i) < b(i))
+                return false;
+        return true;
     }
 }
 #endif

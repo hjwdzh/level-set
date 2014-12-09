@@ -253,11 +253,11 @@ Matrix4d Rigid_Geometry::Inv_Transform() const {
 void Rigid_Geometry::collid_detection(Geometric* g, std::vector<Contact>* contact) {
     Rigid_Geometry* rgb = dynamic_cast<Rigid_Geometry*>(g);
     if (rgb) {
-        if (!triangles.bounding_box.Lazy_Intersection(rgb->triangles.bounding_box))
+        Matrix4d tr = rgb->Inv_Transform() * Transform();
+        if (!triangles.bounding_box.TransformInclude(rgb->triangles.bounding_box, tr))
             return;
         Vector4d o1(gravity_center(1), gravity_center(2), gravity_center(3), 1);
         Vector4d o2(rgb->gravity_center(1),rgb->gravity_center(2),rgb->gravity_center(3), 1);
-        Matrix4<float> tr = rgb->Inv_Transform() * Transform();
         pair<float, TV> deepest_intersection(1e30, TV(0,0,0));
         Vector4d cp;
         for (vector<TV>::iterator it = triangles.vertices.begin();
