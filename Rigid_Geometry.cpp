@@ -30,30 +30,31 @@ Rigid_Geometry::Rigid_Geometry()
     rotation = Quaternion<double>::fromEulerAngles(0, 0, 0);
 }
 
-Rigid_Geometry::Rigid_Geometry(const char* _name, const char* filename, const Vector3d &_x, double _m, bool showLevelSet)
+Rigid_Geometry::Rigid_Geometry(const char* _name, const char* filename, const Vector3d &_x, const Vector3d &_r, const Vector3d &_s, double _m, bool showLevelSet)
 : implicit_object(grid, phi), kf(0.3)
 {
-	cout << "Hello\n";
     show_levelset = showLevelSet;
     name = string(_name);
-    rotation = Quaternion<double>::fromEulerAngles(0, 0, 0);
-    x = _x;
+    rotation = Quaternion<double>::fromEulerAngles(_r[0], _r[1], _r[2]);
     mass = _m;
-    scale = Vector3d(1, 1, 1);
+    scale = _s;
     triangles.loadOBJ(filename);
-    triangles.Update_Bounding_Box_And_Gravity_Center();
+    x = triangles.Update_Bounding_Box_And_Gravity_Center();
+    x = scale * x;
+    x = rotation.rotMatrix() * x;
+    x += _x;
     gravity_center = triangles.gravity_center;
     for (int i = 0; i < 3; ++i) {
         J.at(i,i) = 0;
     }
     for (vector<TV>::iterator it = triangles.vertices.begin();
          it != triangles.vertices.end(); ++it) {
-        J.at(0,0) += ((*it)(2) - gravity_center(2))*((*it)(2) - gravity_center(2))+((*it)(3) - gravity_center(3))*((*it)(3) - gravity_center(3));
-        J.at(1,1) += ((*it)(1) - gravity_center(1))*((*it)(1) - gravity_center(1))+((*it)(3) - gravity_center(3))*((*it)(3) - gravity_center(3));
-        J.at(2,2) += ((*it)(2) - gravity_center(2))*((*it)(2) - gravity_center(2))+((*it)(1) - gravity_center(1))*((*it)(1) - gravity_center(1));
-        double a01 = -((*it)(1) - gravity_center(1))*((*it)(2) - gravity_center(2));
-        double a02 = -((*it)(1) - gravity_center(1))*((*it)(3) - gravity_center(3));
-        double a12 = -((*it)(3) - gravity_center(3))*((*it)(2) - gravity_center(2));
+        J.at(0,0) += ((*it)(2) - gravity_center(2))*((*it)(2) - gravity_center(2))*_s[1]*_s[1]+((*it)(3) - gravity_center(3))*((*it)(3) - gravity_center(3))*_s[2]*_s[2];
+        J.at(1,1) += ((*it)(1) - gravity_center(1))*((*it)(1) - gravity_center(1))*_s[0]*_s[0]+((*it)(3) - gravity_center(3))*((*it)(3) - gravity_center(3))*_s[2]*_s[2];
+        J.at(2,2) += ((*it)(2) - gravity_center(2))*((*it)(2) - gravity_center(2))*_s[1]*_s[1]+((*it)(1) - gravity_center(1))*((*it)(1) - gravity_center(1))*_s[0]*_s[0];
+        double a01 = -((*it)(1) - gravity_center(1))*((*it)(2) - gravity_center(2))*_s[0]*_s[1];
+        double a02 = -((*it)(1) - gravity_center(1))*((*it)(3) - gravity_center(3))*_s[0]*_s[2];
+        double a12 = -((*it)(3) - gravity_center(3))*((*it)(2) - gravity_center(2))*_s[2]*_s[1];
         J.at(0,1) = a01;
         J.at(1,0) = a01;
         J.at(0,2) = a02;
@@ -66,47 +67,6 @@ Rigid_Geometry::Rigid_Geometry(const char* _name, const char* filename, const Ve
     range.min -= TV(0.2, 0.2, 0.2);
     range.max += TV(0.2, 0.2, 0.2);
     grid = GRID<TV>(TV_INT((int)(range.X() / VOXEL_SIZE),(int)(range.Y() / VOXEL_SIZE),(int)(range.Z() / VOXEL_SIZE)), range);
-    phi = ARRAY<3, float>(grid.Domain_Indices());
-    SimLib::LEVELSET_MAKER<float> level_maker;
-    level_maker.Compute_Level_Set(triangles, grid, phi);
-    implicit_object.Fast_Marching_Method();
-}
-
-Rigid_Geometry::Rigid_Geometry(const char* _name, const char* filename, const Vector3d &_x, const Vector3d &_v, double _m, bool showLevelSet)
-: implicit_object(grid, phi), kf(0.3)
-{
-    scale = Vector3d(1, 1, 1);
-    show_levelset = showLevelSet;
-    name = string(_name);
-    rotation = Quaternion<double>::fromEulerAngles(0, 45, 0);
-    x = _x;
-    v = _v;
-    mass = _m;
-    triangles.loadOBJ(filename);
-    triangles.Update_Bounding_Box_And_Gravity_Center();
-    gravity_center = triangles.gravity_center;
-    for (int i = 0; i < 3; ++i) {
-        J0.at(i,i) = 0;
-    }
-    for (vector<TV>::iterator it = triangles.vertices.begin();
-         it != triangles.vertices.end(); ++it) {
-        J0.at(0,0) += ((*it)(2) - gravity_center(2))*((*it)(2) - gravity_center(2))+((*it)(3) - gravity_center(3))*((*it)(3) - gravity_center(3));
-        J0.at(1,1) += ((*it)(1) - gravity_center(1))*((*it)(1) - gravity_center(1))+((*it)(3) - gravity_center(3))*((*it)(3) - gravity_center(3));
-        J0.at(2,2) += ((*it)(2) - gravity_center(2))*((*it)(2) - gravity_center(2))+((*it)(1) - gravity_center(1))*((*it)(1) - gravity_center(1));
-        double a01 = -((*it)(1) - gravity_center(1))*((*it)(2) - gravity_center(2));
-        double a02 = -((*it)(1) - gravity_center(1))*((*it)(3) - gravity_center(3));
-        double a12 = -((*it)(3) - gravity_center(3))*((*it)(2) - gravity_center(2));
-        J0.at(0,1) = a01;
-        J0.at(1,0) = a01;
-        J0.at(0,2) = a02;
-        J0.at(2,0) = a02;
-        J0.at(1,2) = a12;
-        J0.at(2,1) = a12;
-    }
-    J0 = (J0 * (mass / triangles.vertices.size()));
-    J = J0.inverse();
-    RANGE<TV> range = triangles.bounding_box;
-    grid = GRID<TV>(TV_INT(min(40,(int)(range.X() / VOXEL_SIZE)), min(40,(int)(range.Y() / VOXEL_SIZE)), min(40,(int)(range.Z() / VOXEL_SIZE))), range);
     phi = ARRAY<3, float>(grid.Domain_Indices());
     SimLib::LEVELSET_MAKER<float> level_maker;
     level_maker.Compute_Level_Set(triangles, grid, phi);
@@ -257,8 +217,6 @@ void Rigid_Geometry::collid_detection(Geometric* g, std::vector<Contact>* contac
         Matrix4d tr = rgb->Inv_Transform() * Transform();
         if (!triangles.bounding_box.TransformInclude(rgb->triangles.bounding_box, tr))
             return;
-        Vector4d o1(gravity_center(1), gravity_center(2), gravity_center(3), 1);
-        Vector4d o2(rgb->gravity_center(1),rgb->gravity_center(2),rgb->gravity_center(3), 1);
         pair<float, TV> deepest_intersection(1e30, TV(0,0,0));
         Vector4d cp;
         for (vector<TV>::iterator it = triangles.vertices.begin();

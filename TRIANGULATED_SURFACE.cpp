@@ -102,21 +102,29 @@ bool TRIANGULATED_SURFACE<T>::loadOBJ(const char * path){
 }
 
 template<class T>
-void TRIANGULATED_SURFACE<T>::Update_Bounding_Box_And_Gravity_Center() {
+Vector3d TRIANGULATED_SURFACE<T>::Update_Bounding_Box_And_Gravity_Center() {
 	if (triangle_list.size() == 0) {
 		bounding_box = RANGE<VECTOR<T, 3> >();
-		return;
+		return Vector3d();
 	}
-	bounding_box = triangle_list[0].Bounding_Box();
-    T area = 0;
     gravity_center = TV();
+    for (int i = 0; i < vertices.size(); ++i)
+        gravity_center += vertices[i];
+    gravity_center *= (1.0 / vertices.size());
+    for (int i = 0; i < vertices.size(); ++i)
+        vertices[i] -= gravity_center;
+    for (int i = 0; i < triangle_list.size(); ++i) {
+        triangle_list[i].a -= gravity_center;
+        triangle_list[i].b -= gravity_center;
+        triangle_list[i].c -= gravity_center;
+    }
+	bounding_box = triangle_list[0].Bounding_Box();
 	for (int i = 1; i < triangle_list.size(); ++i) {
 		bounding_box.include(triangle_list[i].Bounding_Box());
-        T w = triangle_list[i].Area();
-        gravity_center += w * triangle_list[i].center();
-        area += w;
     }
-    gravity_center *= (1 / area);
+    Vector3d ret(gravity_center(1),gravity_center(2),gravity_center(3));
+    gravity_center = TV();
+    return ret;
 }
 
 template<class T>

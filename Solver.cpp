@@ -168,7 +168,7 @@ pair<double, int> Solver::maxstep(SimLib::ARRAY<1, double>& f, SimLib::ARRAY<1, 
         s = -a(d) / delta_a(d);
     }
     for (set<int>::iterator it = C.begin(); it != C.end(); ++it) {
-        if (delta_f(*it) < 0) {
+        if (delta_f(*it) < -1e-4) {
             double s1 = -f(*it) / delta_f(*it);
             if (s1 < s) {
                 s = s1;
@@ -177,7 +177,7 @@ pair<double, int> Solver::maxstep(SimLib::ARRAY<1, double>& f, SimLib::ARRAY<1, 
         }
     }
     for (set<int>::iterator it = NC.begin(); it != NC.end(); ++it) {
-        if (delta_a(*it) < 0) {
+        if (delta_a(*it) < -1e-4) {
             double s1 = -a(*it) / delta_a(*it);
             if (s1 < s) {
                 s = s1;

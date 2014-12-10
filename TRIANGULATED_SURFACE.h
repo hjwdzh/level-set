@@ -5,6 +5,7 @@
 #include "RANGE.h"
 #include "TRIANGLE.h"
 #include "RAY.h"
+#include "vmath.h"
 
 namespace SimLib {
 template<class T>
@@ -13,7 +14,7 @@ class TRIANGULATED_SURFACE{
 public:
 	TRIANGULATED_SURFACE(){}
 	std::vector<TRIANGLE<T> > triangle_list;
-	void Update_Bounding_Box_And_Gravity_Center();
+	Vector3d Update_Bounding_Box_And_Gravity_Center();
 	bool loadOBJ(const char * path);
     bool Inside(const TV& point);
     bool Test_Inside_Using_Ray(RAY<T>& ray);

@@ -23,8 +23,7 @@ class Contact;
 class Rigid_Geometry : public Geometric {
 public:
     Rigid_Geometry();
-    Rigid_Geometry(const char* name, const char* filename, const Vector3d &_x, double _m, bool showLevelSet = false);
-    Rigid_Geometry(const char* name, const char* filename, const Vector3d &_x, const Vector3d &_v, double _m, bool showLevelSet = false);
+    Rigid_Geometry(const char* _name, const char* filename, const Vector3d &_x, const Vector3d &_r, const Vector3d &_s,double _m, bool showLevelSet = false);
     
     double getMouseDepth(double mouseX, double mouseY);
     
