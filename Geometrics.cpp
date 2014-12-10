@@ -161,26 +161,31 @@ void Geometrics::contact_detection(Geometrics& g) {
                 continue;
             }
             Rigid_Geometry *A = ci.a, *B = ci.b;
-            Vector3d &ni = ci.n, &nj = cj.n, &pj = cj.p, &ra = ci.ra, &rb = ci.rb;
+            Vector3d &ni = ci.n, &nj = cj.n, &pi = ci.p, &pj = cj.p, &ra = ci.ra, &rb = ci.rb;
+            ci.ra = pi - ci.a->x;
+            ci.rb = pi - ci.b->x;
+            cj.ra = pj - cj.a->x;
+            cj.rb = pj - cj.b->x;
             Vector3d force_a, force_b, torque_a, torque_b;
             if (cj.a == ci.a) {
                 force_a = nj;
-                torque_a = (pj - A->x).crossProduct(nj);
+                torque_a = cj.ra.crossProduct(nj);
             } else {
                 if (cj.b == ci.a) {
                     force_a = -nj;
-                    torque_a = (pj - A->x).crossProduct(nj);
+                    torque_a = cj.rb.crossProduct(-nj);
                 }
             }
             if (cj.a == ci.b) {
                 force_b = nj;
-                torque_b = (pj - B->x).crossProduct(nj);
+                torque_b = cj.ra.crossProduct(nj);
             } else {
                 if (cj.b == ci.b) {
                     force_b = -nj;
-                    torque_b = (pj - B->x).crossProduct(nj);
+                    torque_b = cj.rb.crossProduct(-nj);
                 }
             }
+            
             double m1 = A->nailed ? 0 : 1 / A->mass;
             double m2 = B->nailed ? 0 : 1 / B->mass;
             Matrix3d r1 = A->rotation.rotMatrix();

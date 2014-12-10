@@ -1,5 +1,7 @@
 #include "main.h"
 
+extern double g_simTime;
+
 // 描绘函数
 void DrawFunc()
 {
@@ -33,8 +35,10 @@ void DrawFunc()
     // 显示文本信息
     float x = 10.0f;
     float y = 20.0f;
-    
-    DrawTextHHL("Author: hjwdzh@gmail.com", x, y);
+
+    char buf[100];
+    sprintf(buf, "Sim FPS: %.02f", 1 / g_simTime);
+    DrawTextHHL(buf, x, y);
     
     // 交换显示缓冲区
     glutSwapBuffers() ;

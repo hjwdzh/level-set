@@ -132,7 +132,6 @@ void Rigid_Geometry::Display()
             glColor3f(1.0f, 0.0f, 1.0f);
         else
             glColor3f(0.0, 1.0f, 0.0f);
-//    glDisable(GL_LIGHTING);
     glPushMatrix();
     glTranslated(x[0], x[1], x[2]);
     glMultMatrixd(rotation.transform().data);
@@ -215,8 +214,8 @@ void Rigid_Geometry::collid_detection(Geometric* g, std::vector<Contact>* contac
     Rigid_Geometry* rgb = dynamic_cast<Rigid_Geometry*>(g);
     if (rgb) {
         Matrix4d tr = rgb->Inv_Transform() * Transform();
-        if (!triangles.bounding_box.TransformInclude(rgb->triangles.bounding_box, tr))
-            return;
+//        if (!triangles.bounding_box.TransformInclude(rgb->triangles.bounding_box, tr))
+//            return;
         pair<float, TV> deepest_intersection(1e30, TV(0,0,0));
         Vector4d cp;
         for (vector<TV>::iterator it = triangles.vertices.begin();

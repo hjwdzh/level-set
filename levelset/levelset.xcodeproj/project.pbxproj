@@ -108,6 +108,7 @@
 		4F1815AF19D93ED000F6ECA0 /* TRIANGULATED_SURFACE.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TRIANGULATED_SURFACE.cpp; path = ../../TRIANGULATED_SURFACE.cpp; sourceTree = "<group>"; };
 		4F1815B019D93ED000F6ECA0 /* TRIANGULATED_SURFACE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TRIANGULATED_SURFACE.h; path = ../../TRIANGULATED_SURFACE.h; sourceTree = "<group>"; };
 		4F1815B119D93ED000F6ECA0 /* VECTOR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VECTOR.h; path = ../../VECTOR.h; sourceTree = "<group>"; };
+		4F25DA781A38395200CB7130 /* BVH.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BVH.h; path = ../../BVH.h; sourceTree = "<group>"; };
 		4F61472B19DAA02900D64481 /* SEGMENT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SEGMENT.h; path = ../../SEGMENT.h; sourceTree = "<group>"; };
 		4F61472D19DAA11200D64481 /* RAY.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAY.h; path = ../../RAY.h; sourceTree = "<group>"; };
 		4F61472F19DAA1A800D64481 /* INTERSECTION.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INTERSECTION.h; path = ../../INTERSECTION.h; sourceTree = "<group>"; };
@@ -158,6 +159,7 @@
 		4F026A6F19E2C0A6007D1518 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				4F25DA781A38395200CB7130 /* BVH.h */,
 				4F026A3F19E2BFE6007D1518 /* Camera.cpp */,
 				4F026A4019E2BFE6007D1518 /* Camera.h */,
 				4F026A5919E2BFE7007D1518 /* vmath.cpp */,

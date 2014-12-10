@@ -1,7 +1,8 @@
 #include "main.h"
 #include "Solver.h"
+#include <sys/time.h>
 
-double g_mouseState = 0;
+double g_mouseState = 0, g_simTime = 0;
 int g_mouseX, g_mouseY;
 Geometric* g_selectedObject;
 
@@ -116,6 +117,8 @@ void MotionFunc(int x, int y)
 
 void Animate(int id)
 {
+    timeval t1, t2;
+    gettimeofday(&t1, 0);
     if (g_mouseState && g_selectedObject)
     {
         double mouseX, mouseY;
@@ -130,7 +133,9 @@ void Animate(int id)
         v = g_camera->lookat.inverse() * v;
         g_selectedObject->setUserForce(Vector3d(v[0], v[1], v[2]) * 5);
     }
-    for (int i = 0; i < 5; ++i)
-        Solver::EulersStep(*g_sys, 0.01);
+    for (int i = 0; i < 1; ++i)
+        Solver::EulersStep(*g_sys, 0.05);
+    gettimeofday(&t2, 0);
+    g_simTime = (t2.tv_usec - t1.tv_usec) * 1e-6 + (t2.tv_sec - t1.tv_sec);
     glutTimerFunc(33, Animate, 1);
 }

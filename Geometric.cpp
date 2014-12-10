@@ -10,7 +10,7 @@
 #include "Rigid_Geometry.h"
 
 Geometric::Geometric()
-: selected(false), nailed(false), kr(0.8)
+: selected(false), nailed(false), kr(0.0)
 {}
 
 Geometric::~Geometric()

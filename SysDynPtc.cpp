@@ -27,17 +27,30 @@ void SysDynPtc::Initialize()
 {
     ks = 100; kd = 10;
 //    m_objects.addElement(new Rigid_Geometry("obj2", "/Users/jingweihuang/Desktop/projects/levelset/models/monkey.obj",Vector3d(-2.5,10.5,-3),Vector3d(0,0,0),1));
-    Rigid_Geometry* rgd2 = new Rigid_Geometry("base", "/Users/jingweihuang/Desktop/projects/levelset/models/cube.obj",Vector3d(-2,-1,-3),Vector3d(0,0,0),Vector3d(1,1,1),1);
-    rgd2->Scale(Vector3d(20,1,20));
+    Rigid_Geometry* rgd2 = new Rigid_Geometry("base", "/Users/jingweihuang/Desktop/projects/levelset/models/cube.obj",Vector3d(0,-1,0),Vector3d(0,0,0),Vector3d(1,1,1),1);
+    Rigid_Geometry* rgd1 = new Rigid_Geometry("base", "/Users/jingweihuang/Desktop/projects/levelset/models/sphere.obj",Vector3d(0,0,-10),Vector3d(0,0,0),Vector3d(1,1,1),10);
+    rgd1->setKr(0.3);
+    rgd1->v = Vector3d(0,0,8);
+    rgd2->Scale(Vector3d(200,1,200));
     rgd2->Translate(Vector3d(0,0,0));
     rgd2->setNailed();
     typedef SimLib::VECTOR<float,3> TV;
-    Rigid_Geometry* rgd1 = new Rigid_Geometry("obj2", "/Users/jingweihuang/Desktop/projects/levelset/models/bowling.obj",Vector3d(-2,10,-3),Vector3d(0,0,0),Vector3d(5,5,5),1);
-//    rgd->Translate(Vector3d(0, 5, 0));
+    Rigid_Geometry* bowling[10];
+    int t = 0;
+    double scale = 5;
+    for (int i = 1; i <= 4; ++i) {
+        for (int j = 1; j <= 5 - i; ++j) {
+            double h = -scale * cos(3.14159265 / 12) * i / 4;
+            double x = 0.5 * scale * (j - 1 - (4 - i) * 0.5);
+            bowling[t++] = new Rigid_Geometry("bowling", "/Users/jingweihuang/Desktop/projects/levelset/models/bowling.obj",Vector3d(x,0,h),Vector3d(0,0,0),Vector3d(5,5,5),1);
+        }
+    }
+    for (int i = 0; i < t; ++i) {
+        m_objects.addElement(bowling[i]);
+    }
+
     m_objects.addElement(rgd1);
     m_objects.addElement(rgd2);
-//    m_objects.addElement(rgd3);
-//    m_bounds.addElement(new Plane(Vector3d(0, 0, 0), Vector3d(0, 1, 0), 0.5, 0));
 }
 
 void SysDynPtc::Display()
