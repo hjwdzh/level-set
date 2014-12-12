@@ -1,9 +1,39 @@
-CC=cl
-CFLAGS=-c -g -Wall
-LDFLAGS= -lglu32 -lglut32 -lopengl32
-SOURCES=Bound.cpp Bounds.cpp Camera.cpp control.cpp display.cpp ForceField.cpp Geometric.cpp Geometrics.cpp main.cpp Particle.cpp Plane.cpp Rigid_Geometry.cpp scene.cpp Solver.cpp Spring.cpp Springs.cpp SysDynPtc.cpp SystemPhy.cpp vmath.cpp BOUNDARY.cpp FLOOD_FILL.cpp GRID.cpp LEVELSET_MAKER.cpp LEVELSET.cpp RANGE.cpp TRIANGLE.cpp TRIANGULATED_SURFACE.cpp
+CC=c++
+CFLAGS=-I SimLib -I System -I Geometric -I Engine -I Tools -I User -I Bound -I ./ -c -Wall
+LDFLAGS= -framework OpenGL -framework GLUT
+SOURCES= main.cpp \
+SimLib/BOUNDARY.cpp \
+SimLib/FLOOD_FILL.cpp \
+SimLib/GRID.cpp \
+SimLib/GRID.cpp \
+SimLib/LEVELSET_MAKER.cpp \
+SimLib/LEVELSET.cpp \
+SimLib/RANGE.cpp \
+SimLib/TRIANGLE.cpp \
+SimLib/TRIANGULATED_SURFACE.cpp \
+System/SysBowling.cpp \
+System/SysDynPtc.cpp \
+System/SystemPhy.cpp \
+Geometric/Geometric.cpp \
+Geometric/Geometrics.cpp \
+Geometric/Particle.cpp \
+Geometric/Rigid_Geometry.cpp \
+Engine/ForceField.cpp \
+Engine/Solver.cpp \
+Tools/Camera.cpp \
+Tools/texture.cpp \
+Tools/TriManager.cpp \
+Tools/vmath.cpp \
+User/control.cpp \
+User/display.cpp \
+User/scene.cpp \
+Bound/Bound.cpp \
+Bound/Bounds.cpp \
+Bound/Plane.cpp \
+Bound/Spring.cpp \
+Bound/Springs.cpp
 
-OBJECTS=$(SOURCES:.cpp=.obj)
+OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=level
 
 all: $(SOURCES) $(EXECUTABLE)
@@ -11,9 +41,16 @@ all: $(SOURCES) $(EXECUTABLE)
 $(EXECUTABLE): $(OBJECTS) 
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
 
-.cpp.obj:
+.cpp.o:
 	$(CC) $(CFLAGS) $< -o $@
 
 clean:
-	rm *.obj
+	rm SimLib/*.o
+	rm System/*.o
+	rm Geometric/*.o
+	rm Engine/*.o
+	rm Tools/*.o
+	rm User/*.o
+	rm Bound/*.o
+	rm *.o
 	rm level

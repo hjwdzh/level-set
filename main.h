@@ -25,11 +25,12 @@ using namespace std;
 #include "glut.h"
 #endif
 
-#include "SysDynPtc.h"
+#include "SysBowling.h"
 #include "Camera.h"
+#include <string>
 using namespace std;
 
-extern SysDynPtc* g_sys;
+extern SysBowling* g_sys;
 extern Camera* g_camera;
 extern int g_WindowWidth;
 extern int g_WindowHeight;

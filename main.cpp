@@ -48,8 +48,9 @@ const static int g_WindowPosY = 200;
 int g_WindowWidth = 512;
 int g_WindowHeight = 384;
 double g_d = 1.0;
-SysDynPtc* g_sys = 0;
+SysBowling* g_sys = 0;
 Camera* g_camera = 0;
+string res_path;
 
 const char* g_WindowTitle = "Simulation Demo";
 
@@ -64,6 +65,11 @@ double g_right = g_top * (double)g_WindowWidth / g_WindowHeight;
 //void main()
 int main(int argc, char** argv)
 {
+    if (argc >= 2) {
+        res_path = string(argv[1]);
+    } else {
+        res_path = "./Resources";
+    }
     // 初始化opengl, glut, glew
     glutInit(&argc, argv);
     glutInitDisplayMode(g_DisplayMode);
@@ -72,7 +78,7 @@ int main(int argc, char** argv)
     glutInitWindowPosition(g_WindowPosX, g_WindowPosY);
     glutInitWindowSize(g_WindowWidth, g_WindowHeight);
     glutCreateWindow(g_WindowTitle);
-    
+    glutFullScreen();
     // 初始化应用程序
     Initialize() ;
     
@@ -106,11 +112,4 @@ void ReshapeFunc(int width, int height)
     g_WindowWidth = width;
     g_WindowHeight = height;
     
-    glViewport(0, 0, g_WindowWidth, g_WindowHeight);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    double x = (double)g_WindowWidth / g_WindowHeight;
-    glFrustum(-x, x, -1, 1, g_d, 30);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
 }
