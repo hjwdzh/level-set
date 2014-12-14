@@ -3,6 +3,7 @@
 #include "IMPLICIT_CUBE.h"
 #include "IMPLICIT_SPHERE.h"
 #include "Rigid_Geometry.h"
+#include <stdio.h>
 
 using namespace SimLib;
 
