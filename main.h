@@ -14,10 +14,19 @@
 #include <iostream>
 using namespace std;
 #ifndef _WINDOWS_PLATFORM_
+#if __linux || __unix
+// for glGenerateMipmap
+// see: http://stackoverflow.com/a/16630508/732016
+#define GL_GLEXT_PROTOTYPES
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/freeglut.h>
+#else /* not Linux/Windows; probably Mac */
 #include <OpenGL/gl.h>
 #include <OpengL/glu.h>
 #include <GLUT/glut.h>
-#else
+#endif /* __linux || __unix */
+#else /* on _WINDOWS_PLATFORM_ */
 #pragma comment( linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"" )
 #include <Windows.h>
 #include "gl.h"

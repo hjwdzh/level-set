@@ -2,6 +2,7 @@
 #include "INTERSECTION.h"
 #include <algorithm>
 #include <iostream>
+#include <stdio.h>
 
 using namespace SimLib;
 using namespace std;

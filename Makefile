@@ -1,6 +1,12 @@
 CC=c++
 CFLAGS=-I SimLib -I System -I Geometric -I Engine -I Tools -I User -I Bound -I ./ -c -Wall
 LDFLAGS= -framework OpenGL -framework GLUT
+ifneq ($(OS),Windows_NT)
+	UNAME_S := $(shell uname -s)
+	ifeq ($(UNAME_S), Linux)
+		LDFLAGS= -lglut -lGL -lGLEW -lGLU
+	endif
+endif
 SOURCES= main.cpp \
 SimLib/BOUNDARY.cpp \
 SimLib/FLOOD_FILL.cpp \
@@ -39,7 +45,7 @@ EXECUTABLE=level
 all: $(SOURCES) $(EXECUTABLE)
 	
 $(EXECUTABLE): $(OBJECTS) 
-	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+	$(CC) $(OBJECTS) -o $@ $(LDFLAGS)
 
 .cpp.o:
 	$(CC) $(CFLAGS) $< -o $@
