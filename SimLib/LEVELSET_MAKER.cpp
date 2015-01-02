@@ -51,7 +51,7 @@ void LEVELSET_MAKER<T>::Set_Phi_Offset(T phi_offset) {
 }
 
 template<class T>
-void LEVELSET_MAKER<T>::Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_surface, GRID<TV>& grid, ARRAY<3,T>& phi) {
+void LEVELSET_MAKER<T>::Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_surface, GRID<TV>& grid, ARRAY<3,T>& phi, ARRAY<3,int>& closest_triangle_index) {
     typedef VECTOR<int, 3> TV_INT;
     phi.Fill(1e30);
     T fmm_stopping_distance=fmm_band*grid.dx.Max();
@@ -64,7 +64,6 @@ void LEVELSET_MAKER<T>::Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_
     }
     
     bool store_closest_triangle_index=need_flood_fill && !boundary_outside;
-    ARRAY<3,int> closest_triangle_index;
     if(store_closest_triangle_index)
         closest_triangle_index.Resize(grid.Domain_Indices());
     
@@ -108,12 +107,8 @@ void LEVELSET_MAKER<T>::Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_
                     for(int k=min_index(3);k<=max_index(3);k++)
                         if(!edge_is_blocked_x(i,j,k)) {
                             TV t = grid.X(i-1,j,k);
-                            if (t(1) * t(1) + t(2) * t(2) + t(3) * t(3) < 1 && (t(1)+grid.dx(1))*(t(1)+grid.dx(1))+t(2)*t(2)+t(3)*t(3)>1) {
-                                i = i;
-                            }
                             if (INTERSECTION<T>::Intersects(SEGMENT<T>(grid.X(i,j,k),grid.X(i-1,j,k)),enlarged_triangle,surface_thickness_over_two)) {
                                 edge_is_blocked_x(i,j,k) = 1;
-                                edge_is_blocked_x(i-1,j,k) = 1;
                             }
                         }
             for(int i=min_index(1);i<=max_index(1);i++)
@@ -122,7 +117,6 @@ void LEVELSET_MAKER<T>::Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_
                         if(!edge_is_blocked_y(i,j,k)) {
                             if (INTERSECTION<T>::Intersects(SEGMENT<T>(grid.X(i,j,k),grid.X(i,j-1,k)),enlarged_triangle,surface_thickness_over_two)) {
                                 edge_is_blocked_y(i,j,k) = 1;
-                                edge_is_blocked_x(i,j-1,k) = 1;
                             }
                         }
             for(int i=min_index(1);i<=max_index(1);i++)
@@ -131,7 +125,6 @@ void LEVELSET_MAKER<T>::Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_
                         if(!edge_is_blocked_z(i,j,k)) {
                             if (INTERSECTION<T>::Intersects(SEGMENT<T>(grid.X(i,j,k),grid.X(i,j,k-1)),enlarged_triangle,surface_thickness_over_two)) {
                                 edge_is_blocked_z(i,j,k) = 1;
-                                edge_is_blocked_x(i,j,k-1) = 1;
                             }
                         }
         }

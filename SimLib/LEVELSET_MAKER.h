@@ -34,7 +34,7 @@ public:
     void Keep_Only_Largest_Inside_Region(bool boundary_inside);
     void Flip_Sign_If_Corners_Are_Inside(bool flip_inside);
     void Set_Phi_Offset(T phi_offset);
-    void Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_surface, GRID<TV>& grid, ARRAY<3,T>& phi);
+    void Compute_Level_Set(TRIANGULATED_SURFACE<T>& triangulated_surface, GRID<TV>& grid, ARRAY<3,T>& phi, ARRAY<3,int>& closest_triangle_index);
     bool use_fmm;
     T surface_thickness;
     T padding;

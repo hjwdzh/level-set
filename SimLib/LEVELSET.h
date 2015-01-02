@@ -4,6 +4,7 @@
 #include "GRID.h"
 #include "ARRAY.h"
 #include "IMPLICIT_OBJECT.h"
+#include "TRIANGULATED_SURFACE.h"
 #include <vector>
 namespace SimLib {
 template<class T_GRID>
@@ -18,16 +19,17 @@ public:
     LEVELSET(T_GRID& _grid, ARRAY<3,T>& _phi, int number_of_ghost_cells_input = 3)
     : phi(_phi), grid(_grid), number_of_ghost_cells(number_of_ghost_cells_input) {
     }
-    void Fast_Marching_Method(T stoping_distance = -1e30);
+    void Fast_Marching_Method(TRIANGULATED_SURFACE<float>& tris, ARRAY<3,int>& closest_index, T stoping_distance = -1e30);
     std::pair<T, TV> Intersect(const TV& p);
 private:
     void Down_Adjust(int i);
     void Up_Adjust(int i);
     TV_INT Extract();
     void Extend_Distance(TV_INT& ind);
-    void Estimate_Distance(TV_INT& ind);
+    void Estimate_Distance(TV_INT& ind, TV_INT& parent_ind);
     std::vector<TV_INT> heap_index;
-    ARRAY<3, int> array_ind;
+    ARRAY<3, int> array_ind, *closestIndex;
+    TRIANGULATED_SURFACE<float>* triList;
 };
 }
 

@@ -7,7 +7,7 @@ ifneq ($(OS),Windows_NT)
 		LDFLAGS= -lglut -lGL -lGLEW -lGLU
 	endif
 endif
-SOURCES= main.cpp \
+SOURCES= test_levelset.cpp \
 SimLib/BOUNDARY.cpp \
 SimLib/FLOOD_FILL.cpp \
 SimLib/GRID.cpp \

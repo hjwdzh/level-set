@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		4F026A7519E2C189007D1518 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F026A7419E2C189007D1518 /* OpenGL.framework */; };
 		4F026A7719E2C18E007D1518 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F026A7619E2C18E007D1518 /* GLUT.framework */; };
-		4F026A7A19E2C1AF007D1518 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F026A7819E2C1AF007D1518 /* main.cpp */; };
 		4F1815A319D93EB100F6ECA0 /* levelset.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4F1815A219D93EB100F6ECA0 /* levelset.1 */; };
 		4F49013D1A3B2CB700695657 /* BOUNDARY.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F4901261A3B2CB700695657 /* BOUNDARY.cpp */; };
 		4F49013E1A3B2CB700695657 /* FLOOD_FILL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F4901281A3B2CB700695657 /* FLOOD_FILL.cpp */; };
@@ -40,6 +39,7 @@
 		4F49017F1A3B2D2400695657 /* Plane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F4901771A3B2D2400695657 /* Plane.cpp */; };
 		4F4901801A3B2D2400695657 /* Spring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F4901791A3B2D2400695657 /* Spring.cpp */; };
 		4F4901811A3B2D2400695657 /* Springs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F49017B1A3B2D2400695657 /* Springs.cpp */; };
+		4FCE05381A563A8500BE5DDC /* test_levelset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FCE05371A563A8500BE5DDC /* test_levelset.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -58,8 +58,6 @@
 /* Begin PBXFileReference section */
 		4F026A7419E2C189007D1518 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		4F026A7619E2C18E007D1518 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
-		4F026A7819E2C1AF007D1518 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../main.cpp; sourceTree = "<group>"; };
-		4F026A7919E2C1AF007D1518 /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = main.h; path = ../../main.h; sourceTree = "<group>"; };
 		4F18159D19D93EB100F6ECA0 /* levelset */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = levelset; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F1815A219D93EB100F6ECA0 /* levelset.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = levelset.1; sourceTree = "<group>"; };
 		4F4901251A3B2CB700695657 /* ARRAY.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ARRAY.h; path = ../../SimLib/ARRAY.h; sourceTree = "<group>"; };
@@ -126,6 +124,8 @@
 		4F49017A1A3B2D2400695657 /* Spring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Spring.h; path = ../../Bound/Spring.h; sourceTree = "<group>"; };
 		4F49017B1A3B2D2400695657 /* Springs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Springs.cpp; path = ../../Bound/Springs.cpp; sourceTree = "<group>"; };
 		4F49017C1A3B2D2400695657 /* Springs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Springs.h; path = ../../Bound/Springs.h; sourceTree = "<group>"; };
+		4FCE05371A563A8500BE5DDC /* test_levelset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test_levelset.cpp; path = ../../test_levelset.cpp; sourceTree = "<group>"; };
+		4FCE05391A563A9900BE5DDC /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = main.h; path = ../../main.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -275,8 +275,8 @@
 		4F18159F19D93EB100F6ECA0 /* levelset */ = {
 			isa = PBXGroup;
 			children = (
-				4F026A7819E2C1AF007D1518 /* main.cpp */,
-				4F026A7919E2C1AF007D1518 /* main.h */,
+				4FCE05391A563A9900BE5DDC /* main.h */,
+				4FCE05371A563A8500BE5DDC /* test_levelset.cpp */,
 				4F026A7319E2C119007D1518 /* SimLib */,
 				4F026A7219E2C106007D1518 /* System */,
 				4F026A7119E2C0E4007D1518 /* Geometric */,
@@ -345,7 +345,6 @@
 				4F49016B1A3B2D0300695657 /* TriManager.cpp in Sources */,
 				4F49014C1A3B2CCB00695657 /* SysDynPtc.cpp in Sources */,
 				4F4901411A3B2CB700695657 /* LEVELSET.cpp in Sources */,
-				4F026A7A19E2C1AF007D1518 /* main.cpp in Sources */,
 				4F4901701A3B2D1400695657 /* control.cpp in Sources */,
 				4F4901401A3B2CB700695657 /* LEVELSET_MAKER.cpp in Sources */,
 				4F49013F1A3B2CB700695657 /* GRID.cpp in Sources */,
@@ -364,6 +363,7 @@
 				4F49013E1A3B2CB700695657 /* FLOOD_FILL.cpp in Sources */,
 				4F49015F1A3B2CF200695657 /* Solver.cpp in Sources */,
 				4F4901711A3B2D1400695657 /* display.cpp in Sources */,
+				4FCE05381A563A8500BE5DDC /* test_levelset.cpp in Sources */,
 				4F4901691A3B2D0300695657 /* Camera.cpp in Sources */,
 				4F49013D1A3B2CB700695657 /* BOUNDARY.cpp in Sources */,
 				4F4901591A3B2CDA00695657 /* Rigid_Geometry.cpp in Sources */,

@@ -6,23 +6,25 @@
 using namespace SimLib;
 
 template<class T_GRID>
-void LEVELSET<T_GRID>::Fast_Marching_Method(const T stopping_distance) {
+void LEVELSET<T_GRID>::Fast_Marching_Method(TRIANGULATED_SURFACE<float>& tris, ARRAY<3,int>& closest_index, const T stopping_distance) {
     heap_index.clear();
     array_ind = ARRAY<3, int>(phi.dim);
     for (int i = 1; i <= phi.dim(1); ++i) {
         for (int j = 1; j <= phi.dim(2); ++j) {
             for (int k = 1; k <= phi.dim(3); ++k) {
-                if (phi(i,j,k) < -1e20) {
-                    T d1 = fmax(phi(i-1,j,k),phi(i+1,j,k))-grid.dx(1);
-                    T d2 = fmax(phi(i,j-1,k),phi(i,j+1,k))-grid.dx(2);
-                    T d3 = fmax(phi(i,j,k-1),phi(i,j,k+1))-grid.dx(3);
-                    phi(i,j,k) = fmax(fmax(d1, d2), d3);
-                    heap_index.push_back(TV_INT(i,j,k));
+                if (phi(i,j,k) > 1e20)
+                    continue;
+                heap_index.push_back(TV_INT(i,j,k));
+                if (phi(i,j,k) > -1e20) {
                     array_ind(i,j,k) = -((int)heap_index.size());
+                } else {
+                    array_ind(i,j,k) = (int)heap_index.size();
                 }
             }
         }
     }
+    closestIndex = &closest_index;
+    triList = &tris;
     for (int i = (int)heap_index.size() / 2 - 1; i >= 0; --i) {
         Down_Adjust(i);
     }
@@ -89,10 +91,6 @@ typename LEVELSET<T_GRID>::TV_INT LEVELSET<T_GRID>::Extract() {
     heap_index.pop_back();
     if (!heap_index.empty())
         Down_Adjust(0);
-
-    if (k < 0) {
-        Estimate_Distance(ind);
-    }
     return ind;
 }
 
@@ -106,7 +104,7 @@ void LEVELSET<T_GRID>::Extend_Distance(TV_INT& ind) {
                 TV_INT temp_ind = ind + TV_INT(i,j,k);
                 int t = array_ind(temp_ind);
                 if (t != 0) {
-                    Estimate_Distance(temp_ind);
+                    Estimate_Distance(temp_ind, ind);
                     if (t < 0)
                         t = -t;
                     if (t > 0)
@@ -118,26 +116,16 @@ void LEVELSET<T_GRID>::Extend_Distance(TV_INT& ind) {
 }
 
 template<class T_GRID>
-void LEVELSET<T_GRID>::Estimate_Distance(TV_INT& ind) {
-    T phi1 = fmin(-phi(ind + TV_INT(-1, 0, 0)), -phi(ind + TV_INT(1, 0, 0)));
-    T phi2 = fmin(-phi(ind + TV_INT(0, -1, 0)), -phi(ind + TV_INT(0, 1, 0)));
-    T phi3 = fmin(-phi(ind + TV_INT(0, 0, -1)), -phi(ind + TV_INT(0, 0, 1)));
-    T dx1 = 1 / (grid.dx(1) * grid.dx(1));
-    T dx2 = 1 / (grid.dx(2) * grid.dx(2));
-    T dx3 = 1 / (grid.dx(3) * grid.dx(3));
-    T A = dx1 + dx2 + dx3;
-    T B = -2 * (phi1 * dx1 + phi2 * dx2 + phi3 * dx3);
-    T C = phi1 * phi1 * dx1 + phi2 * phi2 * dx2 + phi3 * phi3 * dx3 - 1;
-    T r;
-    if (B*B<4*A*C) {
-        r = fmin(fmin(phi1 + grid.dx(1), phi2 + grid.dx(2)), phi3 + grid.dx(3));
-    } else {
-        r = (-B + sqrt(B*B-4*A*C))/(2*A);
-    }
+void LEVELSET<T_GRID>::Estimate_Distance(TV_INT& ind, TV_INT& parent_ind) {
+    TV x = grid.X(ind);
+    int tr = (*closestIndex)(parent_ind);
+    TV closest_point = triList->triangle_list[tr-1].Closest_Point(x);
+    T dis = (x-closest_point).Magnitude();
     T t = -phi(ind);
-    if (t > r) {
-        phi(ind) = -r;
+    if (t > dis) {
+        phi(ind) = -dis;
         int k = array_ind(ind);
+        (*closestIndex)(ind) = tr;
         if (k < 0)
             array_ind(ind) = -k;
     }

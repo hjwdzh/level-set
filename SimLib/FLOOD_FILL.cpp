@@ -4,7 +4,7 @@ using namespace SimLib;
 
 int FLOOD_FILL::Flood_Fill(ARRAY<3,int>& colors,ARRAY<3,int>& edge_is_blocked_x,ARRAY<3,int>& edge_is_blocked_y,ARRAY<3,int>& edge_is_blocked_z) {
     RANGE<TV_INT> range = colors.domain();
-    int fill_color = 1;
+    int fill_color = 0;
     if (single_cell) {
         for (int i = range.min(1); i <= range.max(1); ++i)
             for (int j = range.min(2); j <= range.max(2); ++j)

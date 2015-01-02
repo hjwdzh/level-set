@@ -10,8 +10,6 @@
 #include "LEVELSET_MAKER.h"
 #include "vmath.h"
 
-#define VOXEL_SIZE 0.01
-
 using namespace std;
 using namespace SimLib;
 
@@ -46,8 +44,9 @@ public:
             if (createLevelSet) {
                 data.implicit_object = new LEVELSET<GRID<VECTOR<float, 3> > >(*data.grid, *data.phi);
                 SimLib::LEVELSET_MAKER<float> level_maker;
-                level_maker.Compute_Level_Set(*data.triangles, *data.grid, *data.phi);
-                ((LEVELSET<GRID<VECTOR<float, 3> > >*)data.implicit_object)->Fast_Marching_Method();
+                ARRAY<3, int> closest_index;
+                level_maker.Compute_Level_Set(*data.triangles, *data.grid, *data.phi, closest_index);
+                ((LEVELSET<GRID<VECTOR<float, 3> > >*)data.implicit_object)->Fast_Marching_Method(*data.triangles, closest_index);
             } else {
                 data.implicit_object = 0;
             }
