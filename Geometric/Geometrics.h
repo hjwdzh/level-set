@@ -62,6 +62,8 @@ public:
         vp.clear();
     }
     void clearRemoveList();
+    
+    void updateBVH();
     vector<Geometric*> vp;
     set<int> removeList;
     vector<Contact> contacts;

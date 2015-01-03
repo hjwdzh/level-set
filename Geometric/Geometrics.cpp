@@ -217,3 +217,11 @@ void Geometrics::contact_detection(Geometrics& g) {
     clearRemoveList();
 }
 
+void Geometrics::updateBVH() {
+    for (int i = 0; i < vp.size(); ++i) {
+        Rigid_Geometry* rgd = dynamic_cast<Rigid_Geometry*>(vp[i]);
+        if (rgd) {
+            rgd->updateBoundingVolume();
+        }
+    }
+}

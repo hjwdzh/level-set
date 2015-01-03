@@ -68,7 +68,7 @@ int main(int argc, char** argv)
     if (argc >= 2) {
         res_path = string(argv[1]);
     } else {
-        res_path = "./Resources";
+        res_path = "/Users/jingweihuang/Desktop/projects/levelset/Resources";
     }
     // 初始化opengl, glut, glew
     glutInit(&argc, argv);

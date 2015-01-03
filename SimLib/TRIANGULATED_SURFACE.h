@@ -6,6 +6,7 @@
 #include "TRIANGLE.h"
 #include "RAY.h"
 #include "vmath.h"
+#include "BV.h"
 
 namespace SimLib {
 template<class T>

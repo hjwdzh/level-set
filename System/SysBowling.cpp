@@ -48,11 +48,11 @@ void SysBowling::Reset() {
     supplemental = 0;
     shoots += 1;
     bowlings.clear();
-    Rigid_Geometry* road1 = new Rigid_Geometry("road", (res_path + "/models/cube.obj").c_str(),Vector3d(0,-10,-50),Vector3d(0,180,0),Vector3d(7,10,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
-    Rigid_Geometry* road2 = new Rigid_Geometry("road", (res_path + "/models/cube.obj").c_str(),Vector3d(-7.5,-10.7,-50),Vector3d(0,180,0),Vector3d(7,10,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
-    Rigid_Geometry* road3 = new Rigid_Geometry("road", (res_path + "/models/cube.obj").c_str(),Vector3d(7.5,-10.7,-50),Vector3d(0,180,0),Vector3d(7,10,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
-    Rigid_Geometry* road4 = new Rigid_Geometry("road", (res_path + "/models/cube.obj").c_str(),Vector3d(-15,-10,-50),Vector3d(0,180,0),Vector3d(7,10,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
-    Rigid_Geometry* road5 = new Rigid_Geometry("road", (res_path + "/models/cube.obj").c_str(),Vector3d(15,-10,-50),Vector3d(0,180,0),Vector3d(7,10,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+    Rigid_Geometry* road1 = new Rigid_Geometry("road", (res_path + "/models/cube.obj").c_str(),Vector3d(0,-1,-50),Vector3d(0,180,0),Vector3d(7,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+    Rigid_Geometry* road2 = new Rigid_Geometry("road", (res_path + "/models/cube.obj").c_str(),Vector3d(-7.5,-1.7,-50),Vector3d(0,180,0),Vector3d(7,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+    Rigid_Geometry* road3 = new Rigid_Geometry("road", (res_path + "/models/cube.obj").c_str(),Vector3d(7.5,-1.7,-50),Vector3d(0,180,0),Vector3d(7,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+    Rigid_Geometry* road4 = new Rigid_Geometry("road", (res_path + "/models/cube.obj").c_str(),Vector3d(-15,-1,-50),Vector3d(0,180,0),Vector3d(7,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+    Rigid_Geometry* road5 = new Rigid_Geometry("road", (res_path + "/models/cube.obj").c_str(),Vector3d(15,-1,-50),Vector3d(0,180,0),Vector3d(7,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
     road1->setNailed();
     road1->setKr(0.1);
     road1->LoadTexture((res_path + "/texture/wood.bmp").c_str(), 0.6);

@@ -14,6 +14,7 @@
 #include "TRIANGLE.h"
 #include "texture.h"
 #include "TriManager.h"
+#include "KDOP.h"
 #include <fstream>
 #include <vector>
 
@@ -29,6 +30,7 @@ Rigid_Geometry::Rigid_Geometry()
 {
     show_levelset = false;
     rotation = Quaternion<double>::fromEulerAngles(0, 0, 0);
+    bounding_volume = new KDOP<4,float>();
 }
 
 Rigid_Geometry::Rigid_Geometry(const char* _name, const char* filename, const Vector3d &_x, const Vector3d &_r, const Vector3d &_s, double _m, IMPLICIT_OBJECT<float>* object, bool showLevelSet)
@@ -76,6 +78,8 @@ Rigid_Geometry::Rigid_Geometry(const char* _name, const char* filename, const Ve
     }
     J0 = (J * (mass / triangles->vertices.size()));
     J = J0.inverse();
+    bounding_volume = new KDOP<4,float>();
+    updateBoundingVolume();
 }
 
 void Rigid_Geometry::LoadTexture(const char* bmp, double _tex_scale) {
@@ -93,6 +97,11 @@ void Rigid_Geometry::Rotate(const Vector3d& rotate) {
 
 void Rigid_Geometry::Scale(const Vector3d& s) {
     scale *= s;
+}
+
+void Rigid_Geometry::updateBoundingVolume() {
+    Matrix4d m = Transform();
+    bounding_volume->update(triangles->vertices, &m);
 }
 
 double Rigid_Geometry::getMouseDepth(double mouseX, double mouseY)
@@ -234,11 +243,13 @@ Matrix4d Rigid_Geometry::Inv_Transform() const {
 }
 
 void Rigid_Geometry::collid_detection(Geometric* g, std::vector<Contact>* contact) {
+    if (strcmp(name.c_str(), g->name.c_str()) == 0)
+        return;
     Rigid_Geometry* rgb = dynamic_cast<Rigid_Geometry*>(g);
     if (rgb) {
+        if (!bounding_volume->intersect(rgb->bounding_volume))
+            return;
         Matrix4d tr = rgb->Inv_Transform() * Transform();
-//        if (!triangles.bounding_box.TransformInclude(rgb->triangles.bounding_box, tr))
-//            return;
         pair<float, TV> deepest_intersection(1e30, TV(0,0,0));
         Vector4d cp;
         for (vector<TV>::iterator it = triangles->vertices.begin();

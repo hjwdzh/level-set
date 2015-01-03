@@ -39,7 +39,9 @@
 		4F49017F1A3B2D2400695657 /* Plane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F4901771A3B2D2400695657 /* Plane.cpp */; };
 		4F4901801A3B2D2400695657 /* Spring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F4901791A3B2D2400695657 /* Spring.cpp */; };
 		4F4901811A3B2D2400695657 /* Springs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F49017B1A3B2D2400695657 /* Springs.cpp */; };
-		4FCE05381A563A8500BE5DDC /* test_levelset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FCE05371A563A8500BE5DDC /* test_levelset.cpp */; };
+		4FCE053C1A57794700BE5DDC /* KDOP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FCE053A1A57794700BE5DDC /* KDOP.cpp */; };
+		4FCE053F1A57808300BE5DDC /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FCE053E1A57808300BE5DDC /* main.cpp */; };
+		4FCE05421A57A9FD00BE5DDC /* BVH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FCE05401A57A9FD00BE5DDC /* BVH.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -124,8 +126,13 @@
 		4F49017A1A3B2D2400695657 /* Spring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Spring.h; path = ../../Bound/Spring.h; sourceTree = "<group>"; };
 		4F49017B1A3B2D2400695657 /* Springs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Springs.cpp; path = ../../Bound/Springs.cpp; sourceTree = "<group>"; };
 		4F49017C1A3B2D2400695657 /* Springs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Springs.h; path = ../../Bound/Springs.h; sourceTree = "<group>"; };
-		4FCE05371A563A8500BE5DDC /* test_levelset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test_levelset.cpp; path = ../../test_levelset.cpp; sourceTree = "<group>"; };
 		4FCE05391A563A9900BE5DDC /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = main.h; path = ../../main.h; sourceTree = "<group>"; };
+		4FCE053A1A57794700BE5DDC /* KDOP.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = KDOP.cpp; path = ../../SimLib/KDOP.cpp; sourceTree = "<group>"; };
+		4FCE053B1A57794700BE5DDC /* KDOP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KDOP.h; path = ../../SimLib/KDOP.h; sourceTree = "<group>"; };
+		4FCE053D1A5779F800BE5DDC /* BV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BV.h; path = ../../SimLib/BV.h; sourceTree = "<group>"; };
+		4FCE053E1A57808300BE5DDC /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../main.cpp; sourceTree = "<group>"; };
+		4FCE05401A57A9FD00BE5DDC /* BVH.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BVH.cpp; path = ../../SimLib/BVH.cpp; sourceTree = "<group>"; };
+		4FCE05411A57A9FD00BE5DDC /* BVH.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BVH.h; path = ../../SimLib/BVH.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,6 +233,11 @@
 		4F026A7319E2C119007D1518 /* SimLib */ = {
 			isa = PBXGroup;
 			children = (
+				4FCE05401A57A9FD00BE5DDC /* BVH.cpp */,
+				4FCE05411A57A9FD00BE5DDC /* BVH.h */,
+				4FCE053D1A5779F800BE5DDC /* BV.h */,
+				4FCE053A1A57794700BE5DDC /* KDOP.cpp */,
+				4FCE053B1A57794700BE5DDC /* KDOP.h */,
 				4F4901251A3B2CB700695657 /* ARRAY.h */,
 				4F4901261A3B2CB700695657 /* BOUNDARY.cpp */,
 				4F4901271A3B2CB700695657 /* BOUNDARY.h */,
@@ -275,8 +287,8 @@
 		4F18159F19D93EB100F6ECA0 /* levelset */ = {
 			isa = PBXGroup;
 			children = (
+				4FCE053E1A57808300BE5DDC /* main.cpp */,
 				4FCE05391A563A9900BE5DDC /* main.h */,
-				4FCE05371A563A8500BE5DDC /* test_levelset.cpp */,
 				4F026A7319E2C119007D1518 /* SimLib */,
 				4F026A7219E2C106007D1518 /* System */,
 				4F026A7119E2C0E4007D1518 /* Geometric */,
@@ -342,6 +354,7 @@
 			files = (
 				4F4901811A3B2D2400695657 /* Springs.cpp in Sources */,
 				4F49015E1A3B2CF200695657 /* ForceField.cpp in Sources */,
+				4FCE053C1A57794700BE5DDC /* KDOP.cpp in Sources */,
 				4F49016B1A3B2D0300695657 /* TriManager.cpp in Sources */,
 				4F49014C1A3B2CCB00695657 /* SysDynPtc.cpp in Sources */,
 				4F4901411A3B2CB700695657 /* LEVELSET.cpp in Sources */,
@@ -349,6 +362,7 @@
 				4F4901401A3B2CB700695657 /* LEVELSET_MAKER.cpp in Sources */,
 				4F49013F1A3B2CB700695657 /* GRID.cpp in Sources */,
 				4F4901801A3B2D2400695657 /* Spring.cpp in Sources */,
+				4FCE053F1A57808300BE5DDC /* main.cpp in Sources */,
 				4F4901721A3B2D1400695657 /* scene.cpp in Sources */,
 				4F49017E1A3B2D2400695657 /* Bounds.cpp in Sources */,
 				4F49016C1A3B2D0300695657 /* vmath.cpp in Sources */,
@@ -362,8 +376,8 @@
 				4F4901431A3B2CB700695657 /* TRIANGLE.cpp in Sources */,
 				4F49013E1A3B2CB700695657 /* FLOOD_FILL.cpp in Sources */,
 				4F49015F1A3B2CF200695657 /* Solver.cpp in Sources */,
+				4FCE05421A57A9FD00BE5DDC /* BVH.cpp in Sources */,
 				4F4901711A3B2D1400695657 /* display.cpp in Sources */,
-				4FCE05381A563A8500BE5DDC /* test_levelset.cpp in Sources */,
 				4F4901691A3B2D0300695657 /* Camera.cpp in Sources */,
 				4F49013D1A3B2CB700695657 /* BOUNDARY.cpp in Sources */,
 				4F4901591A3B2CDA00695657 /* Rigid_Geometry.cpp in Sources */,
