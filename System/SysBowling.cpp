@@ -48,7 +48,7 @@ void SysBowling::Reset() {
     supplemental = 0;
     shoots += 1;
     bowlings.clear();
-    Rigid_Geometry* road1 = new Rigid_Geometry("road", (res_path + "/models/cube.obj").c_str(),Vector3d(0,-1,-50),Vector3d(0,180,0),Vector3d(7,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+    Rigid_Geometry* road1 = new Rigid_Geometry("road", (res_path + "/models/cube.obj").c_str(),Vector3d(0,-3,-50),Vector3d(0,180,0),Vector3d(7,3,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
     Rigid_Geometry* road2 = new Rigid_Geometry("road", (res_path + "/models/cube.obj").c_str(),Vector3d(-7.5,-1.7,-50),Vector3d(0,180,0),Vector3d(7,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
     Rigid_Geometry* road3 = new Rigid_Geometry("road", (res_path + "/models/cube.obj").c_str(),Vector3d(7.5,-1.7,-50),Vector3d(0,180,0),Vector3d(7,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
     Rigid_Geometry* road4 = new Rigid_Geometry("road", (res_path + "/models/cube.obj").c_str(),Vector3d(-15,-1,-50),Vector3d(0,180,0),Vector3d(7,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
@@ -84,7 +84,7 @@ void SysBowling::Reset() {
             double x = 0.5 * scale * (j - 1 - (4 - i) * 0.5);
             char buf[20];
             sprintf(buf, "bowling%d", t);
-            bowlings[t] = new Rigid_Geometry(buf, (res_path + "/models/bowling.obj").c_str(),Vector3d(x,-0.1,h),Vector3d(0,0,0),Vector3d(5,5,5),1);
+            bowlings[t] = new Rigid_Geometry(buf, (res_path + "/models/bowling.obj").c_str(),Vector3d(x,-0.2,h),Vector3d(0,0,0),Vector3d(5,5,5),1);
             ++t;
         }
     }

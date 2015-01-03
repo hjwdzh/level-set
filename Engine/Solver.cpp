@@ -67,9 +67,6 @@ void Solver::QPSolve(ARRAY<2, double>& a, ARRAY<1, double>& b, ARRAY<1, double>&
             f(d) += sj.first * delta_f(d);
             for (int i = 1; i <= n; ++i) {
                 c(i) += delta_a(i) * sj.first;
-                if (fabs(c(i)) > 1e5) {
-                    i = i;
-                }
                 if (c(i) < -1e-4) {
                     ad_minus.insert(i);
                 } else {
@@ -143,9 +140,6 @@ void Solver::fdirection(int d, ARRAY<2, double>& a, set<int> &C, ARRAY<1, double
         double t = 0;
         for (int j = 1; j <= n; ++j) {
             t += a(i,j) * delta_f(j);
-        }
-        if (fabs(t - delta_a(i)) > 1e-4) {
-            i = i;
         }
     }
 }

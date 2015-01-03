@@ -8,15 +8,18 @@
 
 #include "Geometrics.h"
 #include "Rigid_Geometry.h"
+#include "BVH.h"
 #include "ARRAY.h"
 #include "Solver.h"
 
 using namespace SimLib;
 
 Geometrics::Geometrics()
+: bvh(new BVH<4, float>())
 {}
 
 Geometrics::Geometrics(int n)
+: bvh(new BVH<4, float>())
 {
     vp.resize(n);
 }
@@ -92,10 +95,7 @@ void Geometrics::collid_detection(Bounds& b)
 }
 
 void Geometrics::collid_detection(Geometrics& g) {
-    for (vector<Geometric*>::iterator it = vp.begin();
-         it != vp.end(); ++it) {
-        g.collid_detection((*it));
-    }
+    bvh->collid_detection();
     clearRemoveList();
 }
 
@@ -125,19 +125,8 @@ void Geometrics::contact_detection(Bounds& b)
 void Geometrics::contact_detection(Geometrics& g) {
     contacts.clear();
     contacts.reserve(100);
-    for (vector<Geometric*>::iterator it1 = vp.begin();
-         it1 != vp.end(); ++it1) {
-        Rigid_Geometry* rgd1 = dynamic_cast<Rigid_Geometry*>(*it1);
-        if (rgd1) {
-            for (vector<Geometric*>::iterator it2 = vp.begin();
-                 it2 != vp.end(); ++it2) {
-                Rigid_Geometry* rgd2 = dynamic_cast<Rigid_Geometry*>(*it2);
-                if (rgd2 && rgd2 != rgd1) {
-                    rgd1->collid_detection(rgd2, &contacts);
-                }
-            }
-        }
-    }
+    bvh->collid_detection(&contacts);
+
     ARRAY<1,double> b((int)contacts.size());
     for (int i = 0; i < contacts.size(); ++i) {
         Contact& c = contacts[i];
@@ -218,10 +207,14 @@ void Geometrics::contact_detection(Geometrics& g) {
 }
 
 void Geometrics::updateBVH() {
+    std::vector<BV<float>*> bvs;
+    bvs.reserve(vp.size());
     for (int i = 0; i < vp.size(); ++i) {
         Rigid_Geometry* rgd = dynamic_cast<Rigid_Geometry*>(vp[i]);
         if (rgd) {
             rgd->updateBoundingVolume();
+            bvs.push_back(rgd->bounding_volume);
         }
     }
+    bvh->updateBVH(bvs, 1, -1, -1);
 }

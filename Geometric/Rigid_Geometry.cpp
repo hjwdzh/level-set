@@ -79,6 +79,7 @@ Rigid_Geometry::Rigid_Geometry(const char* _name, const char* filename, const Ve
     J0 = (J * (mass / triangles->vertices.size()));
     J = J0.inverse();
     bounding_volume = new KDOP<4,float>();
+    bounding_volume->rgd = this;
     updateBoundingVolume();
 }
 
@@ -287,9 +288,6 @@ void Rigid_Geometry::collid_detection(Geometric* g, std::vector<Contact>* contac
         
         if (deepest_intersection.first > 0)
             return;
-        if (strcmp(rgb->name.c_str(),"ball") == 0 && name[2] == 'w') {
-            rgb = rgb;
-        }
         cp = rgb->Transform() * cp;
         Vector3d N = rgb->Transform() * Vector3d(deepest_intersection.second(1),deepest_intersection.second(2),deepest_intersection.second(3));
         N.normalize();

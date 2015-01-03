@@ -67,7 +67,6 @@ public:
             return 1e30;
         TV w = ind - TV(ind_int1(1),ind_int1(2),ind_int1(3));
         T dis = 0;
-        T weight = 0;
         T f = w(1) * w(2) * w(3);
         dis += d8 * f;
         f = w(1) * w(2) * (1 - w(3));

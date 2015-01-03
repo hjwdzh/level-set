@@ -17,7 +17,7 @@ public:
     ARRAY<3,T>& phi;
     int number_of_ghost_cells;
     LEVELSET(T_GRID& _grid, ARRAY<3,T>& _phi, int number_of_ghost_cells_input = 3)
-    : phi(_phi), grid(_grid), number_of_ghost_cells(number_of_ghost_cells_input) {
+    : grid(_grid), phi(_phi), number_of_ghost_cells(number_of_ghost_cells_input) {
     }
     void Fast_Marching_Method(TRIANGULATED_SURFACE<float>& tris, ARRAY<3,int>& closest_index, T stoping_distance = -1e30);
     std::pair<T, TV> Intersect(const TV& p);

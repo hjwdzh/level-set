@@ -18,7 +18,7 @@ class SystemPhy
 {
 public:
     SystemPhy();
-    ~SystemPhy();
+    virtual ~SystemPhy();
     
     virtual Geometric* mouseSelect(double mouseX, double mouseY) = 0;
     virtual void Initialize() = 0;

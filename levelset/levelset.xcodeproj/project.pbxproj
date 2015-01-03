@@ -104,7 +104,6 @@
 		4F49015B1A3B2CF200695657 /* ForceField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ForceField.h; path = ../../Engine/ForceField.h; sourceTree = "<group>"; };
 		4F49015C1A3B2CF200695657 /* Solver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Solver.cpp; path = ../../Engine/Solver.cpp; sourceTree = "<group>"; };
 		4F49015D1A3B2CF200695657 /* Solver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Solver.h; path = ../../Engine/Solver.h; sourceTree = "<group>"; };
-		4F4901601A3B2D0300695657 /* BVH.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BVH.h; path = ../../Tools/BVH.h; sourceTree = "<group>"; };
 		4F4901611A3B2D0300695657 /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Camera.cpp; path = ../../Tools/Camera.cpp; sourceTree = "<group>"; };
 		4F4901621A3B2D0300695657 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Camera.h; path = ../../Tools/Camera.h; sourceTree = "<group>"; };
 		4F4901631A3B2D0300695657 /* texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = texture.cpp; path = ../../Tools/texture.cpp; sourceTree = "<group>"; };
@@ -178,7 +177,6 @@
 		4F026A6F19E2C0A6007D1518 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
-				4F4901601A3B2D0300695657 /* BVH.h */,
 				4F4901611A3B2D0300695657 /* Camera.cpp */,
 				4F4901621A3B2D0300695657 /* Camera.h */,
 				4F4901631A3B2D0300695657 /* texture.cpp */,

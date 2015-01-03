@@ -53,4 +53,21 @@ void KDOP<d,T>::update(std::vector<TV>& points, Matrix4d* m) {
     }
 }
 
+template<int d, class T>
+T KDOP<d,T>::operator()(int x) {
+    assert(x <= 4 && x >= 1);
+    return (min(x) + max(x)) * 0.5;
+}
+
+template<int d, class T>
+void KDOP<d,T>::include(BV<T> **start, BV<T> **end) {
+    KDOP<4,T>** ptr = (KDOP<4,T>**)start;
+    min = (*ptr)->min;
+    max = (*ptr)->max;
+    for (++ptr; ptr <= (KDOP<4,T>**)end; ++ptr) {
+        min.GetMin((*ptr)->min);
+        max.GetMax((*ptr)->max);
+    }
+}
+
 template class SimLib::KDOP<4,float>;

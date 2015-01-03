@@ -37,7 +37,6 @@ public:
     double mass, kr;
     bool selected, nailed;
     Vector3d x, v, f, extForce, userForce;
-    void (*collid_callback)(Geometric*, Geometric*) = 0;
     std::string name;
     SystemPhy* system;
 };

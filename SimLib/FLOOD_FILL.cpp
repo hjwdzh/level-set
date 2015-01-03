@@ -36,9 +36,6 @@ void FLOOD_FILL::Expand(int x, int y, int z, RANGE<TV_INT>& r, ARRAY<3,int>& col
     while (!stack.empty()) {
         TV_INT& indice = stack.front();
         int x = indice(1), y = indice(2), z = indice(3);
-        if (x == indice(1) / 2 && y == indice(2) / 2 && z == indice(3) / 2) {
-            x = x;
-        }
         if (x > r.min(1) && !edge_is_blocked_x(x,y,z) && colors(x - 1, y, z) == 0){
             colors(x - 1, y, z) = color;
             stack.push_back(TV_INT(x - 1, y, z));

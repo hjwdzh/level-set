@@ -22,7 +22,7 @@ public:
     void collid_event(Geometric*,Geometric*);
     void setState(double* state, double t);
     double* DerivEval(double* state, double t);
-    double angle = 0;
+    double angle;
     double hit_time;
     int start_angle;
     std::vector<Rigid_Geometry*> bowlings;

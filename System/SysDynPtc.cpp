@@ -11,6 +11,7 @@
 #include "main.h"
 #include "Rigid_Geometry.h"
 #include "IMPLICIT_CUBE.h"
+
 using namespace SimLib;
 
 extern string res_path;

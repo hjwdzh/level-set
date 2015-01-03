@@ -15,6 +15,7 @@
 #include "Geometric.h"
 #include "Rigid_Geometry.h"
 #include "Bounds.h"
+#include "BVH.h"
 using namespace std;
 
 class SystemPhy;
@@ -60,13 +61,14 @@ public:
             delete vp[i];
         }
         vp.clear();
+        bvh->clear();
     }
     void clearRemoveList();
-    
     void updateBVH();
     vector<Geometric*> vp;
     set<int> removeList;
     vector<Contact> contacts;
+    SimLib::BVH<4,float>* bvh;
     SystemPhy* system;
 };
 

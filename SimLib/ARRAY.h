@@ -111,6 +111,16 @@ public:
         for (int i = 0; i < data.size(); ++i)
             data[i] = r;
     }
+    void GetMax(const ARRAY& r) {
+        for (int i = 0; i < data.size(); ++i)
+            if (r.data[i] > data[i])
+                data[i] = r.data[i];
+    }
+    void GetMin(const ARRAY& r) {
+        for (int i = 0; i < data.size(); ++i)
+            if (r.data[i] < data[i])
+                data[i] = r.data[i];
+    }
     RANGE<TV_INT> domain() const {
         return RANGE<TV_INT>(TV_INT(bx,by,bz), TV_INT(bx,by,bz) + dim - TV_INT(1,1,1));
     }

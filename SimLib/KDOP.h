@@ -16,6 +16,8 @@ public:
     KDOP(std::vector<TV>& points);
     void update(std::vector<TV>& points, Matrix4d* m);
     bool intersect(const BV<T>*);
+    void include(BV<T>** start, BV<T>** end);
+    T operator()(int x);
     ARRAY<1,T> min;
     ARRAY<1,T> max;
 };
