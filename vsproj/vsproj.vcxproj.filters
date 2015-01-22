@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Bound">
+      <UniqueIdentifier>{c85f123d-6adb-431c-8b18-bcd26517e308}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{abe56776-eb1a-4000-8462-d7efbb6ceccd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometric">
+      <UniqueIdentifier>{232a566a-76d2-4012-8f6c-176f8ffe16b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SimLib">
+      <UniqueIdentifier>{1094eede-67de-4a31-af77-ffd2d86009c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{189fe77f-c3d9-4de9-b44a-14332a71b4a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools">
+      <UniqueIdentifier>{45e5540b-75d7-4ed7-8353-39b72bd0bf1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="User">
+      <UniqueIdentifier>{9485e095-d5f5-44b6-9cd8-b037085e1d31}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Bound\Bound.cpp">
+      <Filter>Bound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Bound\Bounds.cpp">
+      <Filter>Bound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Bound\Plane.cpp">
+      <Filter>Bound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Bound\Spring.cpp">
+      <Filter>Bound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Bound\Springs.cpp">
+      <Filter>Bound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Engine\ForceField.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Engine\Solver.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Geometric\Geometric.cpp">
+      <Filter>Geometric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Geometric\Geometrics.cpp">
+      <Filter>Geometric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Geometric\Particle.cpp">
+      <Filter>Geometric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Geometric\Rigid_Geometry.cpp">
+      <Filter>Geometric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SimLib\BOUNDARY.cpp">
+      <Filter>SimLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SimLib\BVH.cpp">
+      <Filter>SimLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SimLib\FLOOD_FILL.cpp">
+      <Filter>SimLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SimLib\GRID.cpp">
+      <Filter>SimLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SimLib\KDOP.cpp">
+      <Filter>SimLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SimLib\LEVELSET.cpp">
+      <Filter>SimLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SimLib\LEVELSET_MAKER.cpp">
+      <Filter>SimLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SimLib\RANGE.cpp">
+      <Filter>SimLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SimLib\TRIANGLE.cpp">
+      <Filter>SimLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SimLib\TRIANGULATED_SURFACE.cpp">
+      <Filter>SimLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\System\SysBowling.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\System\SysDynPtc.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\System\SystemPhy.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Tools\Camera.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Tools\texture.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Tools\TriManager.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Tools\vmath.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\User\control.cpp">
+      <Filter>User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\User\display.cpp">
+      <Filter>User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\User\scene.cpp">
+      <Filter>User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Bound\Bound.h">
+      <Filter>Bound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Bound\Bounds.h">
+      <Filter>Bound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Bound\Plane.h">
+      <Filter>Bound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Bound\Spring.h">
+      <Filter>Bound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Bound\Springs.h">
+      <Filter>Bound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Engine\ForceField.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Engine\Solver.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Geometric\Geometric.h">
+      <Filter>Geometric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Geometric\Geometrics.h">
+      <Filter>Geometric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Geometric\Particle.h">
+      <Filter>Geometric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Geometric\Rigid_Geometry.h">
+      <Filter>Geometric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SimLib\ARRAY.h">
+      <Filter>SimLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SimLib\BOUNDARY.h">
+      <Filter>SimLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SimLib\BV.h">
+      <Filter>SimLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SimLib\BVH.h">
+      <Filter>SimLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SimLib\FLOOD_FILL.h">
+      <Filter>SimLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SimLib\GRID.h">
+      <Filter>SimLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SimLib\IMPLICIT_CUBE.h">
+      <Filter>SimLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SimLib\IMPLICIT_OBJECT.h">
+      <Filter>SimLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SimLib\IMPLICIT_SPHERE.h">
+      <Filter>SimLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SimLib\INTERSECTION.h">
+      <Filter>SimLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SimLib\KDOP.h">
+      <Filter>SimLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SimLib\LEVELSET.h">
+      <Filter>SimLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SimLib\LEVELSET_MAKER.h">
+      <Filter>SimLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SimLib\RANGE.h">
+      <Filter>SimLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SimLib\RAY.h">
+      <Filter>SimLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SimLib\SEGMENT.h">
+      <Filter>SimLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SimLib\TRIANGLE.h">
+      <Filter>SimLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SimLib\TRIANGULATED_SURFACE.h">
+      <Filter>SimLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SimLib\VECTOR.h">
+      <Filter>SimLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\SysBowling.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\SysDynPtc.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\SystemPhy.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Tools\Camera.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Tools\texture.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Tools\TriManager.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Tools\vmath.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\main.h" />
+  </ItemGroup>
+</Project>

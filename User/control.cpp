@@ -1,6 +1,10 @@
 #include "main.h"
 #include "Solver.h"
+#ifndef _WINDOWS_PLATFORM_
 #include <sys/time.h>
+#else
+#include <time.h>
+#endif
 
 double g_mouseState = 0, g_simTime = 0;
 int g_mouseX, g_mouseY;
@@ -120,8 +124,13 @@ void MotionFunc(int x, int y)
 
 void Animate(int id)
 {
-    timeval t1, t2;
-    gettimeofday(&t1, 0);
+#ifndef _WINDOWS_PLATFORM_
+	timeval t1, t2;
+	gettimeofday(&t1, 0);
+#else
+	DWORD t1, t2;
+	t1 = GetTickCount();
+#endif
     if (g_mouseState && g_selectedObject)
     {
         double mouseX, mouseY;
@@ -138,7 +147,12 @@ void Animate(int id)
     }
     for (int i = 0; i < 1; ++i)
         Solver::EulersStep(*g_sys, 0.08);
+#ifndef _WINDOWS_PLATFORM_
     gettimeofday(&t2, 0);
     g_simTime = (t2.tv_usec - t1.tv_usec) * 1e-6 + (t2.tv_sec - t1.tv_sec);
+#else
+	t2 = GetTickCount();
+	g_simTime = (t2 - t1) * 1e-3;
+#endif
     glutTimerFunc(33, Animate, 1);
 }

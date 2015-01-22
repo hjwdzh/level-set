@@ -22,28 +22,28 @@ public:
         if (!box.Contain(p))
             return make_pair(d,normal);
         d = -d;
-        if (box.min(1) - p(1) > d) {
-            d = box.min(1) - p(1);
+        if (box.getMin(1) - p(1) > d) {
+            d = box.getMin(1) - p(1);
             t = 1;
         }
-        if (p(1) - box.max(1) > d) {
-            d = p(1) - box.max(1);
+        if (p(1) - box.getMax(1) > d) {
+            d = p(1) - box.getMax(1);
             t = 2;
         }
-        if (box.min(2) - p(2) > d) {
-            d = box.min(2) - p(2);
+        if (box.getMin(2) - p(2) > d) {
+            d = box.getMin(2) - p(2);
             t = 3;
         }
-        if (p(2) - box.max(2) > d) {
-            d = p(2) - box.max(2);
+        if (p(2) - box.getMax(2) > d) {
+            d = p(2) - box.getMax(2);
             t = 4;
         }
-        if (box.min(3) - p(3) > d) {
-            d = box.min(3) - p(3);
+        if (box.getMin(3) - p(3) > d) {
+            d = box.getMin(3) - p(3);
             t = 5;
         }
-        if (p(3) - box.max(3) > d) {
-            d = p(3) - box.max(3);
+        if (p(3) - box.getMax(3) > d) {
+            d = p(3) - box.getMax(3);
             t = 6;
         }
         switch (t) {
