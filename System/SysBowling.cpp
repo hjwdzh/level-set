@@ -31,8 +31,8 @@ void SysBowling::RemoveBall() {
 
 void SysBowling::AddBall() {
 #ifndef _WINDOWS_PLATFORM_
-	string model_path = model_path + "";
-	string texture_path = texture_path + "";
+	string model_path = res_path + "/models/";
+	string texture_path = res_path + "/texture/";
 #else
 	string model_path = res_path + "\\models\\";
 	string texture_path = res_path + "\\texture\\";
@@ -56,8 +56,8 @@ void SysBowling::Reset() {
     shoots += 1;
     bowlings.clear();
 #ifndef _WINDOWS_PLATFORM_
-	string model_path = model_path + "";
-	string texture_path = texture_path + "";
+	string model_path = res_path + "/models/";
+	string texture_path = res_path + "/texture/";
 #else
 	string model_path = res_path + "\\models\\";
 	string texture_path = res_path + "\\texture\\";
