@@ -78,7 +78,7 @@ int main(int argc, char** argv)
     glutInitWindowPosition(g_WindowPosX, g_WindowPosY);
     glutInitWindowSize(g_WindowWidth, g_WindowHeight);
     glutCreateWindow(g_WindowTitle);
-    glutFullScreen();
+    //glutFullScreen();
     // 初始化应用程序
     Initialize() ;
     
