@@ -30,9 +30,16 @@ void SysBowling::RemoveBall() {
 }
 
 void SysBowling::AddBall() {
-    Rigid_Geometry* ball = new Rigid_Geometry("ball", (res_path + "/models/sphere.obj").c_str(),Vector3d(0.0,0,-40),Vector3d(0,0,0),Vector3d(0.6,0.6,0.6),100,new IMPLICIT_SPHERE<float>(VECTOR<float,3>(),1));
+#ifndef _WINDOWS_PLATFORM_
+	string model_path = model_path + "";
+	string texture_path = texture_path + "";
+#else
+	string model_path = res_path + "\\models\\";
+	string texture_path = res_path + "\\texture\\";
+#endif
+    Rigid_Geometry* ball = new Rigid_Geometry("ball", (model_path + "sphere.obj").c_str(),Vector3d(0.0,0,-40),Vector3d(0,0,0),Vector3d(0.6,0.6,0.6),100,new IMPLICIT_SPHERE<float>(VECTOR<float,3>(),1));
     ball->setKr(1);
-    ball->LoadTexture((res_path + "/texture/ball.bmp").c_str());
+    ball->LoadTexture((texture_path + "ball.bmp").c_str());
     m_objects.addElement(ball);
 }
 
@@ -48,31 +55,38 @@ void SysBowling::Reset() {
     supplemental = 0;
     shoots += 1;
     bowlings.clear();
-    Rigid_Geometry* road1 = new Rigid_Geometry("road", (res_path + "/models/cube.obj").c_str(),Vector3d(0,-3,-50),Vector3d(0,180,0),Vector3d(7,3,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
-    Rigid_Geometry* road2 = new Rigid_Geometry("road", (res_path + "/models/cube.obj").c_str(),Vector3d(-7.5,-1.7,-50),Vector3d(0,180,0),Vector3d(7,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
-    Rigid_Geometry* road3 = new Rigid_Geometry("road", (res_path + "/models/cube.obj").c_str(),Vector3d(7.5,-1.7,-50),Vector3d(0,180,0),Vector3d(7,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
-    Rigid_Geometry* road4 = new Rigid_Geometry("road", (res_path + "/models/cube.obj").c_str(),Vector3d(-15,-1,-50),Vector3d(0,180,0),Vector3d(7,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
-    Rigid_Geometry* road5 = new Rigid_Geometry("road", (res_path + "/models/cube.obj").c_str(),Vector3d(15,-1,-50),Vector3d(0,180,0),Vector3d(7,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+#ifndef _WINDOWS_PLATFORM_
+	string model_path = model_path + "";
+	string texture_path = texture_path + "";
+#else
+	string model_path = res_path + "\\models\\";
+	string texture_path = res_path + "\\texture\\";
+#endif
+    Rigid_Geometry* road1 = new Rigid_Geometry("road", (model_path + "cube.obj").c_str(),Vector3d(0,-3,-50),Vector3d(0,180,0),Vector3d(7,3,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+    Rigid_Geometry* road2 = new Rigid_Geometry("road", (model_path + "cube.obj").c_str(),Vector3d(-7.5,-1.7,-50),Vector3d(0,180,0),Vector3d(7,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+    Rigid_Geometry* road3 = new Rigid_Geometry("road", (model_path + "cube.obj").c_str(),Vector3d(7.5,-1.7,-50),Vector3d(0,180,0),Vector3d(7,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+    Rigid_Geometry* road4 = new Rigid_Geometry("road", (model_path + "cube.obj").c_str(),Vector3d(-15,-1,-50),Vector3d(0,180,0),Vector3d(7,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+    Rigid_Geometry* road5 = new Rigid_Geometry("road", (model_path + "cube.obj").c_str(),Vector3d(15,-1,-50),Vector3d(0,180,0),Vector3d(7,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
     road1->setNailed();
     road1->setKr(0.1);
-    road1->LoadTexture((res_path + "/texture/wood.bmp").c_str(), 0.6);
+    road1->LoadTexture((texture_path + "wood.bmp").c_str(), 0.6);
     road2->setNailed();
     road2->setKr(0.1);
-    road2->LoadTexture((res_path + "/texture/black.bmp").c_str(), 0.6);
+    road2->LoadTexture((texture_path + "black.bmp").c_str(), 0.6);
     road3->setNailed();
     road3->setKr(0.1);
-    road3->LoadTexture((res_path + "/texture/black.bmp").c_str(), 0.6);
+    road3->LoadTexture((texture_path + "black.bmp").c_str(), 0.6);
     road4->setNailed();
     road4->setKr(0.1);
-    road4->LoadTexture((res_path + "/texture/wood.bmp").c_str(), 0.6);
+    road4->LoadTexture((texture_path + "wood.bmp").c_str(), 0.6);
     road5->setNailed();
     road5->setKr(0.1);
-    road5->LoadTexture((res_path + "/texture/wood.bmp").c_str(), 0.6);
+    road5->LoadTexture((texture_path + "wood.bmp").c_str(), 0.6);
     
-    Rigid_Geometry* gate = new Rigid_Geometry("gate", (res_path + "/models/gate.obj").c_str(),Vector3d(0.53,-1,0),Vector3d(0,180,0),Vector3d(10,10,10),10);
+    Rigid_Geometry* gate = new Rigid_Geometry("gate", (model_path + "gate.obj").c_str(),Vector3d(0.53,-1,0),Vector3d(0,180,0),Vector3d(10,10,10),10);
     gate->setNailed();
     gate->setKr(0);
-    gate->LoadTexture((res_path + "/texture/marble.bmp").c_str());
+    gate->LoadTexture((texture_path + "marble.bmp").c_str());
     
     typedef SimLib::VECTOR<float,3> TV;
     bowlings.resize(10);
@@ -84,7 +98,7 @@ void SysBowling::Reset() {
             double x = 0.5 * scale * (j - 1 - (4 - i) * 0.5);
             char buf[20];
             sprintf(buf, "bowling%d", t);
-            bowlings[t] = new Rigid_Geometry(buf, (res_path + "/models/bowling.obj").c_str(),Vector3d(x,-0.2,h),Vector3d(0,0,0),Vector3d(5,5,5),1);
+            bowlings[t] = new Rigid_Geometry(buf, (model_path + "bowling.obj").c_str(),Vector3d(x,-0.2,h),Vector3d(0,0,0),Vector3d(5,5,5),1);
             ++t;
         }
     }
@@ -136,10 +150,10 @@ void SysBowling::Display() {
     glMatrixMode(GL_MODELVIEW);
     
     // 保存当前模型视图矩阵
-    glPushMatrix();
+*/    glPushMatrix();
     glLoadIdentity();
     
-*/
+
     glTranslated(-40, 30, 0);
     glRotated(angle, 0, 0, 1);
     glScaled(2,5,2);
@@ -150,9 +164,9 @@ void SysBowling::Display() {
     glVertex2d(0, 0.5);
     glEnd();
     
-/*    // 恢复之前保存的模型视图矩阵
+    // 恢复之前保存的模型视图矩阵
     glPopMatrix();
-    
+/*    
     glMatrixMode(GL_PROJECTION);
     
     // 恢复之前保存的投影矩阵

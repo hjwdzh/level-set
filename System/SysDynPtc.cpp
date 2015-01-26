@@ -34,11 +34,11 @@ extern double g_top, g_right;
 void SysDynPtc::Initialize()
 {
     ks = 100; kd = 10;
-    Rigid_Geometry* road1 = new Rigid_Geometry("road", (res_path + "/models/cube.obj").c_str(),Vector3d(0,-1,0),Vector3d(0,180,0),Vector3d(100,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+    Rigid_Geometry* road1 = new Rigid_Geometry("road", (res_path + "/models/cube.obj").c_str(),Vector3d(0,-1,0),Vector3d(0,180,0),Vector3d(100,1,100),1,new IMPLICIT_CUBE<float>(RANGE<VECTOR<float,3> >(VECTOR<float,3> (-1,-1,-1),VECTOR<float,3> (1,1,1))));
     road1->setNailed();
     road1->setKr(0.1);
     road1->LoadTexture((res_path + "/texture/wood.bmp").c_str(), 0.6);   
-    Rigid_Geometry* cube = new Rigid_Geometry("cube", (res_path + "/models/cube.obj").c_str(),Vector3d(0,10,0),Vector3d(0,0,0),Vector3d(1,1,1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+    Rigid_Geometry* cube = new Rigid_Geometry("cube", (res_path + "/models/cube.obj").c_str(),Vector3d(0,10,0),Vector3d(0,0,0),Vector3d(1,1,1),1,new IMPLICIT_CUBE<float>(RANGE<VECTOR<float,3> >(VECTOR<float,3> (-1,-1,-1),VECTOR<float,3> (1,1,1))));
     cube->setKr(0.1);
     cube->LoadTexture((res_path + "/texture/marble.bmp").c_str(), 0.6);
     m_objects.addElement(road1);

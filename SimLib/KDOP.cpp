@@ -1,7 +1,8 @@
 #include "KDOP.h"
-
+#include <math.h>
 using namespace SimLib;
-
+#define fmin(a,b)            (((a) < (b)) ? (a) : (b))
+#define fmax(a,b)            (((a) < (b)) ? (b) : (a))
 template<int d, class T>
 KDOP<d,T>::KDOP()
 : min(d), max(d){

@@ -2,7 +2,7 @@
 #define RANGE_H_
 
 #include "VECTOR.h"
-#include "vmath.h"
+
 namespace SimLib {
 template<class TV>
 class RANGE{
@@ -36,7 +36,7 @@ public:
     bool Lazy_Intersection(RANGE& r) const {
         return min <= r.max && r.min <= max;
     }
-    bool TransformInclude(RANGE& r, const Matrix4d& m) {
+/*    bool TransformInclude(RANGE& r, const Matrix4d& m) {
         Vector4d a1(min(1),min(2),min(3),1);
         Vector4d a2(min(1),min(2),max(3),1);
         Vector4d a3(min(1),max(2),min(3),1);
@@ -54,8 +54,16 @@ public:
         r.Contain(TV(a5[0],a5[1],a5[2])) ||
         r.Contain(TV(a6[0],a6[1],a6[2])) ||
         r.Contain(TV(a7[0],a7[1],a7[2])) ||
-        r.Contain(TV(a8[0],a8[1],a8[2]));
-    }
+		r.Contain(TV(a8[0],a8[1],a8[2]));
+	}
+*/	double getMin(int d) {
+		assert(d >= 1 && d <= 3);
+		return min.getDim(d);
+	}
+	double getMax(int d) {
+		assert(d >= 1 && d <= 3);
+		return max.getDim(d);
+	}
 	TV min, max;
 };
 }

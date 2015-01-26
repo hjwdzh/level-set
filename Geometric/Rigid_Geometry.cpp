@@ -61,7 +61,7 @@ Rigid_Geometry::Rigid_Geometry(const char* _name, const char* filename, const Ve
     for (int i = 0; i < 3; ++i) {
         J.at(i,i) = 0;
     }
-    for (vector<TV>::iterator it = triangles->vertices.begin();
+    for (vector<VECTOR<float,3> >::iterator it = triangles->vertices.begin();
          it != triangles->vertices.end(); ++it) {
         J.at(0,0) += ((*it)(2) - gravity_center(2))*((*it)(2) - gravity_center(2))*_s[1]*_s[1]+((*it)(3) - gravity_center(3))*((*it)(3) - gravity_center(3))*_s[2]*_s[2];
         J.at(1,1) += ((*it)(1) - gravity_center(1))*((*it)(1) - gravity_center(1))*_s[0]*_s[0]+((*it)(3) - gravity_center(3))*((*it)(3) - gravity_center(3))*_s[2]*_s[2];
@@ -187,7 +187,7 @@ void Rigid_Geometry::Display()
                 for (int k = 1; k <= phi->dim(3); ++k) {
                     if ((*phi)(i,j,k) < 0) {
                         glColor3d(0,0,-(*phi)(i,j,k));
-                        TV t = grid->dom_min + TV(i,j,k) * grid->dx;
+                        VECTOR<float,3> t = grid->dom_min + VECTOR<float,3>(i,j,k) * grid->dx;
                         glPushMatrix();
                         glTranslated(t(1), t(2), t(3));
                         glutSolidCube(0.1);
@@ -226,7 +226,7 @@ void Rigid_Geometry::Display()
     glPopMatrix();
 }
 
-Vector3d Rigid_Geometry::ApplyTransform(const TV& p) {
+Vector3d Rigid_Geometry::ApplyTransform(const VECTOR<float,3>& p) {
     Vector3f v(p(1) - gravity_center(1), p(2) - gravity_center(2), p(3) - gravity_center(3));
     v *= scale;
     v = rotation.rotMatrix() * v;
@@ -251,12 +251,12 @@ void Rigid_Geometry::collid_detection(Geometric* g, std::vector<Contact>* contac
         if (!bounding_volume->intersect(rgb->bounding_volume))
             return;
         Matrix4d tr = rgb->Inv_Transform() * Transform();
-        pair<float, TV> deepest_intersection(1e30, TV(0,0,0));
+        pair<float, VECTOR<float,3> > deepest_intersection(1e30, VECTOR<float,3>(0,0,0));
         Vector4d cp;
-        for (vector<TV>::iterator it = triangles->vertices.begin();
+        for (vector<VECTOR<float,3> >::iterator it = triangles->vertices.begin();
              it != triangles->vertices.end(); ++it) {
             Vector4d p = tr * Vector4d((*it)(1),(*it)(2),(*it)(3),1);
-            pair<float, TV> intersecion = rgb->implicit_object->Intersect(TV(p[0], p[1], p[2]));
+            pair<float, VECTOR<float,3> > intersecion = rgb->implicit_object->Intersect(VECTOR<float,3>(p[0], p[1], p[2]));
             if (intersecion.first > 0)
                 continue;
             if (contact) {

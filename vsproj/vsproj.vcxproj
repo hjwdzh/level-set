@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Bound\Bound.cpp" />
+    <ClCompile Include="..\Bound\Bounds.cpp" />
+    <ClCompile Include="..\Bound\Plane.cpp" />
+    <ClCompile Include="..\Bound\Spring.cpp" />
+    <ClCompile Include="..\Bound\Springs.cpp" />
+    <ClCompile Include="..\Engine\ForceField.cpp" />
+    <ClCompile Include="..\Engine\Solver.cpp" />
+    <ClCompile Include="..\Geometric\Geometric.cpp" />
+    <ClCompile Include="..\Geometric\Geometrics.cpp" />
+    <ClCompile Include="..\Geometric\Particle.cpp" />
+    <ClCompile Include="..\Geometric\Rigid_Geometry.cpp" />
+    <ClCompile Include="..\main.cpp" />
+    <ClCompile Include="..\SimLib\BOUNDARY.cpp" />
+    <ClCompile Include="..\SimLib\BVH.cpp" />
+    <ClCompile Include="..\SimLib\FLOOD_FILL.cpp" />
+    <ClCompile Include="..\SimLib\GRID.cpp" />
+    <ClCompile Include="..\SimLib\KDOP.cpp" />
+    <ClCompile Include="..\SimLib\LEVELSET.cpp" />
+    <ClCompile Include="..\SimLib\LEVELSET_MAKER.cpp" />
+    <ClCompile Include="..\SimLib\RANGE.cpp" />
+    <ClCompile Include="..\SimLib\TRIANGLE.cpp" />
+    <ClCompile Include="..\SimLib\TRIANGULATED_SURFACE.cpp" />
+    <ClCompile Include="..\System\SysBowling.cpp" />
+    <ClCompile Include="..\System\SysDynPtc.cpp" />
+    <ClCompile Include="..\System\SystemPhy.cpp" />
+    <ClCompile Include="..\Tools\Camera.cpp" />
+    <ClCompile Include="..\Tools\texture.cpp" />
+    <ClCompile Include="..\Tools\TriManager.cpp" />
+    <ClCompile Include="..\Tools\vmath.cpp" />
+    <ClCompile Include="..\User\control.cpp" />
+    <ClCompile Include="..\User\display.cpp" />
+    <ClCompile Include="..\User\scene.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Bound\Bound.h" />
+    <ClInclude Include="..\Bound\Bounds.h" />
+    <ClInclude Include="..\Bound\Plane.h" />
+    <ClInclude Include="..\Bound\Spring.h" />
+    <ClInclude Include="..\Bound\Springs.h" />
+    <ClInclude Include="..\Engine\ForceField.h" />
+    <ClInclude Include="..\Engine\Solver.h" />
+    <ClInclude Include="..\Geometric\Geometric.h" />
+    <ClInclude Include="..\Geometric\Geometrics.h" />
+    <ClInclude Include="..\Geometric\Particle.h" />
+    <ClInclude Include="..\Geometric\Rigid_Geometry.h" />
+    <ClInclude Include="..\main.h" />
+    <ClInclude Include="..\SimLib\ARRAY.h" />
+    <ClInclude Include="..\SimLib\BOUNDARY.h" />
+    <ClInclude Include="..\SimLib\BV.h" />
+    <ClInclude Include="..\SimLib\BVH.h" />
+    <ClInclude Include="..\SimLib\FLOOD_FILL.h" />
+    <ClInclude Include="..\SimLib\GRID.h" />
+    <ClInclude Include="..\SimLib\IMPLICIT_CUBE.h" />
+    <ClInclude Include="..\SimLib\IMPLICIT_OBJECT.h" />
+    <ClInclude Include="..\SimLib\IMPLICIT_SPHERE.h" />
+    <ClInclude Include="..\SimLib\INTERSECTION.h" />
+    <ClInclude Include="..\SimLib\KDOP.h" />
+    <ClInclude Include="..\SimLib\LEVELSET.h" />
+    <ClInclude Include="..\SimLib\LEVELSET_MAKER.h" />
+    <ClInclude Include="..\SimLib\RANGE.h" />
+    <ClInclude Include="..\SimLib\RAY.h" />
+    <ClInclude Include="..\SimLib\SEGMENT.h" />
+    <ClInclude Include="..\SimLib\TRIANGLE.h" />
+    <ClInclude Include="..\SimLib\TRIANGULATED_SURFACE.h" />
+    <ClInclude Include="..\SimLib\VECTOR.h" />
+    <ClInclude Include="..\System\SysBowling.h" />
+    <ClInclude Include="..\System\SysDynPtc.h" />
+    <ClInclude Include="..\System\SystemPhy.h" />
+    <ClInclude Include="..\Tools\Camera.h" />
+    <ClInclude Include="..\Tools\texture.h" />
+    <ClInclude Include="..\Tools\TriManager.h" />
+    <ClInclude Include="..\Tools\vmath.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{8CD17012-151E-4498-850D-3B138DF8C419}</ProjectGuid>
+    <RootNamespace>vsproj</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>E:\levelset;E:\levelset\User;E:\levelset\Tools;E:\levelset\System;E:\levelset\SimLib;E:\levelset\Geometric;E:\levelset\Engine;E:\levelset\Bound;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\levelset;$(LibraryPath)</LibraryPath>
+    <EmbedManifest>false</EmbedManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>E:\levelset;E:\levelset\User;E:\levelset\Tools;E:\levelset\System;E:\levelset\SimLib;E:\levelset\Geometric;E:\levelset\Engine;E:\levelset\Bound;$(IncludePath);$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>E:\levelset;$(LibraryPath);$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>opengl32.lib;glut32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/SAFESEH:NO %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
