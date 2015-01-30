@@ -194,7 +194,23 @@ void Geometrics::contact_detection(Geometrics& g) {
         }
     }
     ARRAY<1,double> f((int)contacts.size());
-    Solver::QPSolve(a, b, f);
+    ARRAY<1, double> c = b;
+    for (int i = 0; i < 50; ++i) {
+        bool flag = false;
+        for (int j = 1; j <= contacts.size(); ++j) {
+            double f_n = c(j) == 0 ? 0 : -c(j) / a(j,j);
+            if (f_n + f(j) < 0)
+                f_n = -f(j);
+            if (abs(f_n) > 1e-3)
+                flag = true;
+            for (int k = 1; k <= contacts.size(); ++k)
+                c(k) += a(j,k) * f_n;
+            f(j) += f_n;
+        }
+        if (!flag)
+            break;
+    }
+//    Solver::QPSolve(a, b, f);
     for (int i = 0; i < contacts.size(); ++i) {
         Contact &ci = contacts[i];
         Vector3d force = ci.n * f(i+1);

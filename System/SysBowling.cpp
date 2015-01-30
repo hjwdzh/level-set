@@ -138,23 +138,10 @@ void SysBowling::Display() {
     glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
     // 保存当前投影矩阵
-/*    glPushMatrix();
-    
-    glLoadIdentity();
-    gluOrtho2D( 0, g_WindowWidth, 0, g_WindowHeight );
-    
-    // 反转Y轴（朝下为正方向）(与窗口坐标一致)
-    glScalef(1, -1, 1);
-    // 将原点移动到屏幕左上方(与窗口坐标一致)
-    glTranslatef(0, -g_WindowHeight, 0);
-    glMatrixMode(GL_MODELVIEW);
-    
     // 保存当前模型视图矩阵
-*/    glPushMatrix();
-    glLoadIdentity();
-    
 
-    glTranslated(-40, 30, 0);
+    glPushMatrix();
+    glTranslated(-30, 30, 0);
     glRotated(angle, 0, 0, 1);
     glScaled(2,5,2);
     glColor3d(1,1,1);
