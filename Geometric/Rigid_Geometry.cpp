@@ -274,6 +274,7 @@ void Rigid_Geometry::collid_detection(Geometric* g, std::vector<Contact>* contac
                     data.a = this;
                     data.b = rgb;
                     data.n = N;
+                    data.u = N * collid - V;
                     data.p = Vector3d(pp[0],pp[1],pp[2]);
                     data.ra = r1;
                     data.rb = r2;

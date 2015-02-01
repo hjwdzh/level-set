@@ -66,13 +66,4 @@ public:
     unsigned int texturemap;
 };
 
-class Contact {
-public:
-    Contact()
-    : a(0), b(0) {
-    }
-    Rigid_Geometry *a, *b;
-    Vector3d p, n, ra, rb;
-};
-
 #endif /* defined(__levelset__Rigid_Geometry__) */
