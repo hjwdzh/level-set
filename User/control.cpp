@@ -145,8 +145,8 @@ void Animate(int id)
         v = g_camera->lookat.inverse() * v;
         g_selectedObject->setUserForce(Vector3d(v[0], v[1], v[2]) * 5);
     }
-    for (int i = 0; i < 1; ++i)
-        Solver::EulersStep(*g_sys, 0.08);
+    for (int i = 0; i < 4; ++i)
+        Solver::EulersStep(*g_sys, 0.01);
 #ifndef _WINDOWS_PLATFORM_
     gettimeofday(&t2, 0);
     g_simTime = (t2.tv_usec - t1.tv_usec) * 1e-6 + (t2.tv_sec - t1.tv_sec);

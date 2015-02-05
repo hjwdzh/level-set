@@ -39,10 +39,10 @@ void Solver::EulersStep(SystemPhy &sys, double h)
     sys.setState(x, t + h);
 }
 
-void Solver::QPSolve(ARRAY<2, double>& a, ARRAY<1, double>& b, ARRAY<1, double>& f, ARRAY<1, double>& c) {
+void Solver::QPSolve(ARRAY<2, double>& a, ARRAY<1, double>& b, ARRAY<1, double>& f) {
     int n = f.dim(1);
     f.Fill(0);
-    c = b;
+    ARRAY<1, double> c = b;
     ARRAY<1, double> delta_f(n), delta_a(n);
     set<int> C, NC;
     set<int> ad_minus;
