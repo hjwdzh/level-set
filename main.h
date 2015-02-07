@@ -6,7 +6,7 @@
 //  Copyright (c) 2014年 skyer. All rights reserved.
 //
 
-#define _WINDOWS_PLATFORM_
+//#define _WINDOWS_PLATFORM_
 
 #ifndef __simulation__main__
 #define __simulation__main__
