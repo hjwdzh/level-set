@@ -34,12 +34,12 @@ using namespace std;
 #include "glut.h"
 #endif
 
-#include "SysBowling.h"
+#include "Sysfric.h"
 #include "Camera.h"
 #include <string>
 using namespace std;
 
-extern SysBowling* g_sys;
+extern Sysfric* g_sys;
 extern Camera* g_camera;
 extern int g_WindowWidth;
 extern int g_WindowHeight;

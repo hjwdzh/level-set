@@ -35,7 +35,7 @@ Rigid_Geometry::Rigid_Geometry()
 
 Rigid_Geometry::Rigid_Geometry(const char* _name, const char* filename, const Vector3d &_x, const Vector3d &_r, const Vector3d &_s, double _m, IMPLICIT_OBJECT<float>* object, bool showLevelSet)
 {
-    kf = (0.3);
+    kf = (0.2);
     show_levelset = showLevelSet;
     texturemap = 0;
     name = string(_name);
@@ -156,7 +156,7 @@ void Rigid_Geometry::Display()
     glTranslated(x[0], x[1], x[2]);
     if (strcmp(name.c_str(), "gate") != 0)
         glRotated(180, 0, 1, 0);
-    glMultMatrixd(rotation.transform().data);
+    glMultMatrixd( (Quaternion<double>::fromEulerAngles(0, 180, 0) * rotation).transform().data);
     glScaled(scale[0], scale[1], scale[2]);
     glColor3d(0, 0, 1);
     if (!show_levelset) {
@@ -274,9 +274,11 @@ void Rigid_Geometry::collid_detection(Geometric* g, std::vector<Contact>* contac
                     data.a = this;
                     data.b = rgb;
                     data.n = N;
+                    data.u = N * collid - V;
                     data.p = Vector3d(pp[0],pp[1],pp[2]);
                     data.ra = r1;
                     data.rb = r2;
+                    data.mu = (kf < rgb->kf) ? kf : rgb->kf;
                     contact->push_back(data);
                 }
             }

@@ -15,6 +15,7 @@
 #include "Geometric.h"
 #include "Rigid_Geometry.h"
 #include "Bounds.h"
+#include "Contact.h"
 #include "BVH.h"
 using namespace std;
 

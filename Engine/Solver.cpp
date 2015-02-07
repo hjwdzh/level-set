@@ -42,7 +42,8 @@ void Solver::EulersStep(SystemPhy &sys, double h)
 void Solver::QPSolve(ARRAY<2, double>& a, ARRAY<1, double>& b, ARRAY<1, double>& f) {
     int n = f.dim(1);
     f.Fill(0);
-    ARRAY<1, double> c = b, delta_f(n), delta_a(n);
+    ARRAY<1, double> c = b;
+    ARRAY<1, double> delta_f(n), delta_a(n);
     set<int> C, NC;
     set<int> ad_minus;
     for (int i = 1; i <= n; ++i) {
