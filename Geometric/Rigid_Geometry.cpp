@@ -154,9 +154,7 @@ void Rigid_Geometry::Display()
             glColor3f(0.0, 1.0f, 0.0f);
     glPushMatrix();
     glTranslated(x[0], x[1], x[2]);
-    if (strcmp(name.c_str(), "gate") != 0)
-        glRotated(180, 0, 1, 0);
-    glMultMatrixd( (Quaternion<double>::fromEulerAngles(0, 180, 0) * rotation).transform().data);
+    glMultMatrixd(rotation.transform().data);
     glScaled(scale[0], scale[1], scale[2]);
     glColor3d(0, 0, 1);
     if (!show_levelset) {
@@ -274,7 +272,6 @@ void Rigid_Geometry::collid_detection(Geometric* g, std::vector<Contact>* contac
                     data.a = this;
                     data.b = rgb;
                     data.n = N;
-                    data.u = N * collid - V;
                     data.p = Vector3d(pp[0],pp[1],pp[2]);
                     data.ra = r1;
                     data.rb = r2;

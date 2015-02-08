@@ -64,13 +64,16 @@ void Sysfric::Reset() {
 #endif
     Rigid_Geometry* road1 = new Rigid_Geometry("road", (model_path + "cube.obj").c_str(),Vector3d(0,-3,-50),Vector3d(0,0,10),Vector3d(100,3,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
     Rigid_Geometry* cube = new Rigid_Geometry("cube", (model_path + "cube.obj").c_str(),Vector3d(0,1,-40),Vector3d(0,0,10),Vector3d(1,1,1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+    Rigid_Geometry* cube1 = new Rigid_Geometry("cube1", (model_path + "cube.obj").c_str(),Vector3d(2,5,-39.5),Vector3d(0,0,10),Vector3d(1,1,1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
     road1->setNailed();
     road1->setKr(0.1);
     road1->LoadTexture((texture_path + "wood.bmp").c_str(), 0.6);
     cube->LoadTexture((texture_path + "marble.bmp").c_str(), 0.6);
-    cube->v = Vector3d(0,0,0);
+    cube1->LoadTexture((texture_path + "marble.bmp").c_str(), 0.6);
+    cube->v = Vector3d(0,0,2);
     m_objects.addElement(road1);
     m_objects.addElement(cube);
+    m_objects.addElement(cube1);
     game_mode = BEGIN_SHOOT;
 }
 

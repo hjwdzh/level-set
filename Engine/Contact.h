@@ -9,18 +9,14 @@ class Rigid_Geometry;
 
 class Contact {
 public:
-    static enum {FRICTION_DIM = 6};
-
     Contact()
-    : a(0), b(0), D(FRICTION_DIM), friction(FRICTION_DIM) {
+    : a(0), b(0){
     }
     static void contact_handling(std::vector<Contact>& contacts);
     double mu;
     Rigid_Geometry *a, *b;
-    Vector3d p, n, ra, rb, u;
+    Vector3d p, n, ra, rb, u, t1, t2;
     double support;
-    SimLib::ARRAY<1,Vector3d> D;
-    SimLib::ARRAY<1,double> friction;
 };
 
 

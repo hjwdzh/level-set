@@ -48,7 +48,7 @@ const static int g_WindowPosY = 200;
 int g_WindowWidth = 512;
 int g_WindowHeight = 384;
 double g_d = 1.0;
-Sysfric* g_sys = 0;
+SysBowling* g_sys = 0;
 Camera* g_camera = 0;
 string res_path;
 

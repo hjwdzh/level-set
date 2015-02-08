@@ -46,7 +46,7 @@ void SysBowling::AddBall() {
 void SysBowling::ShootBall() {
     double v = 8;
     start_angle = 0;
-    m_objects.findByName("ball")[0]->v = Vector3d(-v * sin(angle / 180.0 * 3.1415926), 0, v * cos(angle / 180.0 * 3.1415926));
+    m_objects.findByName("ball")[0]->v = Vector3d(-v * sin(0 / 180.0 * 3.1415926), 0, v * cos(0 / 180.0 * 3.1415926));
 }
 
 void SysBowling::Reset() {
@@ -82,12 +82,12 @@ void SysBowling::Reset() {
     road5->setNailed();
     road5->setKr(0.1);
     road5->LoadTexture((texture_path + "wood.bmp").c_str(), 0.6);
-    
+
     Rigid_Geometry* gate = new Rigid_Geometry("gate", (model_path + "gate.obj").c_str(),Vector3d(0.53,-1,0),Vector3d(0,180,0),Vector3d(10,10,10),10);
     gate->setNailed();
     gate->setKr(0);
     gate->LoadTexture((texture_path + "marble.bmp").c_str());
-    
+
     typedef SimLib::VECTOR<float,3> TV;
     bowlings.resize(10);
     int t = 0;

@@ -9,6 +9,7 @@
 #include "SysDynPtc.h"
 #include "ForceField.h"
 #include "main.h"
+#include <iostream>
 #include "Rigid_Geometry.h"
 #include "IMPLICIT_CUBE.h"
 
@@ -142,9 +143,21 @@ double* SysDynPtc::DerivEval(double* state, double t)
         *st++ = (*it)->v[0];
         *st++ = (*it)->v[1];
         *st++ = (*it)->v[2];
-        *st++ = (*it)->f[0] / (*it)->mass;
-        *st++ = (*it)->f[1] / (*it)->mass;
-        *st++ = (*it)->f[2] / (*it)->mass;
+        *st = (*it)->f[0] / (*it)->mass;
+        if (abs(*st) < 1e-3) {
+            *st = 0;
+        }
+        st++;
+        *st = (*it)->f[1] / (*it)->mass;
+        if (abs(*st) < 1e-3) {
+            *st = 0;
+        }
+        st++;
+        *st = (*it)->f[2] / (*it)->mass;
+        if (abs(*st) < 1e-3) {
+            *st = 0;
+        }
+        st++;
         Rigid_Geometry* rgd = dynamic_cast<Rigid_Geometry*>(*it);
         if (rgd) {
             *st++ = rgd->w[0];
@@ -153,6 +166,8 @@ double* SysDynPtc::DerivEval(double* state, double t)
             *st++ = 0;
             Matrix3d rotation = rgd->rotation.rotMatrix();
             Vector3d dw = (rotation * rgd->J * rotation.transpose())* rgd->M;
+            if (dw.length() < 1e-3)
+                dw = Vector3d();
             *st++ = dw[0];
             *st++ = dw[1];
             *st++ = dw[2];

@@ -127,17 +127,6 @@ void Geometrics::contact_detection(Geometrics& g) {
     contacts.reserve(100);
     bvh->collid_detection(&contacts);
     Contact::contact_handling(contacts);
-    for (int i = 0; i < contacts.size(); ++i) {
-        Contact &ci = contacts[i];
-        Vector3d force = ci.n * ci.support;
-        for (int j = 1; j <= Contact::FRICTION_DIM; ++j) {
-            force += ci.D(j) * ci.friction(j);
-        }
-        ci.a->ExcertForce(force);
-        ci.b->ExcertForce(-force);
-        ci.a->ExcertMoment(force, ci.p);
-        ci.b->ExcertMoment(-force, ci.p);
-    }
     clearRemoveList();
 }
 
