@@ -30,11 +30,11 @@ public:
     void Display();
     
     Geometric* mouseSelect(double mouseX, double mouseY);
-    void collid_detection(Bounds& b);
-    void collid_detection(Geometrics& b);
-    void collid_detection(Geometric* b);
+    void collide_detection(Bounds& b);
+    void collide_detection(Geometrics& b);
+    void collide_detection(Geometric* b);
     void contact_detection(Bounds& b);
-    void contact_detection(Geometrics& b);
+    void contact_detection(Geometrics& b, double h);
     void addElement(Geometric* object);
     
     void clearForce();

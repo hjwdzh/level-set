@@ -58,7 +58,7 @@ void Geometric::setKr(double _kr)
     kr = _kr;
 }
 
-void Geometric::collid_detection(Geometric* g, std::vector<Contact>* contact) {
+void Geometric::collide_detection(Geometric* g, std::vector<Contact>* contact) {
     
 }
 

@@ -43,39 +43,39 @@ void BVH<d,T>::updateBVH(std::vector<BV<T>*>& bvs, int dim, int l, int r) {
 }
 
 template<int d, class T>
-void BVH<d,T>::collid_detection(std::vector<Contact>* contacts) {
+void BVH<d,T>::collide_detection(std::vector<Contact>* contacts) {
     if (num < 2)
         return;
     if (left && right)
-        collid_detect(left, right, contacts);
+        collide_detect(left, right, contacts);
     if (left)
-        left->collid_detection(contacts);
+        left->collide_detection(contacts);
     if (right)
-        right->collid_detection(contacts);
+        right->collide_detection(contacts);
 }
 
 template<int d, class T>
-void BVH<d,T>::collid_detect(BVH<d, T> *a, BVH<d, T> *b, std::vector<Contact>* contacts) {
+void BVH<d,T>::collide_detect(BVH<d, T> *a, BVH<d, T> *b, std::vector<Contact>* contacts) {
     if (!a->bv->intersect(b->bv))
         return;
     if (a->num == 1 && b->num == 1) {
-        a->bv->rgd->collid_detection(b->bv->rgd, contacts);
-        b->bv->rgd->collid_detection(a->bv->rgd, contacts);
+        a->bv->rgd->collide_detection(b->bv->rgd, contacts);
+        b->bv->rgd->collide_detection(a->bv->rgd, contacts);
         return;
     }
     if (a->num > b->num) {
         if (a->left) {
-            collid_detect(a->left, b, contacts);
+            collide_detect(a->left, b, contacts);
         }
         if (a->right) {
-            collid_detect(a->right, b, contacts);
+            collide_detect(a->right, b, contacts);
         }
     } else {
         if (b->left) {
-            collid_detect(a, b->left, contacts);
+            collide_detect(a, b->left, contacts);
         }
         if (b->right) {
-            collid_detect(a, b->right, contacts);
+            collide_detect(a, b->right, contacts);
         }
     }
 }

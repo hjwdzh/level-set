@@ -19,7 +19,7 @@ public:
     void AddBall();
     void ShootBall();
     void Display();
-    void collid_event(Geometric*,Geometric*);
+    void collide_event(Geometric*,Geometric*);
     void setState(double* state, double t);
     double* DerivEval(double* state, double t);
     double angle;

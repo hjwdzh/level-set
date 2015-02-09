@@ -241,7 +241,7 @@ Matrix4d Rigid_Geometry::Inv_Transform() const {
     return Matrix4d::createTranslation(gravity_center(1), gravity_center(2), gravity_center(3)) * Matrix4d::createScale(1 / scale[0], 1 / scale[1], 1 / scale[2]) * q.transform() * Matrix4d::createTranslation(-x[0], -x[1], -x[2]);
 }
 
-void Rigid_Geometry::collid_detection(Geometric* g, std::vector<Contact>* contact) {
+void Rigid_Geometry::collide_detection(Geometric* g, std::vector<Contact>* contact) {
     if (strcmp(name.c_str(), g->name.c_str()) == 0)
         return;
     Rigid_Geometry* rgb = dynamic_cast<Rigid_Geometry*>(g);
@@ -249,14 +249,13 @@ void Rigid_Geometry::collid_detection(Geometric* g, std::vector<Contact>* contac
         if (!bounding_volume->intersect(rgb->bounding_volume))
             return;
         Matrix4d tr = rgb->Inv_Transform() * Transform();
-        pair<float, VECTOR<float,3> > deepest_intersection(1e30, VECTOR<float,3>(0,0,0));
-        Vector4d cp;
         for (vector<VECTOR<float,3> >::iterator it = triangles->vertices.begin();
              it != triangles->vertices.end(); ++it) {
             Vector4d p = tr * Vector4d((*it)(1),(*it)(2),(*it)(3),1);
             pair<float, VECTOR<float,3> > intersecion = rgb->implicit_object->Intersect(VECTOR<float,3>(p[0], p[1], p[2]));
             if (intersecion.first > 0)
                 continue;
+            intersecion = rgb->implicit_object->Intersect(VECTOR<float,3>(p[0], p[1], p[2]));
             if (contact) {
                 Vector3d N = rgb->Transform() * Vector3d(intersecion.second(1),intersecion.second(2),intersecion.second(3));
                 N.normalize();
@@ -267,7 +266,7 @@ void Rigid_Geometry::collid_detection(Geometric* g, std::vector<Contact>* contac
                 Vector3d v2 = rgb->v + rgb->w.crossProduct(r2);
                 Vector3d V(v2 - v1);
                 double collid = N.dotProduct(V);
-                if (fabs(collid) < CONTACT_THRESHOLD) {
+                if (fabs(collid) > -CONTACT_THRESHOLD) {
                     Contact data;
                     data.a = this;
                     data.b = rgb;
@@ -275,75 +274,15 @@ void Rigid_Geometry::collid_detection(Geometric* g, std::vector<Contact>* contac
                     data.p = Vector3d(pp[0],pp[1],pp[2]);
                     data.ra = r1;
                     data.rb = r2;
+                    data.kr = (kr < rgb->kr) ? kr : rgb->kr;
                     data.mu = (kf < rgb->kf) ? kf : rgb->kf;
                     contact->push_back(data);
                 }
             }
-            if (intersecion.first < deepest_intersection.first) {
-                cp = p;
-                deepest_intersection = intersecion;
-            }
         }
         
-        if (deepest_intersection.first > 0)
-            return;
-        cp = rgb->Transform() * cp;
-        Vector3d N = rgb->Transform() * Vector3d(deepest_intersection.second(1),deepest_intersection.second(2),deepest_intersection.second(3));
-        N.normalize();
-        if (!nailed && contact && deepest_intersection.first < -0.1) {
-            x -= N * deepest_intersection.first / 10;
-        }
-        Vector3d r1(cp[0] - x[0], cp[1] - x[1], cp[2] - x[2]);
-        Vector3d r2(cp[0] - rgb->x[0], cp[1] - rgb->x[1], cp[2] - rgb->x[2]);
-        Vector3d v1 = v + w.crossProduct(r1);
-        Vector3d v2 = rgb->v + rgb->w.crossProduct(r2);
-        Vector3d V(v2 - v1);
-        double collid = N.dotProduct(V);
-
-        if (collid > EPSILON){
-            Matrix3d rot1 = rotation.rotMatrix();
-            Matrix3d J1 = rot1 * J * rot1.transpose();
-            Matrix3d rot2 = rgb->rotation.rotMatrix();
-            Matrix3d J2 = rot2 * rgb->J * rot2.transpose();
-            double m1 = 1 / mass;
-            double m2 = 1 / rgb->mass;
-            if (nailed) {
-                m1 = 0;
-                J1 = Matrix3d::createScale(0, 0, 0);
-            }
-            if (rgb->nailed) {
-                m2 = 0;
-                J2 = Matrix3d::createScale(0, 0, 0);
-            }
-            Matrix3d crossM1 = Matrix3d::createCrossProductMatrix(r1);
-            Matrix3d crossM2 = Matrix3d::createCrossProductMatrix(r2);
-            Matrix3d K = Matrix3d() * (m1 + m2) + crossM1.transpose() * J1 * crossM1 + crossM2.transpose() * J2 * crossM2;
-            double kc = 0;
-            if (collid > CONTACT_THRESHOLD) {
-                kc = min(kr, rgb->kr);
-            }
-            double jn = (1 + kc) * V.dotProduct(N) / N.dotProduct(K * N);
-            v += N * (jn * m1);
-            rgb->v -= N * (jn * m2);
-            w += J1 * (r1.crossProduct(N) * jn);
-            rgb->w -= J2 * (r2.crossProduct(N) * jn);
-            
-/*            Vector3d Vt = V - N * V.dotProduct(N);
-            if (Vt.length() < 1e-4)
-                return;
-            Vector3d Vtn = Vt;
-            Vtn.normalize();
-            double jt = Vt.length() / Vtn.dotProduct(K * Vtn);
-            if (jt > jn * max(kf, rgb->kf)) {
-                jt = jn * max(kf, rgb->kf);
-            }
-            v += Vtn * (jt * m1);
-            rgb->v -= Vtn * (jt * m2);
-            w += J1 * (r1.crossProduct(Vtn) * jt);
-            rgb->w -= J2 * (r2.crossProduct(Vtn) * jt);
-*/      }
         if (system) {
-            system->collid_event(this, rgb);
+            system->collide_event(this, rgb);
         }
     }
 }

@@ -36,7 +36,7 @@ void Solver::EulersStep(SystemPhy &sys, double h)
             }
         }
     }
-    sys.setState(x, t + h);
+    sys.setState(x, h);
 }
 
 void Solver::QPSolve(ARRAY<2, double>& a, ARRAY<1, double>& b, ARRAY<1, double>& f) {

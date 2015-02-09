@@ -38,7 +38,7 @@ public:
     void ExcertMoment(const Vector3d& force, const Vector3d& p);
     void ExcertMoment(const Vector3d& moment);
     void ExcertForceField(Vector3d (*forcefunc)(Geometric*));
-    void collid_detection(Geometric* b, std::vector<Contact>* contact = 0);
+    void collide_detection(Geometric* b, std::vector<Contact>* contact = 0);
     void updateBoundingVolume();
     void LoadTexture(const char* bmp, double _tex_scale = 1);
 

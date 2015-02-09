@@ -32,7 +32,7 @@ public:
     virtual void Display() = 0;
     virtual void ExcertForce(const Vector3d& force) = 0;
     virtual void ExcertForceField(Vector3d (*forcefunc)(Geometric*)) = 0;
-    virtual void collid_detection(Geometric* g, std::vector<Contact>* contact = 0);
+    virtual void collide_detection(Geometric* g, std::vector<Contact>* contact = 0);
     virtual void contact_detection(Geometric* g);
     double mass, kr;
     bool selected, nailed;

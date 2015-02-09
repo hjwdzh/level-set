@@ -26,7 +26,7 @@ public:
     virtual double* getState() = 0;
     virtual void setState(double* state, double t) = 0;
     virtual double getTime() = 0;
-    virtual void collid_event(Geometric*,Geometric*) = 0;
+    virtual void collide_event(Geometric*,Geometric*) = 0;
     virtual double* DerivEval(double* state, double t) = 0;
 };
 

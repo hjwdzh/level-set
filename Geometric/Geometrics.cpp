@@ -87,15 +87,15 @@ Geometric* Geometrics::mouseSelect(double mouseX, double mouseY)
     return res;
 }
 
-void Geometrics::collid_detection(Bounds& b)
+void Geometrics::collide_detection(Bounds& b)
 {
     for (vector<Geometric*>::iterator it = vp.begin();
          it != vp.end(); ++it)
-        b.collid_detection((*it));
+        b.collide_detection((*it));
 }
 
-void Geometrics::collid_detection(Geometrics& g) {
-    bvh->collid_detection();
+void Geometrics::collide_detection(Geometrics& g) {
+    bvh->collide_detection();
     clearRemoveList();
 }
 
@@ -107,10 +107,10 @@ void Geometrics::clearRemoveList() {
     removeList.clear();
 }
 
-void Geometrics::collid_detection(Geometric* g) {
+void Geometrics::collide_detection(Geometric* g) {
     for (int i = 0; i < vp.size(); ++i) {
         if (vp[i] != g) {
-            g->collid_detection(vp[i]);
+            g->collide_detection(vp[i]);
         }
     }
 }
@@ -122,11 +122,23 @@ void Geometrics::contact_detection(Bounds& b)
         b.contact_detection((*it));
 }
 
-void Geometrics::contact_detection(Geometrics& g) {
+void Geometrics::contact_detection(Geometrics& g, double h) {
     contacts.clear();
     contacts.reserve(100);
-    bvh->collid_detection(&contacts);
-    Contact::contact_handling(contacts);
+    bvh->collide_detection(&contacts);
+    bool had_collision = true;
+    while (had_collision) {
+        int t = 0;
+        if (t == 100)
+            t = t;
+        had_collision = false;
+        for (int i = 0; i < contacts.size(); ++i) {
+            if (contacts[i].collide_handling()) {
+                had_collision = true;
+            }
+        }
+    }
+    Contact::contact_handling(contacts, h);
     clearRemoveList();
 }
 

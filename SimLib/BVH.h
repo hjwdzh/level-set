@@ -28,8 +28,8 @@ public:
         bv = 0;
     }
     void updateBVH(std::vector<BV<T>*>& bvs, int dim, int l, int r);
-    void collid_detection(std::vector<Contact>* contacts=0);
-    void collid_detect(BVH*, BVH*, std::vector<Contact>* contacts=0);
+    void collide_detection(std::vector<Contact>* contacts=0);
+    void collide_detect(BVH*, BVH*, std::vector<Contact>* contacts=0);
     int axis;
     BVH *left, *right;
     BV<T>* bv;

@@ -9,7 +9,7 @@ void SetParameters()
 // 初始化应用程序
 void Initialize()
 {
-    g_sys = new SysBowling();
+    g_sys = new Sysfric();
     
     g_sys->Initialize();
     g_camera = new Camera();

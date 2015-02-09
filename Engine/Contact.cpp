@@ -2,9 +2,47 @@
 #include "vmath.h"
 #include "Rigid_Geometry.h"
 #include "Solver.h"
+#include "bound.h"
 using namespace SimLib;
 
-void Contact::contact_handling(std::vector<Contact>& contacts) {
+bool Contact::collide_handling() {
+    Vector3d v1 = a->v + a->w.crossProduct(ra);
+    Vector3d v2 = b->v + b->w.crossProduct(rb);
+    double vrel = n.dotProduct(v1 - v2);
+    if (vrel >= -1e-4 || (a->nailed && b->nailed))
+        return false;
+    double numerator = -(1 + kr) * vrel;
+    double term1 = a->nailed ? 0 : 1 / a->mass;
+    double term2 = b->nailed ? 0 : 1 / a->mass;
+    Matrix3d J1 = Matrix3d::createScale(0, 0, 0);
+    Matrix3d J2 = J1;
+    if (!(a->nailed)) {
+        Matrix3d rot1 = a->rotation.rotMatrix();
+        J1 = rot1 * a->J * rot1.transpose();
+    }
+    if (!(b->nailed)) {
+        Matrix3d rot2 = b->rotation.rotMatrix();
+        J2 = rot2 * b->J * rot2.transpose();
+    }
+    double term3 = n.dotProduct((J1 * (ra.crossProduct(n))).crossProduct(ra));
+    double term4 = n.dotProduct((J2 * (rb.crossProduct(n))).crossProduct(rb));
+    double j = numerator / (term1 + term2 + term3 + term4);
+    Vector3d p = n * j;
+    if (!(a->nailed)) {
+        a->v += p * term1;
+        a->w += J1 * ra.crossProduct(p);
+    }
+    if (!(b->nailed)) {
+        b->v -= p * term2;
+        b->w -= J2 * rb.crossProduct(p);
+    }
+    v1 = a->v + a->w.crossProduct(ra);
+    v2 = b->v + b->w.crossProduct(rb);
+    vrel = n.dotProduct(v1 - v2);
+    return true;
+}
+
+void Contact::contact_handling(std::vector<Contact>& contacts, double h) {
     ARRAY<1,double> b((int)contacts.size() * 3);
     Vector3d r_v(4.3284, 2.3850, 3.2859);
     r_v.normalize();
@@ -13,11 +51,11 @@ void Contact::contact_handling(std::vector<Contact>& contacts) {
         c.t1 = c.n.crossProduct(Vector3d(1.6947, 2.1259, 1.7465));
         c.t1.normalize();
         c.t2 = c.n.crossProduct(c.t1);
-        Vector3d u = c.a->v + c.a->w * c.ra - c.b->v - c.b->w * c.rb;
-        c.u = u - c.n * u.dotProduct(c.n);
+        Vector3d &n = c.n, &ra = c.ra, &rb = c.rb;
+        Vector3d u = c.a->v + c.a->w.crossProduct(ra) - c.b->v - c.b->w.crossProduct(rb);
+        c.u = u - n * u.dotProduct(n);
         c.support = 0;
         Rigid_Geometry *A = c.a, *B = c.b;
-        Vector3d &n = c.n, &ra = c.ra, &rb = c.rb;
         Vector3d &f_a = A->f, &f_b = B->f, &t_a = A->M, &t_b = B->M;
         double m1 = A->nailed ? 0 : 1 / A->mass;
         double m2 = B->nailed ? 0 : 1 / B->mass;
@@ -118,17 +156,11 @@ void Contact::contact_handling(std::vector<Contact>& contacts) {
         }
     }
     ARRAY<1, double> c = b;
-    if (contacts[0].a->name[2] == 'w' && contacts[0].a->v.length() > 0) {
-        contacts = contacts;
-    }
     ARRAY<1, double> X(c.dim(1));
-    for (int i = 0; i < 2g00; ++i) {
+    for (int i = 0; i < 25; ++i) {
         bool flag = false;
         for (int j = 0; j < contacts.size(); ++j) {
             ARRAY<1, double> f(3);
-            f(1) = c(j*3+1) == 0 ? 0 : -c(j * 3 + 1) / a(j * 3 + 1, j * 3 + 1);
-            if (f(1) < 0)
-                f(1) = 0;
             if (contacts[j].u.length() != 0) {
                 Vector3d fr = (-contacts[j].u);
                 fr.normalize();
@@ -148,33 +180,44 @@ void Contact::contact_handling(std::vector<Contact>& contacts) {
                     for (int k = 1; k <= 3; ++k)
                         for (int l = 1; l <= 3; ++l)
                             m.at(l-1,k-1) = a(j * 3 + k, j * 3 + l);
+                    Matrix3d mm =m;
                     m = m.inverse();
                     Vector3d v = m * Vector3d(-c(j * 3 + 1), -c(j * 3 + 2), -c(j * 3 + 3));
-                    if (v[0] > 1e4) {
-                        v = v;
+                    double len = 2;
+                    if (v[0] <= 0) {
+                        f.Fill(0);
+                    } else {
+                        f(1) = v[0]; f(2) = v[1]; f(3) = v[2];
+                        len = sqrt(f(2) * f(2) + f(3) * f(3)) / (f(1) * contacts[j].mu);
                     }
-                    for (int k = 1; k <= 3; ++k) {
-                        double test = c(j * 3 + k);
-                        for (int l = 1; l <= 3; ++l)
-                            test += a(j * 3 + k, j * 3 + l) * v[l - 1];
-                        test = test;
-                    }
-                    f(1) = v[0]; f(2) = v[1]; f(3) = v[2];
-                    double len = sqrt(f(2) * f(2) + f(3) * f(3)) / (f(1) * contacts[j].mu);
                     if (len > 1) {
+                        int t = 0;
                         while (true) {
+                            t++;
+                            if (t == 100)
+                                t = t;
                             f(2) /= len;
                             f(3) /= len;
-                            double t = -c(j * 3 + 1) - f(2) * a(j * 3 + 1, j * 3 + 2) - f(3) * a(j * 3 + 1, j * 3 + 3);
-                            if (abs(t - f(1)) < 1e-4)
+                            double t = (-c(j * 3 + 1) - f(2) * a(j * 3 + 1, j * 3 + 2) - f(3) * a(j * 3 + 1, j * 3 + 3)) / a(j*3+1, j*3+1);
+                            if (t < 0)
+                                t = 0;
+                            if (abs(t - f(1)) < 1e-6)
                                 break;
                             f(1) = t;
+                            if (f(1) <= 0) {
+                                f.Fill(0);
+                                len = 1;
+                            }
                             double c1 = -c(j * 3 + 2) - f(1) * a(j * 3 + 2, j * 3 + 1);
                             double c2 = -c(j * 3 + 3) - f(1) * a(j * 3 + 3, j * 3 + 1);
                             f(3) = (a(j * 3 + 2, j * 3 + 2) * c2 - a(j * 3 + 3, j * 3 + 2) * c1) / (a(j * 3 + 2, j * 3 + 2) * a(j * 3 + 3, j * 3 + 3) - a(j * 3 + 2, j * 3 + 3) * a(j * 3 + 3, j * 3 + 2));
-                            f(2) = (c1 - f(3) * a(j * 3 + 3, j * 3 + 2)) / a(j * 3 + 2, j * 3 + 2);
+                            f(2) = (c1 - f(3) * a(j * 3 + 2, j * 3 + 3)) / a(j * 3 + 2, j * 3 + 2);
                             len = sqrt(f(2) * f(2) + f(3) * f(3)) / (f(1) * contacts[j].mu);
+                            Vector3d v1 = mm * Vector3d(f(1),f(2),f(3)) + Vector3d(c(j*3+1),c(j*3+2),c(j*3+3));
+                            v1 = v1;
                         }
+                        Vector3d v1 = mm * Vector3d(f(1),f(2),f(3)) + Vector3d(c(j*3+1),c(j*3+2),c(j*3+3));
+                        v1 = v1;
                     }
                 }
             }
@@ -189,16 +232,16 @@ void Contact::contact_handling(std::vector<Contact>& contacts) {
                     }
                 }
                 X(k + j * 3) += delta_t;
-                if (abs(delta_t) > 1e-4) {
+                if (abs(delta_t) > 1e-6) {
                     flag = true;
                 }
             }
         }
-        if (!flag)
+        if (!flag) {
             break;
+        }
     }
     
-
     for (int i = 0; i < contacts.size(); ++i) {
         Contact &ci = contacts[i];
         Vector3d force = ci.n * X(i * 3 + 1) + ci.t1 * X(i * 3 + 2) + ci.t2 * X(i * 3 + 3);

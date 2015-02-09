@@ -62,18 +62,34 @@ void Sysfric::Reset() {
 	string model_path = res_path + "\\models\\";
 	string texture_path = res_path + "\\texture\\";
 #endif
-    Rigid_Geometry* road1 = new Rigid_Geometry("road", (model_path + "cube.obj").c_str(),Vector3d(0,-3,-50),Vector3d(0,0,10),Vector3d(100,3,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
-    Rigid_Geometry* cube = new Rigid_Geometry("cube", (model_path + "cube.obj").c_str(),Vector3d(0,1,-40),Vector3d(0,0,10),Vector3d(1,1,1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
-    Rigid_Geometry* cube1 = new Rigid_Geometry("cube1", (model_path + "cube.obj").c_str(),Vector3d(2,5,-39.5),Vector3d(0,0,10),Vector3d(1,1,1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
-    road1->setNailed();
-    road1->setKr(0.1);
-    road1->LoadTexture((texture_path + "wood.bmp").c_str(), 0.6);
-    cube->LoadTexture((texture_path + "marble.bmp").c_str(), 0.6);
+//    Rigid_Geometry* road1 = new Rigid_Geometry("road", (model_path + "cube.obj").c_str(),Vector3d(0,-3,-50),Vector3d(0,0,0),Vector3d(100,3,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+    Rigid_Geometry* cube = new Rigid_Geometry("cube", (model_path + "cube.obj").c_str(),Vector3d(0,-1,-40),Vector3d(0,0,0),Vector3d(100,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+    Rigid_Geometry* cube1 = new Rigid_Geometry("cube1", (model_path + "cube.obj").c_str(),Vector3d(0,10,-40),Vector3d(0,0,0),Vector3d(1,1,1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+    Rigid_Geometry* cube2 = new Rigid_Geometry("cube2", (model_path + "cube.obj").c_str(),Vector3d(0,1,-40),Vector3d(0,0,0),Vector3d(2,1,2),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+    Rigid_Geometry* cube3 = new Rigid_Geometry("cube3", (model_path + "cube.obj").c_str(),Vector3d(0,0.5,-60),Vector3d(0,0,0),Vector3d(1,0.5,1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+    cube1->setKr(0);
+    cube->setKr(0);
+//    Rigid_Geometry* cube2 = new Rigid_Geometry("cube2", (model_path + "cube.obj").c_str(),Vector3d(5,5,-39.5),Vector3d(0,0,0),Vector3d(1,1,1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+//    road1->setNailed();
+//    road1->setKr(0.1);
+//    road1->LoadTexture((texture_path + "wood.bmp").c_str(), 0.6);
+    cube->setNailed();
+    cube->LoadTexture((texture_path + "wood.bmp").c_str(), 0.6);
+    cube->kf = 0.1;
     cube1->LoadTexture((texture_path + "marble.bmp").c_str(), 0.6);
-    cube->v = Vector3d(0,0,2);
-    m_objects.addElement(road1);
+    cube1->w = Vector3d(0,4,0);
+    cube1->kf = 0.9;
+    cube2->LoadTexture((texture_path + "marble.bmp").c_str(), 0.6);
+    cube2->kf = 0.9;
+    cube3->LoadTexture((texture_path + "marble.bmp").c_str(), 0.6);
+    cube3->v = Vector3d(0,0,10);
+    cube3->kf = 0.1;
+//    cube2->w = Vector3d(0,1,0);
+//    m_objects.addElement(road1);
     m_objects.addElement(cube);
     m_objects.addElement(cube1);
+    m_objects.addElement(cube2);
+    m_objects.addElement(cube3);
     game_mode = BEGIN_SHOOT;
 }
 
@@ -122,7 +138,7 @@ void Sysfric::Display() {
      */    glEnable(GL_LIGHTING);
 }
 
-void Sysfric::collid_event(Geometric* s1,Geometric* s2) {
+void Sysfric::collide_event(Geometric* s1,Geometric* s2) {
     if ((strcmp(s1->name.c_str(), "ball") == 0 && strcmp(s2->name.c_str(), "gate") == 0) ||
         (strcmp(s2->name.c_str(), "ball") == 0 && strcmp(s1->name.c_str(), "gate") == 0)) {
         RemoveBall();
@@ -132,7 +148,6 @@ void Sysfric::collid_event(Geometric* s1,Geometric* s2) {
 }
 
 void Sysfric::setState(double* state, double t) {
-    time = t;
     if (game_mode == STOP && getTime() - hit_time > 5.5) {
         for (int i = 0; i < bowlings.size(); ++i) {
             while (i < bowlings.size()) {
@@ -151,9 +166,11 @@ void Sysfric::setState(double* state, double t) {
             Reset();
         }
         start_angle = 1;
+        time += t;
         return;
     }
     if (game_mode == STOP && getTime() - hit_time > 5) {
+        time += t;
         return;
     }
     this->SysDynPtc::setState(state, t);

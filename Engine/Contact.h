@@ -12,8 +12,9 @@ public:
     Contact()
     : a(0), b(0){
     }
-    static void contact_handling(std::vector<Contact>& contacts);
-    double mu;
+    static void contact_handling(std::vector<Contact>& contacts, double h);
+    bool collide_handling();
+    double mu, kr;
     Rigid_Geometry *a, *b;
     Vector3d p, n, ra, rb, u, t1, t2;
     double support;

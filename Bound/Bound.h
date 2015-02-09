@@ -22,7 +22,7 @@ public:
     virtual ~Bound() = 0;
     virtual void setKr(double _kr);
     virtual void setKf(double _kf);
-    virtual bool collid_detection(Geometric* object) = 0;
+    virtual bool collide_detection(Geometric* object) = 0;
     virtual bool contact_detection(Geometric* object) = 0;
     virtual void Display() = 0;
 protected:

@@ -30,13 +30,13 @@ int Bounds::size() const
     return (int)vp.size();
 }
 
-bool Bounds::collid_detection(Geometric* object)
+bool Bounds::collide_detection(Geometric* object)
 {
     bool t = false;
     for (vector<Bound*>::iterator it = vp.begin();
          it != vp.end(); ++it)
     {
-        t |= (*it)->collid_detection(object);
+        t |= (*it)->collide_detection(object);
     }
     return t;
 }

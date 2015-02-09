@@ -161,7 +161,7 @@ void SysBowling::Display() {
 */    glEnable(GL_LIGHTING);
 }
 
-void SysBowling::collid_event(Geometric* s1,Geometric* s2) {
+void SysBowling::collide_event(Geometric* s1,Geometric* s2) {
     if ((strcmp(s1->name.c_str(), "ball") == 0 && strcmp(s2->name.c_str(), "gate") == 0) ||
         (strcmp(s2->name.c_str(), "ball") == 0 && strcmp(s1->name.c_str(), "gate") == 0)) {
         RemoveBall();
@@ -171,7 +171,6 @@ void SysBowling::collid_event(Geometric* s1,Geometric* s2) {
 }
 
 void SysBowling::setState(double* state, double t) {
-    time = t;
     if (game_mode == STOP && getTime() - hit_time > 5.5) {
         for (int i = 0; i < bowlings.size(); ++i) {
             while (i < bowlings.size()) {
@@ -190,9 +189,11 @@ void SysBowling::setState(double* state, double t) {
             Reset();
         }
         start_angle = 1;
+        time += t;
         return;
     }
     if (game_mode == STOP && getTime() - hit_time > 5) {
+        time += t;
         return;
     }
     this->SysDynPtc::setState(state, t);

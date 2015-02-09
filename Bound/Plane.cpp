@@ -29,7 +29,7 @@ Plane::Plane(const Vector3d& _P, const Vector3d& _N, double _kr, double _kf)
     kf = _kf;
 }
 
-bool Plane::collid_detection(Geometric* object)
+bool Plane::collide_detection(Geometric* object)
 {
     Particle* ptc = dynamic_cast<Particle*>(object);
     if (ptc)

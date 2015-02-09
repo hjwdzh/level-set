@@ -116,21 +116,29 @@ void SysDynPtc::setState(double* state, double t)
         } else {
             t += 7;
         }
-    }
+/*        for (int i = 0; i < 3; ++i) {
+            if (abs(rgd->v[i]) < 3e-2) {
+                rgd->v[i] = 0;
+            }
+            if (abs(rgd->w[i]) < 3e-2) {
+                rgd->w[i] = 0;
+            }
+        }
+*/    }
     
     delete[] state;
-    time = t;
+    time += t;
     
     m_objects.updateBVH();
     
     for (int i = 0; i < COLLISION_ITERATION - 1; ++i) {
-        m_objects.collid_detection(m_objects);
-        m_objects.collid_detection(m_bounds);
+        m_objects.collide_detection(m_objects);
+        m_objects.collide_detection(m_bounds);
     }
     m_objects.clearForce();
     ForceApply();
     m_objects.contact_detection(m_bounds);
-    m_objects.contact_detection(m_objects);
+    m_objects.contact_detection(m_objects,t);
 }
 
 double* SysDynPtc::DerivEval(double* state, double t)
@@ -143,21 +151,9 @@ double* SysDynPtc::DerivEval(double* state, double t)
         *st++ = (*it)->v[0];
         *st++ = (*it)->v[1];
         *st++ = (*it)->v[2];
-        *st = (*it)->f[0] / (*it)->mass;
-        if (abs(*st) < 1e-3) {
-            *st = 0;
-        }
-        st++;
-        *st = (*it)->f[1] / (*it)->mass;
-        if (abs(*st) < 1e-3) {
-            *st = 0;
-        }
-        st++;
-        *st = (*it)->f[2] / (*it)->mass;
-        if (abs(*st) < 1e-3) {
-            *st = 0;
-        }
-        st++;
+        *st++ = (*it)->f[0] / (*it)->mass;
+        *st++ = (*it)->f[1] / (*it)->mass;
+        *st++ = (*it)->f[2] / (*it)->mass;
         Rigid_Geometry* rgd = dynamic_cast<Rigid_Geometry*>(*it);
         if (rgd) {
             *st++ = rgd->w[0];
@@ -166,8 +162,6 @@ double* SysDynPtc::DerivEval(double* state, double t)
             *st++ = 0;
             Matrix3d rotation = rgd->rotation.rotMatrix();
             Vector3d dw = (rotation * rgd->J * rotation.transpose())* rgd->M;
-            if (dw.length() < 1e-3)
-                dw = Vector3d();
             *st++ = dw[0];
             *st++ = dw[1];
             *st++ = dw[2];
