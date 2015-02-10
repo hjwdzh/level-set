@@ -27,7 +27,19 @@ bool Contact::collide_handling() {
     double term3 = n.dotProduct((J1 * (ra.crossProduct(n))).crossProduct(ra));
     double term4 = n.dotProduct((J2 * (rb.crossProduct(n))).crossProduct(rb));
     double j = numerator / (term1 + term2 + term3 + term4);
-    Vector3d p = n * j;
+    Vector3d u = v1 - v2 - n * vrel;
+    double urel = u.length();
+    double jf = 0;
+    if (urel != 0) {
+        u.normalize();
+        u = -u;
+        double term5 = u.dotProduct((J1 * (ra.crossProduct(u))).crossProduct(ra));
+        double term6 = u.dotProduct((J2 * (rb.crossProduct(u))).crossProduct(rb));
+        double jf = urel / (term1 + term2 + term5 + term6);
+        if (jf > j * mu)
+            jf = j * mu;
+    }
+    Vector3d p = n * j + u * jf;
     if (!(a->nailed)) {
         a->v += p * term1;
         a->w += J1 * ra.crossProduct(p);
@@ -36,9 +48,6 @@ bool Contact::collide_handling() {
         b->v -= p * term2;
         b->w -= J2 * rb.crossProduct(p);
     }
-    v1 = a->v + a->w.crossProduct(ra);
-    v2 = b->v + b->w.crossProduct(rb);
-    vrel = n.dotProduct(v1 - v2);
     return true;
 }
 

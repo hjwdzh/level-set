@@ -128,9 +128,6 @@ void Geometrics::contact_detection(Geometrics& g, double h) {
     bvh->collide_detection(&contacts);
     bool had_collision = true;
     while (had_collision) {
-        int t = 0;
-        if (t == 100)
-            t = t;
         had_collision = false;
         for (int i = 0; i < contacts.size(); ++i) {
             if (contacts[i].collide_handling()) {
