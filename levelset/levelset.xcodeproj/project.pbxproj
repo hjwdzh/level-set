@@ -42,6 +42,8 @@
 		4FCE053C1A57794700BE5DDC /* KDOP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FCE053A1A57794700BE5DDC /* KDOP.cpp */; };
 		4FCE053F1A57808300BE5DDC /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FCE053E1A57808300BE5DDC /* main.cpp */; };
 		4FCE05421A57A9FD00BE5DDC /* BVH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FCE05401A57A9FD00BE5DDC /* BVH.cpp */; };
+		4FFCB9341A8A2E84009EB84C /* Contact.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FFCB9331A8A2E84009EB84C /* Contact.cpp */; };
+		4FFCB9371A8A2ECC009EB84C /* Sysfric.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FFCB9361A8A2ECC009EB84C /* Sysfric.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -132,6 +134,10 @@
 		4FCE053E1A57808300BE5DDC /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../main.cpp; sourceTree = "<group>"; };
 		4FCE05401A57A9FD00BE5DDC /* BVH.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BVH.cpp; path = ../../SimLib/BVH.cpp; sourceTree = "<group>"; };
 		4FCE05411A57A9FD00BE5DDC /* BVH.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BVH.h; path = ../../SimLib/BVH.h; sourceTree = "<group>"; };
+		4FFCB9321A8A2E84009EB84C /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Contact.h; path = ../../Engine/Contact.h; sourceTree = "<group>"; };
+		4FFCB9331A8A2E84009EB84C /* Contact.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Contact.cpp; path = ../../Engine/Contact.cpp; sourceTree = "<group>"; };
+		4FFCB9351A8A2ECC009EB84C /* Sysfric.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sysfric.h; path = ../../System/Sysfric.h; sourceTree = "<group>"; };
+		4FFCB9361A8A2ECC009EB84C /* Sysfric.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sysfric.cpp; path = ../../System/Sysfric.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -192,6 +198,8 @@
 		4F026A7019E2C0CD007D1518 /* Engine */ = {
 			isa = PBXGroup;
 			children = (
+				4FFCB9321A8A2E84009EB84C /* Contact.h */,
+				4FFCB9331A8A2E84009EB84C /* Contact.cpp */,
 				4F49015A1A3B2CF200695657 /* ForceField.cpp */,
 				4F49015B1A3B2CF200695657 /* ForceField.h */,
 				4F49015C1A3B2CF200695657 /* Solver.cpp */,
@@ -218,6 +226,8 @@
 		4F026A7219E2C106007D1518 /* System */ = {
 			isa = PBXGroup;
 			children = (
+				4FFCB9351A8A2ECC009EB84C /* Sysfric.h */,
+				4FFCB9361A8A2ECC009EB84C /* Sysfric.cpp */,
 				4F4901451A3B2CCB00695657 /* SysBowling.cpp */,
 				4F4901461A3B2CCB00695657 /* SysBowling.h */,
 				4F4901471A3B2CCB00695657 /* SysDynPtc.cpp */,
@@ -367,10 +377,12 @@
 				4F4901561A3B2CDA00695657 /* Geometric.cpp in Sources */,
 				4F49014B1A3B2CCB00695657 /* SysBowling.cpp in Sources */,
 				4F4901421A3B2CB700695657 /* RANGE.cpp in Sources */,
+				4FFCB9371A8A2ECC009EB84C /* Sysfric.cpp in Sources */,
 				4F4901441A3B2CB700695657 /* TRIANGULATED_SURFACE.cpp in Sources */,
 				4F4901571A3B2CDA00695657 /* Geometrics.cpp in Sources */,
 				4F49014D1A3B2CCB00695657 /* SystemPhy.cpp in Sources */,
 				4F49017D1A3B2D2400695657 /* Bound.cpp in Sources */,
+				4FFCB9341A8A2E84009EB84C /* Contact.cpp in Sources */,
 				4F4901431A3B2CB700695657 /* TRIANGLE.cpp in Sources */,
 				4F49013E1A3B2CB700695657 /* FLOOD_FILL.cpp in Sources */,
 				4F49015F1A3B2CF200695657 /* Solver.cpp in Sources */,

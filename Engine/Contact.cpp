@@ -35,7 +35,7 @@ bool Contact::collide_handling() {
         u = -u;
         double term5 = u.dotProduct((J1 * (ra.crossProduct(u))).crossProduct(ra));
         double term6 = u.dotProduct((J2 * (rb.crossProduct(u))).crossProduct(rb));
-        double jf = urel / (term1 + term2 + term5 + term6);
+        jf = urel / (term1 + term2 + term5 + term6);
         if (jf > j * mu)
             jf = j * mu;
     }
