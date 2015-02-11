@@ -1,3 +1,6 @@
 *.DS_Store
 *.o
-
+vsproj/vsproj.sdf
+vsproj/vsproj.v11.suo
+vsproj/vsproj.opensdf
+vsproj/Debug/

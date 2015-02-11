@@ -113,13 +113,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>E:\levelset;E:\levelset\User;E:\levelset\Tools;E:\levelset\System;E:\levelset\SimLib;E:\levelset\Geometric;E:\levelset\Engine;E:\levelset\Bound;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\levelset;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\;..\User;..\Tools;..\System;..\SimLib;..\Geometric;..\Engine;..\Bound;$(IncludePath)</IncludePath>
+    <LibraryPath>..\;$(LibraryPath)</LibraryPath>
     <EmbedManifest>false</EmbedManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>E:\levelset;E:\levelset\User;E:\levelset\Tools;E:\levelset\System;E:\levelset\SimLib;E:\levelset\Geometric;E:\levelset\Engine;E:\levelset\Bound;$(IncludePath);$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>E:\levelset;$(LibraryPath);$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);</LibraryPath>
+    <IncludePath>..\;..\User;..\Tools;..\System;..\SimLib;..\Geometric;..\Engine;..\Bound;$(IncludePath);$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>..\;$(LibraryPath);$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
