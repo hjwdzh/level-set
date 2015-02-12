@@ -28,6 +28,17 @@ public:
     virtual double getTime() = 0;
     virtual void collide_event(Geometric*,Geometric*) = 0;
     virtual double* DerivEval(double* state, double t) = 0;
+    virtual double* DerivVelEval(double* state, double t) {return 0;}
+    virtual double* DerivPosEval(double* state, double t) {return 0;}
+    
+    virtual void collide_detection() {}
+    virtual void contact_handling() {}
+    virtual void post_initialization() {}
+    
+    virtual double* getVelState() { return 0; }
+    virtual double* getPosState() { return 0; }
+    virtual void setVelState(double* state, double t) {}
+    virtual void setPosState(double* state, double t) {}
 };
 
 #endif /* defined(__simulation__SystemPhy__) */

@@ -5,13 +5,15 @@
 #include "bound.h"
 using namespace SimLib;
 
-bool Contact::collide_handling() {
+bool Contact::collide_handling(double k) {
     Vector3d v1 = a->v + a->w.crossProduct(ra);
     Vector3d v2 = b->v + b->w.crossProduct(rb);
     double vrel = n.dotProduct(v1 - v2);
     if (vrel >= -1e-4 || (a->nailed && b->nailed))
         return false;
-    double numerator = -(1 + kr) * vrel;
+    if (k < -50)
+        k = kr;
+    double numerator = -(1 + k) * vrel;
     double term1 = a->nailed ? 0 : 1 / a->mass;
     double term2 = b->nailed ? 0 : 1 / a->mass;
     Matrix3d J1 = Matrix3d::createScale(0, 0, 0);
@@ -51,7 +53,7 @@ bool Contact::collide_handling() {
     return true;
 }
 
-void Contact::contact_handling(std::vector<Contact>& contacts, double h) {
+void Contact::contact_handling(std::vector<Contact>& contacts) {
     ARRAY<1,double> b((int)contacts.size() * 3);
     Vector3d r_v(4.3284, 2.3850, 3.2859);
     r_v.normalize();

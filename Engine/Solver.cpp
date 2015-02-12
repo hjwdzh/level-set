@@ -14,6 +14,110 @@
 
 using namespace SimLib;
 
+void Solver::NRBS(SystemPhy &sys, double h) {
+    double t = sys.getTime();
+    int n = sys.getDim() / 13 * 6;
+    int m = sys.getDim() / 13 * 7;
+    //collide detection
+    //use x_new = x + h * v_new and v_new = v + dv to test collision
+    double* v = sys.getVelState();
+    double* deltaV = sys.DerivVelEval(v, t);
+    double* v_new = new double[n];
+    if (deltaV != 0) {
+        for (int i = 0; i < n; ++i) {
+            v_new[i] = v[i] + deltaV[i] * h;
+        }
+    }
+    double* x = sys.getPosState();
+    sys.setVelState(v_new, t);
+    double* deltaX = sys.DerivPosEval(x, t);
+    double* x_new = new double[m];
+    if (deltaX != 0) {
+        for (int i = 0; i < m; ++i) {
+            if (i % 7 < 3) {
+                x_new[i] = x[i] + h * deltaX[i];
+            }
+            else if (i % 7 == 3) {
+                Quaternion<double> rotation(x[i+3],x[i],x[i+1],x[i+2]);
+                Quaternion<double> rotation1 = Quaternion<double>::fromEulerAngles(h*deltaX[i]*ANGLE_SCALE, h*deltaX[i+1]*ANGLE_SCALE, h*deltaX[i+2]*ANGLE_SCALE);
+                rotation = rotation1 * rotation;
+                x_new[i] = rotation.v[0];
+                x_new[i+1] = rotation.v[1];
+                x_new[i+2] = rotation.v[2];
+                x_new[i+3] = rotation.w;
+            }
+        }
+    }
+    sys.setPosState(x_new, t);
+    sys.setVelState(v, t);
+    sys.collide_detection();
+    delete[] v;
+    delete[] deltaV;
+    delete[] v_new;
+    delete[] deltaX;
+    
+    //integrate velocity
+    v = sys.getVelState();
+    deltaV = sys.DerivVelEval(v, t);
+    if (deltaV != 0) {
+        for (int i = 0; i < n; ++i) {
+            v[i] += deltaV[i] * h;
+        }
+    }
+    sys.setVelState(v, t);
+    delete[] v;
+    delete[] deltaV;
+
+    //contact handling
+    //use x_new = x + h * v
+    deltaX = sys.DerivPosEval(x, t);
+    if (deltaX != 0) {
+        for (int i = 0; i < m; ++i) {
+            if (i % 7 < 3) {
+                x_new[i] = x[i] + h * deltaX[i];
+            }
+            else if (i % 7 == 3) {
+                Quaternion<double> rotation(x[i+3],x[i],x[i+1],x[i+2]);
+                Quaternion<double> rotation1 = Quaternion<double>::fromEulerAngles(h*deltaX[i]*ANGLE_SCALE, h*deltaX[i+1]*ANGLE_SCALE, h*deltaX[i+2]*ANGLE_SCALE);
+                rotation = rotation1 * rotation;
+                x_new[i] = rotation.v[0];
+                x_new[i+1] = rotation.v[1];
+                x_new[i+2] = rotation.v[2];
+                x_new[i+3] = rotation.w;
+            }
+        }
+    }
+    sys.setPosState(x_new, t);
+    sys.contact_handling();
+    delete[] deltaX;
+    
+    //Integrate x
+    deltaX = sys.DerivPosEval(x, t);
+    if (deltaX != 0) {
+        for (int i = 0; i < m; ++i) {
+            if (i % 7 < 3) {
+                x_new[i] = x[i] + h * deltaX[i];
+            }
+            else if (i % 7 == 3) {
+                Quaternion<double> rotation(x[i+3],x[i],x[i+1],x[i+2]);
+                Quaternion<double> rotation1 = Quaternion<double>::fromEulerAngles(h*deltaX[i]*ANGLE_SCALE, h*deltaX[i+1]*ANGLE_SCALE, h*deltaX[i+2]*ANGLE_SCALE);
+                rotation = rotation1 * rotation;
+                x_new[i] = rotation.v[0];
+                x_new[i+1] = rotation.v[1];
+                x_new[i+2] = rotation.v[2];
+                x_new[i+3] = rotation.w;
+            }
+        }
+    }
+    sys.setPosState(x_new, t + h);
+    
+    delete[] x;
+    delete[] x_new;
+    delete[] deltaX;
+    sys.post_initialization();
+}
+
+
 void Solver::EulersStep(SystemPhy &sys, double h)
 {
     double t = sys.getTime();
@@ -37,6 +141,9 @@ void Solver::EulersStep(SystemPhy &sys, double h)
         }
     }
     sys.setState(x, h);
+    sys.post_initialization();
+    sys.collide_detection();
+    sys.contact_handling();
 }
 
 void Solver::QPSolve(ARRAY<2, double>& a, ARRAY<1, double>& b, ARRAY<1, double>& f) {

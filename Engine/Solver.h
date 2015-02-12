@@ -18,6 +18,7 @@ class Solver
 {
 public:
     static void EulersStep(SystemPhy& sys, double h);
+    static void NRBS(SystemPhy& sys, double h);
     static void QPSolve(SimLib::ARRAY<2, double>& a, SimLib::ARRAY<1, double>& b, SimLib::ARRAY<1, double>& f);
     static void LinearSolve(SimLib::ARRAY<2, double> a, SimLib::ARRAY<1, double> b, SimLib::ARRAY<1, double>& x);
 private:

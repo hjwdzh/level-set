@@ -95,34 +95,6 @@ void Geometrics::collide_detection(Bounds& b)
 }
 
 void Geometrics::collide_detection(Geometrics& g) {
-    bvh->collide_detection();
-    clearRemoveList();
-}
-
-void Geometrics::clearRemoveList() {
-    for (set<int>::reverse_iterator it = removeList.rbegin(); it != removeList.rend(); ++it) {
-        delete vp[*it];
-        vp.erase(vp.begin() + (*it));
-    }
-    removeList.clear();
-}
-
-void Geometrics::collide_detection(Geometric* g) {
-    for (int i = 0; i < vp.size(); ++i) {
-        if (vp[i] != g) {
-            g->collide_detection(vp[i]);
-        }
-    }
-}
-
-void Geometrics::contact_detection(Bounds& b)
-{
-    for (vector<Geometric*>::iterator it = vp.begin();
-         it != vp.end(); ++it)
-        b.contact_detection((*it));
-}
-
-void Geometrics::contact_detection(Geometrics& g, double h) {
     contacts.clear();
     contacts.reserve(100);
     bvh->collide_detection(&contacts);
@@ -135,7 +107,42 @@ void Geometrics::contact_detection(Geometrics& g, double h) {
             }
         }
     }
-    Contact::contact_handling(contacts, h);
+}
+
+void Geometrics::clearRemoveList() {
+    for (set<int>::reverse_iterator it = removeList.rbegin(); it != removeList.rend(); ++it) {
+        delete vp[*it];
+        vp.erase(vp.begin() + (*it));
+    }
+    removeList.clear();
+}
+
+void Geometrics::collide_detection(Geometric* g) {
+}
+
+void Geometrics::contact_detection(Bounds& b)
+{
+    for (vector<Geometric*>::iterator it = vp.begin();
+         it != vp.end(); ++it)
+        b.contact_detection((*it));
+}
+
+void Geometrics::contact_detection(Geometrics& g) {
+//    Contact::contact_handling(contacts);
+    contacts.clear();
+    contacts.reserve(100);
+    bvh->collide_detection(&contacts);
+    for (double l = -0.8; l < 1e-3; l += 0.2) {
+        bool had_collision = true;
+        while (had_collision) {
+            had_collision = false;
+            for (int i = 0; i < contacts.size(); ++i) {
+                if (contacts[i].collide_handling(l)) {
+                    had_collision = true;
+                }
+            }
+        }
+    }
     clearRemoveList();
 }
 

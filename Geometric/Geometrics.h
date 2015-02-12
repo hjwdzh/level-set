@@ -34,7 +34,8 @@ public:
     void collide_detection(Geometrics& b);
     void collide_detection(Geometric* b);
     void contact_detection(Bounds& b);
-    void contact_detection(Geometrics& b, double h);
+    
+    void contact_detection(Geometrics& b);
     void addElement(Geometric* object);
     
     void clearForce();

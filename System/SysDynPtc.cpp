@@ -62,6 +62,47 @@ int SysDynPtc::getDim()
     return 13 * m_objects.size();
 }
 
+double* SysDynPtc::getVelState() {
+    double *state = new double[6 * m_objects.size()];
+    double *t = state;
+    for (vector<Geometric*>::iterator it = m_objects.vp.begin();
+         it != m_objects.vp.end(); ++it) {
+        *t++ = (*it)->v[0];
+        *t++ = (*it)->v[1];
+        *t++ = (*it)->v[2];
+        Rigid_Geometry* rgd = dynamic_cast<Rigid_Geometry*>(*it);
+        if (rgd) {
+            *t++ = rgd->w[0];
+            *t++ = rgd->w[1];
+            *t++ = rgd->w[2];
+        } else {
+            t += 3;
+        }
+    }
+    return state;
+}
+
+double* SysDynPtc::getPosState() {
+    double *state = new double[7 * m_objects.size()];
+    double *t = state;
+    for (vector<Geometric*>::iterator it = m_objects.vp.begin();
+         it != m_objects.vp.end(); ++it) {
+        *t++ = (*it)->x[0];
+        *t++ = (*it)->x[1];
+        *t++ = (*it)->x[2];
+        Rigid_Geometry* rgd = dynamic_cast<Rigid_Geometry*>(*it);
+        if (rgd) {
+            *t++ = rgd->rotation.v[0];
+            *t++ = rgd->rotation.v[1];
+            *t++ = rgd->rotation.v[2];
+            *t++ = rgd->rotation.w;
+        } else {
+            t += 4;
+        }
+    }
+    return state;
+}
+
 double* SysDynPtc::getState()
 {
     double *state = new double[13 * m_objects.size()];
@@ -91,6 +132,42 @@ double* SysDynPtc::getState()
     return state;
 }
 
+void SysDynPtc::setVelState(double* state, double t) {
+    double* pt = state;
+    for (vector<Geometric*>::iterator it = m_objects.vp.begin();
+         it != m_objects.vp.end(); ++it) {
+        (*it)->v[0] = *pt++;
+        (*it)->v[1] = *pt++;
+        (*it)->v[2] = *pt++;
+        Rigid_Geometry* rgd = dynamic_cast<Rigid_Geometry*>(*it);
+        if (rgd) {
+            rgd->w[0] = *pt++;
+            rgd->w[1] = *pt++;
+            rgd->w[2] = *pt++;
+        }
+    }
+    time = t;
+}
+
+void SysDynPtc::setPosState(double* state, double t) {
+    double* pt = state;
+    for (vector<Geometric*>::iterator it = m_objects.vp.begin();
+         it != m_objects.vp.end(); ++it) {
+        (*it)->x[0] = *pt++;
+        (*it)->x[1] = *pt++;
+        (*it)->x[2] = *pt++;
+        Rigid_Geometry* rgd = dynamic_cast<Rigid_Geometry*>(*it);
+        if (rgd) {
+            rgd->rotation.v[0] = *pt++;
+            rgd->rotation.v[1] = *pt++;
+            rgd->rotation.v[2] = *pt++;
+            rgd->rotation.w = *pt++;
+            rgd->rotation.normalize();
+        }
+    }
+    time = t;
+}
+
 void SysDynPtc::setState(double* state, double t)
 {
     double* pt = state;
@@ -113,8 +190,6 @@ void SysDynPtc::setState(double* state, double t)
             rgd->w[0] = *pt++;
             rgd->w[1] = *pt++;
             rgd->w[2] = *pt++;
-        } else {
-            t += 7;
         }
 /*        for (int i = 0; i < 3; ++i) {
             if (abs(rgd->v[i]) < 3e-2) {
@@ -129,16 +204,53 @@ void SysDynPtc::setState(double* state, double t)
     delete[] state;
     time += t;
     
-    m_objects.updateBVH();
-    
-    for (int i = 0; i < COLLISION_ITERATION - 1; ++i) {
-        m_objects.collide_detection(m_objects);
-        m_objects.collide_detection(m_bounds);
+}
+
+double* SysDynPtc::DerivVelEval(double* state, double t)
+{
+    double *delta = new double[6 * m_objects.size()];
+    double *st = delta;
+    for (vector<Geometric*>::iterator it = m_objects.vp.begin();
+         it != m_objects.vp.end(); ++it)
+    {
+        *st++ = (*it)->f[0] / (*it)->mass;
+        *st++ = (*it)->f[1] / (*it)->mass;
+        *st++ = (*it)->f[2] / (*it)->mass;
+        Rigid_Geometry* rgd = dynamic_cast<Rigid_Geometry*>(*it);
+        if (rgd) {
+            Matrix3d rotation = rgd->rotation.rotMatrix();
+            Vector3d dw = (rotation * rgd->J * rotation.transpose())* rgd->M;
+            *st++ = dw[0];
+            *st++ = dw[1];
+            *st++ = dw[2];
+        } else {
+            st += 3;
+        }
     }
-    m_objects.clearForce();
-    ForceApply();
-    m_objects.contact_detection(m_bounds);
-    m_objects.contact_detection(m_objects,t);
+    return delta;
+}
+
+double* SysDynPtc::DerivPosEval(double* state, double t)
+{
+    double *delta = new double[13 * m_objects.size()];
+    double *st = delta;
+    for (vector<Geometric*>::iterator it = m_objects.vp.begin();
+         it != m_objects.vp.end(); ++it)
+    {
+        *st++ = (*it)->v[0];
+        *st++ = (*it)->v[1];
+        *st++ = (*it)->v[2];
+        Rigid_Geometry* rgd = dynamic_cast<Rigid_Geometry*>(*it);
+        if (rgd) {
+            *st++ = rgd->w[0];
+            *st++ = rgd->w[1];
+            *st++ = rgd->w[2];
+            *st++ = 0;
+        } else {
+            st += 4;
+        }
+    }
+    return delta;
 }
 
 double* SysDynPtc::DerivEval(double* state, double t)
