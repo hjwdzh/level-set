@@ -39,6 +39,10 @@
 		4F49017F1A3B2D2400695657 /* Plane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F4901771A3B2D2400695657 /* Plane.cpp */; };
 		4F4901801A3B2D2400695657 /* Spring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F4901791A3B2D2400695657 /* Spring.cpp */; };
 		4F4901811A3B2D2400695657 /* Springs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F49017B1A3B2D2400695657 /* Springs.cpp */; };
+		4FC6C12E1A8DF24E00E3C764 /* Joint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FC6C12C1A8DF24E00E3C764 /* Joint.cpp */; };
+		4FC6C1311A8DF53600E3C764 /* RotJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FC6C12F1A8DF53600E3C764 /* RotJoint.cpp */; };
+		4FC6C1341A8DF54800E3C764 /* PtJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FC6C1321A8DF54800E3C764 /* PtJoint.cpp */; };
+		4FC6C1371A8DF55800E3C764 /* TransJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FC6C1351A8DF55800E3C764 /* TransJoint.cpp */; };
 		4FCE053C1A57794700BE5DDC /* KDOP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FCE053A1A57794700BE5DDC /* KDOP.cpp */; };
 		4FCE053F1A57808300BE5DDC /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FCE053E1A57808300BE5DDC /* main.cpp */; };
 		4FCE05421A57A9FD00BE5DDC /* BVH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FCE05401A57A9FD00BE5DDC /* BVH.cpp */; };
@@ -127,6 +131,14 @@
 		4F49017A1A3B2D2400695657 /* Spring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Spring.h; path = ../../Bound/Spring.h; sourceTree = "<group>"; };
 		4F49017B1A3B2D2400695657 /* Springs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Springs.cpp; path = ../../Bound/Springs.cpp; sourceTree = "<group>"; };
 		4F49017C1A3B2D2400695657 /* Springs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Springs.h; path = ../../Bound/Springs.h; sourceTree = "<group>"; };
+		4FC6C12C1A8DF24E00E3C764 /* Joint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Joint.cpp; sourceTree = "<group>"; };
+		4FC6C12D1A8DF24E00E3C764 /* Joint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Joint.h; sourceTree = "<group>"; };
+		4FC6C12F1A8DF53600E3C764 /* RotJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RotJoint.cpp; sourceTree = "<group>"; };
+		4FC6C1301A8DF53600E3C764 /* RotJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RotJoint.h; sourceTree = "<group>"; };
+		4FC6C1321A8DF54800E3C764 /* PtJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PtJoint.cpp; sourceTree = "<group>"; };
+		4FC6C1331A8DF54800E3C764 /* PtJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PtJoint.h; sourceTree = "<group>"; };
+		4FC6C1351A8DF55800E3C764 /* TransJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransJoint.cpp; sourceTree = "<group>"; };
+		4FC6C1361A8DF55800E3C764 /* TransJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransJoint.h; sourceTree = "<group>"; };
 		4FCE05391A563A9900BE5DDC /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = main.h; path = ../../main.h; sourceTree = "<group>"; };
 		4FCE053A1A57794700BE5DDC /* KDOP.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = KDOP.cpp; path = ../../SimLib/KDOP.cpp; sourceTree = "<group>"; };
 		4FCE053B1A57794700BE5DDC /* KDOP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KDOP.h; path = ../../SimLib/KDOP.h; sourceTree = "<group>"; };
@@ -299,6 +311,7 @@
 				4FCE05391A563A9900BE5DDC /* main.h */,
 				4F026A7319E2C119007D1518 /* SimLib */,
 				4F026A7219E2C106007D1518 /* System */,
+				4FC6C12B1A8DF23600E3C764 /* Joint */,
 				4F026A7119E2C0E4007D1518 /* Geometric */,
 				4F026A7019E2C0CD007D1518 /* Engine */,
 				4F026A6F19E2C0A6007D1518 /* Tools */,
@@ -307,6 +320,22 @@
 				4F1815A219D93EB100F6ECA0 /* levelset.1 */,
 			);
 			path = levelset;
+			sourceTree = "<group>";
+		};
+		4FC6C12B1A8DF23600E3C764 /* Joint */ = {
+			isa = PBXGroup;
+			children = (
+				4FC6C12C1A8DF24E00E3C764 /* Joint.cpp */,
+				4FC6C12D1A8DF24E00E3C764 /* Joint.h */,
+				4FC6C12F1A8DF53600E3C764 /* RotJoint.cpp */,
+				4FC6C1301A8DF53600E3C764 /* RotJoint.h */,
+				4FC6C1321A8DF54800E3C764 /* PtJoint.cpp */,
+				4FC6C1331A8DF54800E3C764 /* PtJoint.h */,
+				4FC6C1351A8DF55800E3C764 /* TransJoint.cpp */,
+				4FC6C1361A8DF55800E3C764 /* TransJoint.h */,
+			);
+			name = Joint;
+			path = ../../Joint;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -364,6 +393,7 @@
 				4F49015E1A3B2CF200695657 /* ForceField.cpp in Sources */,
 				4FCE053C1A57794700BE5DDC /* KDOP.cpp in Sources */,
 				4F49016B1A3B2D0300695657 /* TriManager.cpp in Sources */,
+				4FC6C1341A8DF54800E3C764 /* PtJoint.cpp in Sources */,
 				4F49014C1A3B2CCB00695657 /* SysDynPtc.cpp in Sources */,
 				4F4901411A3B2CB700695657 /* LEVELSET.cpp in Sources */,
 				4F4901701A3B2D1400695657 /* control.cpp in Sources */,
@@ -371,6 +401,7 @@
 				4F49013F1A3B2CB700695657 /* GRID.cpp in Sources */,
 				4F4901801A3B2D2400695657 /* Spring.cpp in Sources */,
 				4FCE053F1A57808300BE5DDC /* main.cpp in Sources */,
+				4FC6C12E1A8DF24E00E3C764 /* Joint.cpp in Sources */,
 				4F4901721A3B2D1400695657 /* scene.cpp in Sources */,
 				4F49017E1A3B2D2400695657 /* Bounds.cpp in Sources */,
 				4F49016C1A3B2D0300695657 /* vmath.cpp in Sources */,
@@ -385,6 +416,7 @@
 				4FFCB9341A8A2E84009EB84C /* Contact.cpp in Sources */,
 				4F4901431A3B2CB700695657 /* TRIANGLE.cpp in Sources */,
 				4F49013E1A3B2CB700695657 /* FLOOD_FILL.cpp in Sources */,
+				4FC6C1311A8DF53600E3C764 /* RotJoint.cpp in Sources */,
 				4F49015F1A3B2CF200695657 /* Solver.cpp in Sources */,
 				4FCE05421A57A9FD00BE5DDC /* BVH.cpp in Sources */,
 				4F4901711A3B2D1400695657 /* display.cpp in Sources */,
@@ -392,6 +424,7 @@
 				4F49013D1A3B2CB700695657 /* BOUNDARY.cpp in Sources */,
 				4F4901591A3B2CDA00695657 /* Rigid_Geometry.cpp in Sources */,
 				4F49016A1A3B2D0300695657 /* texture.cpp in Sources */,
+				4FC6C1371A8DF55800E3C764 /* TransJoint.cpp in Sources */,
 				4F49017F1A3B2D2400695657 /* Plane.cpp in Sources */,
 				4F4901581A3B2CDA00695657 /* Particle.cpp in Sources */,
 			);

@@ -64,7 +64,7 @@ void Sysfric::Reset() {
 #endif
 //    Rigid_Geometry* road1 = new Rigid_Geometry("road", (model_path + "cube.obj").c_str(),Vector3d(0,-3,-50),Vector3d(0,0,0),Vector3d(100,3,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
     Rigid_Geometry* cube = new Rigid_Geometry("cube0", (model_path + "cube.obj").c_str(),Vector3d(0,-1,-40),Vector3d(0,0,0),Vector3d(100,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
-    Rigid_Geometry* cube1 = new Rigid_Geometry("cube1", (model_path + "cube.obj").c_str(),Vector3d(0,3,-40),Vector3d(0,0,0),Vector3d(1,1,1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+    Rigid_Geometry* cube1 = new Rigid_Geometry("cube1", (model_path + "cube.obj").c_str(),Vector3d(0,10,-40),Vector3d(0,0,0),Vector3d(1,1,1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
     Rigid_Geometry* cube2 = new Rigid_Geometry("cube2", (model_path + "cube.obj").c_str(),Vector3d(0,1,-40),Vector3d(0,45,0),Vector3d(2,1,2),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
     Rigid_Geometry* cube3 = new Rigid_Geometry("cube3", (model_path + "cube.obj").c_str(),Vector3d(0,0.5,-60),Vector3d(0,0,0),Vector3d(1,0.5,1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
     cube->setKr(0);
@@ -77,7 +77,7 @@ void Sysfric::Reset() {
     cube->kf = 0.1;
     cube1->LoadTexture((texture_path + "marble.bmp").c_str(), 0.6);
     cube1->setKr(0);
-//    cube1->w = Vector3d(0,5,0);
+    cube1->w = Vector3d(0,5,0);
     cube1->kf = 0.9;
     cube2->LoadTexture((texture_path + "marble.bmp").c_str(), 0.6);
     cube2->kf = 0.9;
