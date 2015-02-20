@@ -9,10 +9,13 @@
 #ifndef __simulation__SysDynPtc__
 #define __simulation__SysDynPtc__
 
+#include <vector>
+
 #include "Springs.h"
 #include "Geometrics.h"
 #include "Plane.h"
 #include "Contact.h"
+#include "Joint.h"
 #include "SystemPhy.h"
 
 class SysDynPtc: public SystemPhy
@@ -36,12 +39,15 @@ public:
     virtual void contact_handling() {
         m_objects.contact_detection(m_objects);
     }
-    virtual void post_initialization() {
+    virtual void updateForce() {
         m_objects.updateBVH();
         m_objects.clearForce();
         ForceApply();
     }
 
+    virtual void preStabilization();
+    virtual void postStabilization();
+    
     virtual void setVelState(double* state, double t);
     virtual void setPosState(double* state, double t);
     virtual double* getVelState();
@@ -53,6 +59,7 @@ public:
     void clear();
     double ks, kd;
     Geometrics m_objects;
+    std::vector<Joint*> joints;
     
 protected:
     virtual void ForceApply();

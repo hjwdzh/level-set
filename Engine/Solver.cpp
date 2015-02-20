@@ -51,6 +51,7 @@ void Solver::NRBS(SystemPhy &sys, double h) {
     sys.setPosState(x_new, t);
     sys.setVelState(v, t);
     sys.collide_detection();
+    sys.postStabilization();
     delete[] v;
     delete[] deltaV;
     delete[] v_new;
@@ -65,9 +66,11 @@ void Solver::NRBS(SystemPhy &sys, double h) {
         }
     }
     sys.setVelState(v, t);
+    sys.postStabilization();
     delete[] v;
     delete[] deltaV;
 
+    sys.preStabilization();
     //contact handling
     //use x_new = x + h * v
     deltaX = sys.DerivPosEval(x, t);
@@ -114,7 +117,7 @@ void Solver::NRBS(SystemPhy &sys, double h) {
     delete[] x;
     delete[] x_new;
     delete[] deltaX;
-    sys.post_initialization();
+    sys.updateForce();
 }
 
 
@@ -141,7 +144,7 @@ void Solver::EulersStep(SystemPhy &sys, double h)
         }
     }
     sys.setState(x, h);
-    sys.post_initialization();
+    sys.updateForce();
     sys.collide_detection();
     sys.contact_handling();
 }
@@ -252,6 +255,7 @@ void Solver::fdirection(int d, ARRAY<2, double>& a, set<int> &C, ARRAY<1, double
     }
 }
 
+// Ax = b
 void Solver::LinearSolve(ARRAY<2, double> a, ARRAY<1, double> b, ARRAY<1, double>& x) {
     int n = a.dim(1);
     for (int i = 1; i <= n; ++i) {

@@ -1656,6 +1656,16 @@ public:
         ret.at(2,2) = 0;
         return ret;
     }
+    
+    static Matrix3<T> createDotProductMatrix(const Vector3<T>& r1, const Vector3<T>& r2) {
+        Matrix3<T> m;
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                m.at(i,j) = r1[i] * r2[j];
+            }
+        }
+        return m;
+    }
 
 	static Matrix3<T> createScale(T x, T y, T z)
 	{
@@ -2939,6 +2949,12 @@ public:
 			: w(w_), v(v_)
 	{
 	}
+    
+    Quaternion(const Vector3<T>& w_) {
+        double len = w_.length();
+        w = cos(len * 0.5);
+        v = w_ * (T)(sin(len * 0.5) / len);
+    }
 
 	/**
 	 * Creates quaternion object from value (w_ + xi + yj + zk).

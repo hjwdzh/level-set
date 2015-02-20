@@ -16,11 +16,12 @@ class RotJoint : public Joint {
 public:
     virtual bool violated();
     virtual void preStabilization();
-    virtual void postStabilization();
-
+    virtual bool postStabilization();
+    virtual void initialize();
+    double getAngle();
     double min_angle, max_angle, k;
-    Vector3d tPos;
-    Quaternion<double> tAngle;
+    Vector3d tAxis, wp, wc, dp, dc;
+    double angle;
 };
 
 #endif /* defined(__levelset__RotJoint__) */

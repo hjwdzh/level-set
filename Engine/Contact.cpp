@@ -15,7 +15,7 @@ bool Contact::collide_handling(double k) {
         k = kr;
     double numerator = -(1 + k) * vrel;
     double term1 = a->nailed ? 0 : 1 / a->mass;
-    double term2 = b->nailed ? 0 : 1 / a->mass;
+    double term2 = b->nailed ? 0 : 1 / b->mass;
     Matrix3d J1 = Matrix3d::createScale(0, 0, 0);
     Matrix3d J2 = J1;
     if (!(a->nailed)) {

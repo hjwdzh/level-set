@@ -12,16 +12,23 @@
 #include <iostream>
 #include "vmath.h"
 #include "Rigid_Geometry.h"
+#include "ARRAY.h"
 
 class Joint {
 public:
-    virtual bool violated() = 0;
-    virtual void preStabilization() = 0;
-    virtual void postStabilization() = 0;
-    
+    virtual bool violated();
+    virtual void preStabilization();
+    virtual bool postStabilization();
+    virtual void initialize();
     Rigid_Geometry *parent, *child;
     Vector3d pPos, cPos;
-    Quaternion<double> pAngle, cAngle;
+protected:
+    virtual Vector3d f(double h, Vector3d& j);
+    virtual Quatd ft(double h, Vector3d& jt);
+    virtual void dfj(double h, const Vector3d& j, Matrix3d& r);
+    virtual void dfjt(double h, const Vector3d& jt, std::pair<Vector3d,Matrix3d>& r);
+    virtual Vector3d solvej(double h);
+    virtual Vector3d solvejt(double h);
 };
 
 #endif /* defined(__levelset__Joint__) */

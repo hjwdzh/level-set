@@ -14,12 +14,12 @@
 
 class PtJoint : public Joint {
 public:
+    PtJoint();
+    PtJoint(Vector3d p1, Vector3d p2);
+    
     virtual bool violated();
     virtual void preStabilization();
-    virtual void postStabilization();
-    
-    Vector3d tPos;
-    Quaternion<double> tAngle;
+    virtual bool postStabilization();
 };
 
 #endif /* defined(__levelset__PtJoint__) */

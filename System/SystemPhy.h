@@ -31,9 +31,11 @@ public:
     virtual double* DerivVelEval(double* state, double t) {return 0;}
     virtual double* DerivPosEval(double* state, double t) {return 0;}
     
+    virtual void preStabilization() {}
     virtual void collide_detection() {}
     virtual void contact_handling() {}
-    virtual void post_initialization() {}
+    virtual void updateForce() {}
+    virtual void postStabilization() {}
     
     virtual double* getVelState() { return 0; }
     virtual double* getPosState() { return 0; }

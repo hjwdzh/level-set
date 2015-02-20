@@ -298,6 +298,22 @@ void SysDynPtc::ForceApply()
     m_springs.ForceApply(ks, kd);
 }
 
+void SysDynPtc::postStabilization() {
+    bool has_collision = true;
+    while (has_collision) {
+        has_collision = false;
+        for (int i = 0; i < joints.size(); ++i) {
+            if (joints[i]->postStabilization()) {
+                has_collision = true;
+            }
+        }
+    }
+}
+
+void SysDynPtc::preStabilization() {
+    
+}
+
 double SysDynPtc::getTime()
 {
     return time;

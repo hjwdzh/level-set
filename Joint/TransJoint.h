@@ -17,11 +17,15 @@ class TransJoint : public Joint {
 public:
     virtual bool violated();
     virtual void preStabilization();
-    virtual void postStabilization();
+    virtual bool postStabilization();
+    virtual double getDistance();
+    virtual void initialize();
     
     double min_dis, max_dis, k;
-    Vector3d tPos;
-    Quaternion<double> tAngle;
+    
+    Vector4d pX, cX;
+    Vector3d tAxis, vp, vc;
+    double dis;
 };
 
 #endif /* defined(__levelset__TransJoint__) */
