@@ -146,7 +146,7 @@ void Animate(int id)
         g_selectedObject->setUserForce(Vector3d(v[0], v[1], v[2]) * 5);
     }
     for (int i = 0; i < 9; ++i)
-        Solver::NRBS(*g_sys, 0.005);
+        Solver::EulersStep(*g_sys, 0.005);
 #ifndef _WINDOWS_PLATFORM_
     gettimeofday(&t2, 0);
     g_simTime = (t2.tv_usec - t1.tv_usec) * 1e-6 + (t2.tv_sec - t1.tv_sec);

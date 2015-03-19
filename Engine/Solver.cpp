@@ -15,6 +15,7 @@
 using namespace SimLib;
 
 void Solver::NRBS(SystemPhy &sys, double h) {
+    sys.setSolver(SystemPhy::NRBS);
     double t = sys.getTime();
     int n = sys.getDim() / 13 * 6;
     int m = sys.getDim() / 13 * 7;
@@ -123,6 +124,7 @@ void Solver::NRBS(SystemPhy &sys, double h) {
 
 void Solver::EulersStep(SystemPhy &sys, double h)
 {
+    sys.setSolver(SystemPhy::LCP);
     double t = sys.getTime();
     int n = sys.getDim();
     double* x = sys.getState();

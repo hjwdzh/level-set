@@ -17,6 +17,7 @@ using namespace std;
 class SystemPhy
 {
 public:
+    enum SOLVER_TYPE {NRBS = 0, LCP = 1};
     SystemPhy();
     virtual ~SystemPhy();
     
@@ -41,6 +42,9 @@ public:
     virtual double* getPosState() { return 0; }
     virtual void setVelState(double* state, double t) {}
     virtual void setPosState(double* state, double t) {}
+    
+    void setSolver(SOLVER_TYPE s) { solver = s; }
+    SOLVER_TYPE solver;
 };
 
 #endif /* defined(__simulation__SystemPhy__) */

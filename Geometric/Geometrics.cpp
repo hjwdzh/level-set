@@ -128,10 +128,7 @@ void Geometrics::contact_detection(Bounds& b)
 }
 
 void Geometrics::contact_detection(Geometrics& g) {
-//    Contact::contact_handling(contacts);
-    contacts.clear();
-    contacts.reserve(100);
-    bvh->collide_detection(&contacts);
+    if (system->solver == SystemPhy::NRBS) {
     for (double l = -0.8; l < 1e-3; l += 0.2) {
         bool had_collision = true;
         while (had_collision) {
@@ -142,6 +139,9 @@ void Geometrics::contact_detection(Geometrics& g) {
                 }
             }
         }
+    }
+    } else {
+        Contact::contact_handling(contacts);
     }
     clearRemoveList();
 }
