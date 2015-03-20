@@ -20,8 +20,29 @@ void Joint::initialize() {
     
 }
 
-void Joint::preStabilization() {
-    
+void Joint::preStabilization(double h) {
+    Vector3d j = solvej(h);
+    Vector3d jt = solvejt(h);
+    Matrix3d J1 = Matrix3d::createScale(0, 0, 0);
+    Matrix3d J2 = J1;
+    if (!(parent->nailed)) {
+        Matrix3d rot1 = parent->rotation.rotMatrix();
+        J1 = rot1 * parent->J * rot1.transpose();
+    }
+    if (!(child->nailed)) {
+        Matrix3d rot2 = child->rotation.rotMatrix();
+        J2 = rot2 * child->J * rot2.transpose();
+    }
+    double term1 = parent->nailed ? 0 : 1 / parent->mass;
+    double term2 = child->nailed ? 0 : 1 / child->mass;
+    if (!(parent->nailed)) {
+        parent->v += j * term1;
+        parent->w += J1 * jt;
+    }
+    if (!(child->nailed)) {
+        child->v -= j * term2;
+        child->w -= J2 * jt;
+    }
 }
 
 bool Joint::postStabilization() {
@@ -195,9 +216,36 @@ Vector3d Joint::solvej(double h) {
             epsilon += 0.05;
         fval = f(h, j);
     }
-    return fval;
+    return j;
 }
 
 Vector3d Joint::solvejt(double h) {
-    return Vector3d();
+    Vector3d jt, djt;
+    std::pair<Vector3d, Matrix3d> dfjtval;
+    Quatd ftval = ft(h, jt);
+    double epsilon = 0.1;
+    while (ftval.length() > 1e-6) {
+        dfjt(h, jt, dfjtval);
+        ARRAY<2, double> A;
+        ARRAY<1, double> B, X;
+        for (int i = 1; i <= 3; ++i) {
+            for (int j = 1; j <= 3; ++j) {
+                A(i,j) = dfjtval.second.at(j - 1, i - 1);
+            }
+            A(4,i) = dfjtval.first[i - 1];
+        }
+        for (int i = 1; i <= 3; ++i) {
+            B(i) = ftval.v[i-1];
+        }
+        B(4) = ftval.w;
+        Solver::OLS(A, B, X);
+        for (int i = 1; i <= 3; ++i) {
+            djt[i-1] = X(i);
+        }
+        jt = djt * epsilon;
+        if (epsilon < 1 - 1e-6)
+            epsilon += 0.05;
+        ftval = f(h, jt);
+    }
+    return jt;
 }

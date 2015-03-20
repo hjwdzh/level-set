@@ -21,6 +21,8 @@ public:
     static void NRBS(SystemPhy& sys, double h);
     static void QPSolve(SimLib::ARRAY<2, double>& a, SimLib::ARRAY<1, double>& b, SimLib::ARRAY<1, double>& f);
     static void LinearSolve(SimLib::ARRAY<2, double> a, SimLib::ARRAY<1, double> b, SimLib::ARRAY<1, double>& x);
+    static void OLS(SimLib::ARRAY<2, double>& a, SimLib::ARRAY<1, double>& b, SimLib::ARRAY<1, double>& x);
+    static void SVD(SimLib::ARRAY<2, double> a, SimLib::ARRAY<2, double>& u, SimLib::ARRAY<1, double>& s, SimLib::ARRAY<2, double>& v);
 private:
     static void fdirection(int d, SimLib::ARRAY<2, double>& a, std::set<int>& C, SimLib::ARRAY<1, double>& delta_f, SimLib::ARRAY<1, double>& delta_a);
     static pair<double, int> maxstep(SimLib::ARRAY<1, double>& f, SimLib::ARRAY<1, double>& a, SimLib::ARRAY<1, double>& delta_f, SimLib::ARRAY<1, double>& delta_a, std::set<int>& C, std::set<int>& NC, int d);

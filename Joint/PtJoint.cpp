@@ -20,8 +20,28 @@ bool PtJoint::violated() {
     return false;
 }
 
-void PtJoint::preStabilization() {
-    
+void PtJoint::preStabilization(double h) {
+    Vector3d j = solvej(h);
+    Matrix3d J1 = Matrix3d::createScale(0, 0, 0);
+    Matrix3d J2 = J1;
+    if (!(parent->nailed)) {
+        Matrix3d rot1 = parent->rotation.rotMatrix();
+        J1 = rot1 * parent->J * rot1.transpose();
+    }
+    if (!(child->nailed)) {
+        Matrix3d rot2 = child->rotation.rotMatrix();
+        J2 = rot2 * child->J * rot2.transpose();
+    }
+    double term1 = parent->nailed ? 0 : 1 / parent->mass;
+    double term2 = child->nailed ? 0 : 1 / child->mass;
+    if (!(parent->nailed)) {
+        parent->v += j * term1;
+        parent->w += J1 * pPos.crossProduct(j);
+    }
+    if (!(child->nailed)) {
+        child->v -= j * term2;
+        child->w -= J2 * cPos.crossProduct(j);
+    }
 }
 
 bool PtJoint::postStabilization() {

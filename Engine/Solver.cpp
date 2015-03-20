@@ -290,6 +290,174 @@ void Solver::LinearSolve(ARRAY<2, double> a, ARRAY<1, double> b, ARRAY<1, double
     }
 }
 
+//http://m.oschina.net/blog/3758
+void Solver::SVD(SimLib::ARRAY<2, double> a, SimLib::ARRAY<2, double>& u, SimLib::ARRAY<1, double>& s, SimLib::ARRAY<2, double>& v) {
+    int m = a.dim(1);
+    int n = a.dim(2);
+    if (m < n) {
+        ARRAY<2, double> A(n, m);
+        for (int i = 1; i <= m; ++i) {
+            for (int j = 1; j <= n; ++j) {
+                A(j,i) = a(i,j);
+            }
+        }
+        SVD(A, v, s, u);
+        return;
+    }
+    u = ARRAY<2, double>(m,m);
+    s = ARRAY<1, double>(n);
+    v = ARRAY<2, double>(n,n);
+    ARRAY<1, double> e(n);
+    ARRAY<1, double> work(m);
+    int wantu = 1;
+    int wantv = 1;
+    int nct = m - 1;
+    int nrt = std::max(0, n - 2);
+    int i = 0, j = 0, k = 0;
+    for (k = 1; k <= std::max(nct, nrt); ++k) {
+        if (k <= nct) {
+            s(k) = 0;
+            for (i = k; i <= m; ++i)
+                s(k) = hypot(s(k), a(i,k));
+            if (s(k) < -1e-6 || s(k) > 1e-6) {
+                if (a(k,k) < 0)
+                    s(k) = -s(k);
+                for (i = k; i <= m; ++i)
+                    a(i,k) /= s(k);
+                a(k,k) += 1;
+            }
+            s(k) = -s(k);
+        }
+        for (j = k + 1; j <= n; ++j) {
+            if (k <= nct && (s(k) < -1e-6 || s(k) > 1e-6)) {
+                double t = 0;
+                for (i = k; i <= m; ++i)
+                    t += a(i,k) * a(i,j);
+                t = -t / a(k,k);
+                for (i = k; i <= m; ++i)
+                    a(i,j) += t * a(i,k);
+            }
+            e(k) = a(k,j);
+        }
+        if (wantu & (k <= nct)) {
+            for (i = k; i <= m; ++i)
+                u(i,k) = a(i,k);
+        }
+        if (k <= nrt) {
+            e(k) = 0;
+            for (i = k + 1; i <= n; ++i)
+                e(k) = hypot(e(k), e(i));
+            if (e(k) > 1e-6 || e(k) < -1e-6) {
+                if (e(k+1) < 0)
+                    e(k) = -e(k);
+                for (i = k + 1; i <= n; ++i)
+                    e(i) /= e(k);
+                e(k + 1) += 1;
+            }
+            e(k) = -e(k);
+            if ((k + 1 < m) && (e(k) > 1e-6 || e(k) < -1e-6)) {
+                for (i = k + 1; i <= m; ++i)
+                    work(i) = 0;
+                for (j = k + 1; j <= n; ++j) {
+                    for (i = k + 1; i <= m; ++i) {
+                        work(i) += e(j) * a(i,j);
+                    }
+                }
+                for (j = k + 1; j <= n; ++j) {
+                    double t = -e(j) / e(k + 1);
+                    for (int i = k + 1; i <= m; ++i)
+                        a(i,j) += t * work(i);
+                }
+            }
+            if (wantv) {
+                for (i = k + 1; i <= n; ++i)
+                    v(i,k) = e(i);
+            }
+        }
+    }
+    int p = n;
+    if (nct < n) {
+        s(nct + 1) = a(nct + 1,nct + 1);
+    }
+    if (m < p) {
+        s(p) = 0;
+    }
+    if (nrt + 1 < p) {
+        e(nrt + 1) = a(nrt + 1, p);
+    }
+    e(p) = 0;
+    if (wantu) {
+        for (j = nct + 1; j <= n; ++j) {
+            for (i = 1; i <= m; ++i)
+                u(i,j) = 0;
+            u(j,j) = 1;
+        }
+        for (k = nct; k >= 1; --k) {
+            if (s(k) > 1e-6 || s(k) < -1e-6) {
+                for (j = k + 1; j <= n; ++j) {
+                    double t = 0;
+                    for (i = k; i <= m; ++i)
+                        t += u(i,k) * u(i,j);
+                    t = -t / u(k,k);
+                    for (i = k; i <= m; ++i)
+                        u(i,j) += t * u(i,k);
+                }
+                for (i = k; i <= m; ++i) {
+                    u(i,k) = -u(i,k);
+                }
+                u(k,k) += 1;
+                for (i = 1; i <= k - 1; ++i) {
+                    u(i,k) = 0;
+                }
+            } else {
+                for (i = 1; i <= m; ++i)
+                    u(i,k) = 0;
+                u(k,k) = 1;
+            }
+        }
+    }
+    if (wantv) {
+        for (k = n; k >= 1; --k) {
+            if ((k <= nrt) && (e(k) > 1e-6 || e(k) < -1e-6)) {
+                for (j = k + 1; j <= n; ++j) {
+                    double t = 0;
+                    for (i = k + 1; i <= n; ++i)
+                        t += v(i,k) * v(i,j);
+                    t = -t / v(k+1, k);
+                    for (i = k + 1; i <= n; ++i)
+                        v(i,j) += t * v(i,k);
+                }
+            }
+            for (i = 1; i <= n; ++i) {
+                v(i,k) = 0;
+            }
+            v(k,k) = 1;
+        }
+    }
+}
+
+//min ||Ax - b||
+void Solver::OLS(SimLib::ARRAY<2, double>& a, SimLib::ARRAY<1, double>& b, SimLib::ARRAY<1, double>& x) {
+    ARRAY<2, double> u, v;
+    ARRAY<1, double> s;
+    SVD(a, u, s, v);
+    ARRAY<1, double> b1(4);
+    for (int i = 1; i <= 4; ++i) {
+        for (int j = 1; j <= 4; ++j) {
+            b1(i) += u(j,i) * b(j);
+        }
+    }
+    for (int i = 1; i <= 3; ++i)
+        b1(i) /= s(i);
+    x = ARRAY<1, double>(3);
+    for (int i = 1; i <= 3; ++i) {
+        for (int j = 1; j <= 3; ++j) {
+            x(i) += v(i,j) * b1(j);
+        }
+    }
+}
+
+
 pair<double, int> Solver::maxstep(SimLib::ARRAY<1, double>& f, SimLib::ARRAY<1, double>& a, SimLib::ARRAY<1, double>& delta_f, SimLib::ARRAY<1, double>& delta_a, set<int>& C, set<int>& NC, int d) {
     double s = 1e30;
     int j = -1;

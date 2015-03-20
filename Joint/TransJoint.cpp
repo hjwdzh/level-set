@@ -20,14 +20,41 @@ bool TransJoint::violated() {
     return ((curDis < min_dis && dir < 0) || (curDis > max_dis && dir > 0));
 }
 
-void TransJoint::preStabilization() {
-    
+void TransJoint::preStabilization(double h) {
+    Vector3d j = solvej(h);
+    Vector3d jt = solvejt(h);
+    if (!violated()) {
+        j -= tAxis * j.dotProduct(tAxis);
+    }
+    Matrix3d J1 = Matrix3d::createScale(0, 0, 0);
+    Matrix3d J2 = J1;
+    if (!(parent->nailed)) {
+        Matrix3d rot1 = parent->rotation.rotMatrix();
+        J1 = rot1 * parent->J * rot1.transpose();
+    }
+    if (!(child->nailed)) {
+        Matrix3d rot2 = child->rotation.rotMatrix();
+        J2 = rot2 * child->J * rot2.transpose();
+    }
+    double term1 = parent->nailed ? 0 : 1 / parent->mass;
+    double term2 = child->nailed ? 0 : 1 / child->mass;
+    if (!(parent->nailed)) {
+        parent->v += j * term1;
+        parent->w += J1 * jt;
+    }
+    if (!(child->nailed)) {
+        child->v -= j * term2;
+        child->w -= J2 * jt;
+    }
 }
 
 bool TransJoint::postStabilization() {
     Vector3d vrel;
     Vector3d wrel = child->w - parent->w;
-    if (violated()) {
+    if (!violated()) {
+        vrel = vc - vp;
+        vrel -= tAxis * vrel.dotProduct(tAxis);
+    } else {
         vrel = vc - vp;
     }
     if ((vrel.length() < 1e-4  && wrel.length() < 1e-4) || (parent->nailed && child->nailed))

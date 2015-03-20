@@ -16,7 +16,7 @@
 class TransJoint : public Joint {
 public:
     virtual bool violated();
-    virtual void preStabilization();
+    virtual void preStabilization(double h);
     virtual bool postStabilization();
     virtual double getDistance();
     virtual void initialize();

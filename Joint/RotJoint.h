@@ -15,7 +15,7 @@
 class RotJoint : public Joint {
 public:
     virtual bool violated();
-    virtual void preStabilization();
+    virtual void preStabilization(double h);
     virtual bool postStabilization();
     virtual void initialize();
     double getAngle();

@@ -18,7 +18,7 @@ public:
     PtJoint(Vector3d p1, Vector3d p2);
     
     virtual bool violated();
-    virtual void preStabilization();
+    virtual void preStabilization(double h);
     virtual bool postStabilization();
 };
 
