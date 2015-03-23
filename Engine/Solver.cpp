@@ -8,6 +8,7 @@
 
 #include "Solver.h"
 #include "vmath.h"
+#include "SysDynPtc.h"
 #include <set>
 #include <list>
 #define ANGLE_SCALE 180 / 3.141592654
@@ -15,6 +16,11 @@
 using namespace SimLib;
 
 void Solver::NRBS(SystemPhy &sys, double h) {
+    static int tt = 0;
+    tt++;
+    if (tt >= 340) {
+        tt = tt;
+    }
     sys.setSolver(SystemPhy::NRBS);
     double t = sys.getTime();
     int n = sys.getDim() / 13 * 6;
@@ -71,7 +77,6 @@ void Solver::NRBS(SystemPhy &sys, double h) {
     delete[] v;
     delete[] deltaV;
 
-    sys.preStabilization();
     //contact handling
     //use x_new = x + h * v
     deltaX = sys.DerivPosEval(x, t);
@@ -94,7 +99,8 @@ void Solver::NRBS(SystemPhy &sys, double h) {
     sys.setPosState(x_new, t);
     sys.contact_handling();
     delete[] deltaX;
-    
+
+    sys.preStabilization(h);
     //Integrate x
     deltaX = sys.DerivPosEval(x, t);
     if (deltaX != 0) {
@@ -114,7 +120,7 @@ void Solver::NRBS(SystemPhy &sys, double h) {
         }
     }
     sys.setPosState(x_new, t + h);
-    
+    sys.postStabilization();
     delete[] x;
     delete[] x_new;
     delete[] deltaX;

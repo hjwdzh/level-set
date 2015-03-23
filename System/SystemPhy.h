@@ -32,7 +32,7 @@ public:
     virtual double* DerivVelEval(double* state, double t) {return 0;}
     virtual double* DerivPosEval(double* state, double t) {return 0;}
     
-    virtual void preStabilization() {}
+    virtual void preStabilization(double h) {}
     virtual void collide_detection() {}
     virtual void contact_handling() {}
     virtual void updateForce() {}

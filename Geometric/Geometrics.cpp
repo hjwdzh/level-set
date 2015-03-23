@@ -98,12 +98,16 @@ void Geometrics::collide_detection(Geometrics& g) {
     contacts.clear();
     contacts.reserve(100);
     bvh->collide_detection(&contacts);
-    bool had_collision = true;
-    while (had_collision) {
-        had_collision = false;
+    bool has_collision = true;
+    int iteration = 0;
+    while (has_collision) {
+        has_collision = false;
+        iteration++;
+        if (iteration > 9)
+            break;
         for (int i = 0; i < contacts.size(); ++i) {
             if (contacts[i].collide_handling()) {
-                had_collision = true;
+                has_collision = true;
             }
         }
     }
@@ -130,12 +134,16 @@ void Geometrics::contact_detection(Bounds& b)
 void Geometrics::contact_detection(Geometrics& g) {
     if (system->solver == SystemPhy::NRBS) {
     for (double l = -0.8; l < 1e-3; l += 0.2) {
-        bool had_collision = true;
-        while (had_collision) {
-            had_collision = false;
+        bool has_collision = true;
+        int iteration = 0;
+        while (has_collision) {
+            iteration++;
+            if (iteration > 9)
+                break;
+            has_collision = false;
             for (int i = 0; i < contacts.size(); ++i) {
                 if (contacts[i].collide_handling(l)) {
-                    had_collision = true;
+                    has_collision = true;
                 }
             }
         }

@@ -2944,7 +2944,7 @@ public:
 	 * Creates quaternion object from real part w_ and complex part v_.
 	 * @param w_ Real part of quaternion.
 	 * @param v_ Complex part of quaternion (xi + yj + zk).
-	 */
+//	 */
 	Quaternion(T w_, const Vector3<T>& v_)
 			: w(w_), v(v_)
 	{
@@ -2953,7 +2953,8 @@ public:
     Quaternion(const Vector3<T>& w_) {
         double len = w_.length();
         w = cos(len * 0.5);
-        v = w_ * (T)(sin(len * 0.5) / len);
+        if (len != 0)
+            v = w_ * (T)(sin(len * 0.5) / len);
     }
 
 	/**

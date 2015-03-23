@@ -45,7 +45,7 @@ public:
         ForceApply();
     }
 
-    virtual void preStabilization();
+    virtual void preStabilization(double h);
     virtual void postStabilization();
     
     virtual void setVelState(double* state, double t);

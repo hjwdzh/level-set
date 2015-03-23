@@ -115,7 +115,7 @@ Vector3d Joint::f(double h, Vector3d& j) {
     }
     Vector3d rp0 = parent->rotation.rotMatrix() * pPos;
     Vector3d rc0 = child->rotation.rotMatrix() * cPos;
-    return j * (h * (mp + mc)) + (parent->v * h + (Quatd(parent->w * h + (J1 * rp0.crossProduct(j)) * h) * parent->rotation).rotMatrix() * pPos) - (child->v * h + (Quatd(child->w * h - (J2 * rc0.crossProduct(j)) * h) * child->rotation).rotMatrix() * cPos);
+    return parent->x - child->x + j * (h * (mp + mc)) + (parent->v * h + Quatd(parent->w * h + (J1 * rp0.crossProduct(j)) * h).rotMatrix() * rp0) - (child->v * h + Quatd(child->w * h - (J2 * rc0.crossProduct(j)) * h).rotMatrix() * rc0);
 }
 
 Quatd Joint::ft(double h, Vector3d& jt) {
@@ -151,12 +151,18 @@ void Joint::dfj(double h, const Vector3d &j, Matrix3d &r) {
     Vector3d wc0 = (child->w - J2 * (rc * j)) * h;
     double thetap = wp0.length() * 0.5;
     double thetac = wc0.length() * 0.5;
-    Vector3d wp = wp0 * (1 / wp0.length());
-    Vector3d wc = wc0 * (1 / wc0.length());
+    Vector3d wp, wc;
+    Matrix3d dwp, dwc;
+    if (thetap != 0) {
+        wp = wp0 * (1 / wp0.length());
+        dwp = (Matrix3d() - Matrix3d::createDotProductMatrix(wp, wp)) * J1 * rp * (h / (2 * thetap));
+    }
+    if (thetac != 0) {
+        wc = wc0 * (1 / wc0.length());
+        dwc = (Matrix3d() - Matrix3d::createDotProductMatrix(wc, wc)) * J2 * rc * (-h / (2 * thetac));
+    }
     Vector3d dthetap = (J1 * rp).transpose() * (wp * (h * 0.5));
     Vector3d dthetac = (J2 * rc).transpose() * (wc * (-h * 0.5));
-    Matrix3d dwp = (Matrix3d() - Matrix3d::createDotProductMatrix(wp, wp)) * J1 * rp * (h / (2 * thetap));
-    Matrix3d dwc = (Matrix3d() - Matrix3d::createDotProductMatrix(wc, wc)) * J2 * rc * (-h / (2 * thetac));
     Vector3d t1 = rp0 * (cos(thetap) * sin(thetap)) - rp * wp * (2 * cos(thetap) * cos(thetap)) + rp * wp * (2 * sin(thetap) * sin(thetap)) + wp * (rp0.dotProduct(wp) * 4 * sin(thetap) * cos(thetap));
     Matrix3d t2 = rp * (-2 * sin(thetap) * cos(thetap)) + Matrix3d() * (2 * rp0.dotProduct(wp) * sin(thetap) * sin(thetap)) + Matrix3d::createDotProductMatrix(wp * (2 * sin(thetap) * sin(thetap)), rp0);
     Matrix3d resp = Matrix3d::createDotProductMatrix(t1, dthetap) + t2 * dwp;
@@ -208,10 +214,10 @@ Vector3d Joint::solvej(double h) {
     Matrix3d dfjval;
     Vector3d fval = f(h, j);
     double epsilon = 0.1;
-    while (fval.length() > 1e-6) {
+    while (fval.length() > 1e-3) {
         dfj(h, j, dfjval);
         dj = dfjval.inverse() * fval;
-        j += dj * epsilon;
+        j -= dj * epsilon;
         if (epsilon < 1 - 1e-6)
             epsilon += 0.05;
         fval = f(h, j);
@@ -242,7 +248,7 @@ Vector3d Joint::solvejt(double h) {
         for (int i = 1; i <= 3; ++i) {
             djt[i-1] = X(i);
         }
-        jt = djt * epsilon;
+        jt -= djt * epsilon;
         if (epsilon < 1 - 1e-6)
             epsilon += 0.05;
         ftval = f(h, jt);

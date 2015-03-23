@@ -300,7 +300,11 @@ void SysDynPtc::ForceApply()
 
 void SysDynPtc::postStabilization() {
     bool has_collision = true;
+    int iteration = 0;
     while (has_collision) {
+        iteration++;
+        if (iteration > 9)
+            break;
         has_collision = false;
         for (int i = 0; i < joints.size(); ++i) {
             if (joints[i]->postStabilization()) {
@@ -310,8 +314,9 @@ void SysDynPtc::postStabilization() {
     }
 }
 
-void SysDynPtc::preStabilization() {
-    
+void SysDynPtc::preStabilization(double h) {
+    for (int i = 0; i < joints.size(); ++i)
+        joints[i]->preStabilization(h);
 }
 
 double SysDynPtc::getTime()
