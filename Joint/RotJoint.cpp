@@ -12,6 +12,17 @@
 
 using namespace SimLib;
 
+RotJoint::RotJoint() {
+}
+
+RotJoint::RotJoint(const Vector3d& p1, const Vector3d& p2, const Vector3d& _tAxis, double min_angle, double max_angle) {
+    pPos = p1;
+    cPos = p2;
+    tAxis = _tAxis;
+    this->min_angle = min_angle;
+    this->max_angle = max_angle;
+}
+
 bool RotJoint::violated() {
     double ta = getAngle() - angle;
     if (ta < -180)
@@ -77,19 +88,26 @@ void RotJoint::initialize() {
 
 bool RotJoint::postStabilization() {
     Vector3d wrel;
-    if (!(parent->nailed || child->nailed)) {
+    bool is_violated = false;
+    if (!(parent->nailed && child->nailed)) {
+        is_violated = true;
         Vector3d d1 = parent->Transform() * dp;
         Vector3d d2 = child->Transform() * dc;
+        d1.normalize();
+        d2.normalize();
         wp = d1 * d1.dotProduct(parent->w);
         wc = d2 * d2.dotProduct(child->w);
         if (!violated()) {
-            wrel = tAxis * tAxis.dotProduct(wc - wp);
+            wrel = wp - wc + child->w - parent->w;
+            is_violated = false;
         }
     }
-    Vector3d v1 = parent->v + parent->w.crossProduct(parent->Transform() * pPos);
-    Vector3d v2 = child->v + child->w.crossProduct(child->Transform() * cPos);
+    Vector3d pPos = parent->rotation.rotMatrix() * this->pPos;
+    Vector3d cPos = child->rotation.rotMatrix() * this->cPos;
+    Vector3d v1 = parent->v + parent->w.crossProduct(pPos);
+    Vector3d v2 = child->v + child->w.crossProduct(cPos);
     Vector3d vrel = v2 - v1;
-    if ((vrel.length() < 1e-4  && wrel.length() < 1e-4) || (parent->nailed && child->nailed))
+    if ((vrel.length() < 1e-4 && wrel.length() < 1e-4) || (parent->nailed && child->nailed))
         return false;
     double term1 = parent->nailed ? 0 : 1 / parent->mass;
     double term2 = child->nailed ? 0 : 1 / child->mass;
@@ -101,12 +119,12 @@ bool RotJoint::postStabilization() {
         J1 = rot1 * parent->J * rot1.transpose();
     }
     if (!(child->nailed)) {
-        J2 = rot2 * parent->J * rot2.transpose();
+        J2 = rot2 * child->J * rot2.transpose();
     }
     Matrix3d rp = Matrix3d::createCrossProductMatrix(pPos);
     Matrix3d rc = Matrix3d::createCrossProductMatrix(cPos);
     Matrix3d rpt = rp.transpose();
-    Matrix3d rct = rp.transpose();
+    Matrix3d rct = rc.transpose();
     Matrix3d vrel_A1 = Matrix3d() * (term1 + term2) + rpt * J1 * rp + rct * J2 * rc;
     Matrix3d vrel_A2 = rpt * J1 + rct * J2;
     Matrix3d wrel_A1 = J1 * rp + J2 * rc;
@@ -118,15 +136,30 @@ bool RotJoint::postStabilization() {
         b(i) = vrel[i-1];
         b(i + 3) = wrel[i-1];
         for (int j = 1; j <= 3; ++j) {
-            a(i,j) = vrel_A1.at(j,i);
-            a(i,j+3) = vrel_A2.at(j,i);
-            a(i+3,j) = wrel_A1.at(j,i);
-            a(i+3,j+3) = wrel_A2.at(j,i);
+            a(i,j) = vrel_A1.at(j-1,i-1);
+            a(i,j+3) = vrel_A2.at(j-1,i-1);
+            a(i+3,j) = wrel_A1.at(j-1,i-1);
+            a(i+3,j+3) = wrel_A2.at(j-1,i-1);
         }
     }
     Solver::LinearSolve(a, b, x);
     Vector3d j(x(1), x(2), x(3));
     Vector3d jt(x(4), x(5), x(6));
+    if (!is_violated) {
+        Vector3d diff;
+        Vector3d axis = wrel_A2.inverse() * tAxis;
+        axis.normalize();
+        while (true) {
+            diff += axis * jt.dotProduct(axis);
+            if (diff.length() < 1e-13)
+                break;
+            jt -= diff;
+            diff = vrel_A1.inverse() * (vrel_A2 * diff);
+            j += diff;
+            diff = wrel_A2.inverse() * (wrel_A1 * diff);
+        }
+    }
+    Vector3d t3 = wrel_A1 * j + wrel_A2 * jt;
     if (!(parent->nailed)) {
         parent->v += j * term1;
         parent->w += J1 * (pPos.crossProduct(j) + jt);

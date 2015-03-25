@@ -4,6 +4,7 @@
 #include "IMPLICIT_SPHERE.h"
 #include "Rigid_Geometry.h"
 #include "PtJoint.h"
+#include "RotJoint.h"
 #include <stdio.h>
 
 using namespace SimLib;
@@ -64,50 +65,44 @@ void Sysfric::Reset() {
 	string texture_path = res_path + "\\texture\\";
 #endif
 //    Rigid_Geometry* road1 = new Rigid_Geometry("road", (model_path + "cube.obj").c_str(),Vector3d(0,-3,-50),Vector3d(0,0,0),Vector3d(100,3,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
-    Rigid_Geometry* cube = new Rigid_Geometry("cube0", (model_path + "cube.obj").c_str(),Vector3d(0,-1,-40),Vector3d(0,0,0),Vector3d(100,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
-    Rigid_Geometry* cube11 = new Rigid_Geometry("cube1", (model_path + "cube.obj").c_str(),Vector3d(4,5,-36),Vector3d(0,0,0),Vector3d(1,1,1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
-    Rigid_Geometry* cube1 = new Rigid_Geometry("cube1", (model_path + "cube.obj").c_str(),Vector3d(2,3,-38),Vector3d(0,0,0),Vector3d(1,1,1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
-    Rigid_Geometry* cube2 = new Rigid_Geometry("cube2", (model_path + "cube.obj").c_str(),Vector3d(0,1,-40),Vector3d(0,0,0),Vector3d(1,1,1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+//    Rigid_Geometry* cube = new Rigid_Geometry("cube0", (model_path + "cube.obj").c_str(),Vector3d(0,-1,-40),Vector3d(0,0,0),Vector3d(100,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+    Rigid_Geometry* cube1 = new Rigid_Geometry("cube1", (model_path + "cube.obj").c_str(),Vector3d(0,1,-42),Vector3d(0,0,0),Vector3d(1,1,1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+    Rigid_Geometry* cube2 = new Rigid_Geometry("cube2", (model_path + "cube.obj").c_str(),Vector3d(0,1,-40),Vector3d(0,0,0),Vector3d(1.1,1,1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
 //    Rigid_Geometry* cube3 = new Rigid_Geometry("cube3", (model_path + "cube.obj").c_str(),Vector3d(0,0.5,-60),Vector3d(0,0,0),Vector3d(1,0.5,1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
 //    cube->setKr(0);
 //    Rigid_Geometry* cube2 = new Rigid_Geometry("cube2", (model_path + "cube.obj").c_str(),Vector3d(5,5,-39.5),Vector3d(0,0,0),Vector3d(1,1,1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
 //    road1->setNailed();
 //    road1->setKr(0.1);
 //    road1->LoadTexture((texture_path + "wood.bmp").c_str(), 0.6);
-    cube->setNailed();
-    cube->LoadTexture((texture_path + "wood.bmp").c_str(), 0.6);
-    cube->kf = 0.1;
+//    cube->setNailed();
+//    cube->LoadTexture((texture_path + "wood.bmp").c_str(), 0.6);
+//    cube->kf = 0.1;
     cube1->LoadTexture((texture_path + "marble.bmp").c_str(), 0.6);
     cube1->setKr(0);
-    cube1->kf = 0.9;
-    cube11->LoadTexture((texture_path + "marble.bmp").c_str(), 0.6);
-    cube11->setKr(0);
-    cube11->kf = 0.9;
 //    cube1->v = Vector3d(-5,0,0);
 //    cube1->w = Vector3d(0,5,0);
-    PtJoint* ptJoint = new PtJoint(Vector3d(-1,-1,-1),Vector3d(1,1,1));
-    ptJoint->parent = cube2;
-    ptJoint->child = cube1;
-    PtJoint* ptJoint1 = new PtJoint(Vector3d(-1,-1,-1),Vector3d(1,1,1));
-    ptJoint1->parent = cube1;
-    ptJoint1->child = cube11;
+    cube1->kf = 0.9;
+//    PtJoint* ptJoint = new PtJoint(Vector3d(-1,-1,-1),Vector3d(1,-1,-1));
+//    PtJoint* ptJoint1 = new PtJoint(Vector3d(-1,-1,1),Vector3d(1,-1,1));
+    RotJoint* rotJoint = new RotJoint(Vector3d(-1,-1,-1),Vector3d(-1,-1,1),Vector3d(1,0,0),-45,45);
+    rotJoint->parent = cube2;
+    rotJoint->child = cube1;
+    rotJoint->initialize();
 //    ptJoint1->parent = cube2;
 //    ptJoint1->child = cube1;
     cube2->LoadTexture((texture_path + "marble.bmp").c_str(), 0.6);
     cube2->kf = 0.9;
-//    cube2->setNailed();
+    cube2->setNailed();
 //    cube3->LoadTexture((texture_path + "marble.bmp").c_str(), 0.6);
 //    cube3->v = Vector3d(0,0,10);
 //    cube3->kf = 0.1;
 //    cube2->w = Vector3d(0,1,0);
 //    m_objects.addElement(road1);
-    m_objects.addElement(cube);
-    m_objects.addElement(cube11);
+//    m_objects.addElement(cube);
     m_objects.addElement(cube1);
     m_objects.addElement(cube2);
 //    m_objects.addElement(cube3);
-    joints.push_back(ptJoint);
-    joints.push_back(ptJoint1);
+    joints.push_back(rotJoint);
 //    joints.push_back(ptJoint1);
     game_mode = BEGIN_SHOOT;
 }

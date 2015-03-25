@@ -11,7 +11,7 @@
 PtJoint::PtJoint() {
 }
 
-PtJoint::PtJoint(Vector3d p1, Vector3d p2) {
+PtJoint::PtJoint(const Vector3d& p1, const Vector3d& p2) {
     pPos = p1;
     cPos = p2;
 }

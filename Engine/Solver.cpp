@@ -18,7 +18,7 @@ using namespace SimLib;
 void Solver::NRBS(SystemPhy &sys, double h) {
     static int tt = 0;
     tt++;
-    if (tt >= 340) {
+    if (tt == 56) {
         tt = tt;
     }
     sys.setSolver(SystemPhy::NRBS);
@@ -100,7 +100,7 @@ void Solver::NRBS(SystemPhy &sys, double h) {
     sys.contact_handling();
     delete[] deltaX;
 
-    sys.preStabilization(h);
+//    sys.preStabilization(h);
     //Integrate x
     deltaX = sys.DerivPosEval(x, t);
     if (deltaX != 0) {

@@ -21,6 +21,7 @@ void Joint::initialize() {
 }
 
 void Joint::preStabilization(double h) {
+    return;
     Vector3d j = solvej(h);
     Vector3d jt = solvejt(h);
     Matrix3d J1 = Matrix3d::createScale(0, 0, 0);
