@@ -31,10 +31,16 @@ bool RotJoint::violated() {
         ta -= 360;
     Vector3d d1 = parent->Transform() * dp;
     double dir = d1.dotProduct(wc - wp);
-    return ((ta < min_angle && dir > 0) || (ta > max_angle && dir < 0));
+    if ((ta < min_angle && dir > 0) || (ta > max_angle && dir < 0)) {
+        qt = Quatd(-tAxis * (min_angle / 180.0 * 3.141592654));
+        return true;
+    }
+    return false;
 }
 
 void RotJoint::preStabilization(double h) {
+    Vector3d pPos = parent->rotation.rotMatrix() * this->pPos;
+    Vector3d cPos = child->rotation.rotMatrix() * this->cPos;
     Vector3d j = solvej(h);
     Matrix3d J1 = Matrix3d::createScale(0, 0, 0);
     Matrix3d J2 = J1;

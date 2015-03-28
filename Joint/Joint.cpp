@@ -130,7 +130,7 @@ Quatd Joint::ft(double h, Vector3d& jt) {
         Matrix3d rot2 = child->rotation.rotMatrix();
         J2 = rot2 * child->J * rot2.transpose();
     }
-    return (Quatd(parent->w * h + J1 * jt * h) * parent->rotation) - (Quatd(child->w * h - J2 * jt * h) * child->rotation);
+    return (Quatd(parent->w * h + J1 * jt * h) * parent->rotation * qt) - (Quatd(child->w * h - J2 * jt * h) * child->rotation);
 }
 
 void Joint::dfj(double h, const Vector3d &j, Matrix3d &r) {
@@ -190,16 +190,22 @@ void Joint::dfjt(double h, const Vector3d& jt, std::pair<Vector3d,Matrix3d>& r) 
     Vector3d wc0 = (child->w - J2 * jt) * h;
     double thetap = wp0.length() * 0.5;
     double thetac = wc0.length() * 0.5;
-    Vector3d wp = wp0 * (1 / wp0.length());
-    Vector3d wc = wc0 * (1 / wc0.length());
+    Vector3d wp, wc;
+    Matrix3d dwp, dwc;
+    if (thetap != 0) {
+        wp = wp0 * (1 / wp0.length());
+        dwp = (Matrix3d() - Matrix3d::createDotProductMatrix(wp, wp)) * J1 * (h / (2 * thetap));
+    }
+    if (thetac != 0) {
+        wc = wc0 * (1 / wc0.length());
+        dwc = (Matrix3d() - Matrix3d::createDotProductMatrix(wc, wc)) * J2 * (-h / (2 * thetac));
+    }
     Vector3d dthetap = J1.transpose() * (wp * (h * 0.5));
     Vector3d dthetac = J2.transpose() * (wc * (-h * 0.5));
-    Matrix3d dwp = (Matrix3d() - Matrix3d::createDotProductMatrix(wp, wp)) * J1 * (h / (2 * thetap));
-    Matrix3d dwc = (Matrix3d() - Matrix3d::createDotProductMatrix(wc, wc)) * J2 * (-h / (2 * thetac));
     Vector3d ap = dthetap * (-parent->rotation.w * sin(thetap) - parent->rotation.v.dotProduct(wp) * cos(thetap))
-            - dwp.transpose() * parent->rotation.v;
+            - dwp.transpose() * parent->rotation.v * sin(thetap);
     Vector3d ac = dthetac * (-child->rotation.w * sin(thetac) - child->rotation.v.dotProduct(wc) * cos(thetac))
-            - dwc.transpose() * child->rotation.v;
+            - dwc.transpose() * child->rotation.v * sin(thetac);
     r.first = ap - ac;
     Vector3d t1 = parent->rotation.v * (-sin(thetap)) + wp * (parent->rotation.w * cos(thetap)) - parent->rotation.v.crossProduct(wp) * cos(thetap);
     Matrix3d t2 = Matrix3d() * (parent->rotation.w * sin(thetap)) - Matrix3d::createCrossProductMatrix(parent->v) * sin(thetap);
@@ -233,8 +239,8 @@ Vector3d Joint::solvejt(double h) {
     double epsilon = 0.1;
     while (ftval.length() > 1e-6) {
         dfjt(h, jt, dfjtval);
-        ARRAY<2, double> A;
-        ARRAY<1, double> B, X;
+        ARRAY<2, double> A(4,3);
+        ARRAY<1, double> B(4), X, C;
         for (int i = 1; i <= 3; ++i) {
             for (int j = 1; j <= 3; ++j) {
                 A(i,j) = dfjtval.second.at(j - 1, i - 1);
@@ -245,14 +251,25 @@ Vector3d Joint::solvejt(double h) {
             B(i) = ftval.v[i-1];
         }
         B(4) = ftval.w;
+        double w1 = 0, w2 = 0;
+        for (int i = 1; i <= 4; ++i)
+            w1 += B(i) * B(i);
         Solver::OLS(A, B, X);
+        C = B;
+        for (int i = 1; i <= 4; ++i) {
+            for (int j = 1; j <= 3; ++j) {
+                C(i) -= A(i,j) * X(j);
+            }
+        }
+        for (int i = 1; i <= 4; ++i)
+            w2 += C(i) * C(i);
         for (int i = 1; i <= 3; ++i) {
             djt[i-1] = X(i);
         }
         jt -= djt * epsilon;
         if (epsilon < 1 - 1e-6)
             epsilon += 0.05;
-        ftval = f(h, jt);
+        ftval = ft(h, jt);
     }
     return jt;
 }

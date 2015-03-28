@@ -26,5 +26,9 @@ public:
 private:
     static void fdirection(int d, SimLib::ARRAY<2, double>& a, std::set<int>& C, SimLib::ARRAY<1, double>& delta_f, SimLib::ARRAY<1, double>& delta_a);
     static pair<double, int> maxstep(SimLib::ARRAY<1, double>& f, SimLib::ARRAY<1, double>& a, SimLib::ARRAY<1, double>& delta_f, SimLib::ARRAY<1, double>& delta_a, std::set<int>& C, std::set<int>& NC, int d);
+    static double get_norm(double *x, int n);
+    static double normalize(double *x, int n);
+    static double product(double *a, double *b, int n);
+    static void orth(double *a, double *b, int n);
 };
 #endif /* defined(__simulation__Solver__) */

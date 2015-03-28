@@ -100,7 +100,7 @@ void Solver::NRBS(SystemPhy &sys, double h) {
     sys.contact_handling();
     delete[] deltaX;
 
-//    sys.preStabilization(h);
+    sys.preStabilization(h);
     //Integrate x
     deltaX = sys.DerivPosEval(x, t);
     if (deltaX != 0) {
@@ -296,10 +296,38 @@ void Solver::LinearSolve(ARRAY<2, double> a, ARRAY<1, double> b, ARRAY<1, double
     }
 }
 
-//http://m.oschina.net/blog/3758
+double Solver::get_norm(double *x, int n){
+    double r=0;
+    for(int i=0;i<n;i++)
+        r+=x[i]*x[i];
+    return sqrt(r);
+}
+double Solver::normalize(double *x, int n){
+    double r=get_norm(x,n);
+    if(r<1e-6)
+        return 0;
+    for(int i=0;i<n;i++)
+        x[i]/=r;
+    return r;
+}
+
+double Solver::product(double*a, double *b,int n){
+    double r=0;
+    for(int i=0;i<n;i++)
+        r+=a[i]*b[i];
+    return r;
+}
+
+void Solver::orth(double *a, double *b, int n){//|a|=1
+    double r=product(a,b,n);
+    for(int i=0;i<n;i++)
+        b[i]-=r*a[i];
+    
+}
 void Solver::SVD(SimLib::ARRAY<2, double> a, SimLib::ARRAY<2, double>& u, SimLib::ARRAY<1, double>& s, SimLib::ARRAY<2, double>& v) {
     int m = a.dim(1);
     int n = a.dim(2);
+    int k = n;
     if (m < n) {
         ARRAY<2, double> A(n, m);
         for (int i = 1; i <= m; ++i) {
@@ -313,133 +341,65 @@ void Solver::SVD(SimLib::ARRAY<2, double> a, SimLib::ARRAY<2, double>& u, SimLib
     u = ARRAY<2, double>(m,m);
     s = ARRAY<1, double>(n);
     v = ARRAY<2, double>(n,n);
-    ARRAY<1, double> e(n);
-    ARRAY<1, double> work(m);
-    int wantu = 1;
-    int wantv = 1;
-    int nct = m - 1;
-    int nrt = std::max(0, n - 2);
-    int i = 0, j = 0, k = 0;
-    for (k = 1; k <= std::max(nct, nrt); ++k) {
-        if (k <= nct) {
-            s(k) = 0;
-            for (i = k; i <= m; ++i)
-                s(k) = hypot(s(k), a(i,k));
-            if (s(k) < -1e-6 || s(k) > 1e-6) {
-                if (a(k,k) < 0)
-                    s(k) = -s(k);
-                for (i = k; i <= m; ++i)
-                    a(i,k) /= s(k);
-                a(k,k) += 1;
-            }
-            s(k) = -s(k);
+
+    double *left_vector=new double[m];
+    double *next_left_vector=new double[m];
+    double *right_vector=new double[n];
+    double *next_right_vector=new double[n];
+
+    for(int col=0;col<k;col++){
+        double diff=1;
+        double r=-1;
+        while(1){
+            for(int i=0;i<m;i++)
+                left_vector[i]= (float)rand() / RAND_MAX;
+            if(normalize(left_vector, m)>1e-6)
+                break;
         }
-        for (j = k + 1; j <= n; ++j) {
-            if (k <= nct && (s(k) < -1e-6 || s(k) > 1e-6)) {
-                double t = 0;
-                for (i = k; i <= m; ++i)
-                    t += a(i,k) * a(i,j);
-                t = -t / a(k,k);
-                for (i = k; i <= m; ++i)
-                    a(i,j) += t * a(i,k);
+        
+        for(int iter=0;diff>=1e-6 && iter<1000;iter++){
+            memset(next_left_vector,0,sizeof(double)*m);
+            memset(next_right_vector,0,sizeof(double)*n);
+            for(int i=0;i<m;i++)
+                for(int j=0;j<n;j++)
+                    next_right_vector[j]+=left_vector[i]*a(i+1,j+1);
+            
+            r=normalize(next_right_vector,n);
+            if(r<1e-6) break;
+            for(int i=0;i<col;i++)
+                orth(&v(i+1,1),next_right_vector,n);
+            normalize(next_right_vector,n);
+            
+            for(int i=0;i<m;i++)
+                for(int j=0;j<n;j++)
+                    next_left_vector[i]+=next_right_vector[j]*a(i+1,j+1);
+            r=normalize(next_left_vector,m);
+            if(r<1e-6) break;
+            for(int i=0;i<col;i++)
+                orth(&u(i+1,1),next_left_vector,m);
+            normalize(next_left_vector,m);
+            diff=0;
+            for(int i=0;i<m;i++){
+                double d=next_left_vector[i]-left_vector[i];
+                diff+=d*d;
             }
-            e(k) = a(k,j);
+            
+            memcpy(left_vector,next_left_vector,sizeof(double)*m);
+            memcpy(right_vector,next_right_vector,sizeof(double)*n);
         }
-        if (wantu & (k <= nct)) {
-            for (i = k; i <= m; ++i)
-                u(i,k) = a(i,k);
-        }
-        if (k <= nrt) {
-            e(k) = 0;
-            for (i = k + 1; i <= n; ++i)
-                e(k) = hypot(e(k), e(i));
-            if (e(k) > 1e-6 || e(k) < -1e-6) {
-                if (e(k+1) < 0)
-                    e(k) = -e(k);
-                for (i = k + 1; i <= n; ++i)
-                    e(i) /= e(k);
-                e(k + 1) += 1;
-            }
-            e(k) = -e(k);
-            if ((k + 1 < m) && (e(k) > 1e-6 || e(k) < -1e-6)) {
-                for (i = k + 1; i <= m; ++i)
-                    work(i) = 0;
-                for (j = k + 1; j <= n; ++j) {
-                    for (i = k + 1; i <= m; ++i) {
-                        work(i) += e(j) * a(i,j);
-                    }
-                }
-                for (j = k + 1; j <= n; ++j) {
-                    double t = -e(j) / e(k + 1);
-                    for (int i = k + 1; i <= m; ++i)
-                        a(i,j) += t * work(i);
-                }
-            }
-            if (wantv) {
-                for (i = k + 1; i <= n; ++i)
-                    v(i,k) = e(i);
-            }
+        if(r>=1e-6){
+            s(col+1)=r;
+            memcpy((char *)&u(col+1,1),left_vector,sizeof(double)*m);
+            memcpy((char *)&v(col+1,1),right_vector,sizeof(double)*n);
+        }else{
+            break;
         }
     }
-    int p = n;
-    if (nct < n) {
-        s(nct + 1) = a(nct + 1,nct + 1);
-    }
-    if (m < p) {
-        s(p) = 0;
-    }
-    if (nrt + 1 < p) {
-        e(nrt + 1) = a(nrt + 1, p);
-    }
-    e(p) = 0;
-    if (wantu) {
-        for (j = nct + 1; j <= n; ++j) {
-            for (i = 1; i <= m; ++i)
-                u(i,j) = 0;
-            u(j,j) = 1;
-        }
-        for (k = nct; k >= 1; --k) {
-            if (s(k) > 1e-6 || s(k) < -1e-6) {
-                for (j = k + 1; j <= n; ++j) {
-                    double t = 0;
-                    for (i = k; i <= m; ++i)
-                        t += u(i,k) * u(i,j);
-                    t = -t / u(k,k);
-                    for (i = k; i <= m; ++i)
-                        u(i,j) += t * u(i,k);
-                }
-                for (i = k; i <= m; ++i) {
-                    u(i,k) = -u(i,k);
-                }
-                u(k,k) += 1;
-                for (i = 1; i <= k - 1; ++i) {
-                    u(i,k) = 0;
-                }
-            } else {
-                for (i = 1; i <= m; ++i)
-                    u(i,k) = 0;
-                u(k,k) = 1;
-            }
-        }
-    }
-    if (wantv) {
-        for (k = n; k >= 1; --k) {
-            if ((k <= nrt) && (e(k) > 1e-6 || e(k) < -1e-6)) {
-                for (j = k + 1; j <= n; ++j) {
-                    double t = 0;
-                    for (i = k + 1; i <= n; ++i)
-                        t += v(i,k) * v(i,j);
-                    t = -t / v(k+1, k);
-                    for (i = k + 1; i <= n; ++i)
-                        v(i,j) += t * v(i,k);
-                }
-            }
-            for (i = 1; i <= n; ++i) {
-                v(i,k) = 0;
-            }
-            v(k,k) = 1;
-        }
-    }
+    delete [] next_left_vector;
+    delete [] next_right_vector;
+    delete [] left_vector;
+    delete [] right_vector;
+    
 }
 
 //min ||Ax - b||
@@ -447,17 +407,23 @@ void Solver::OLS(SimLib::ARRAY<2, double>& a, SimLib::ARRAY<1, double>& b, SimLi
     ARRAY<2, double> u, v;
     ARRAY<1, double> s;
     SVD(a, u, s, v);
-    ARRAY<1, double> b1(4);
-    for (int i = 1; i <= 4; ++i) {
-        for (int j = 1; j <= 4; ++j) {
+    int n = a.dim(1);
+    int m = a.dim(2);
+    ARRAY<1, double> b1(n);
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 1; j <= n; ++j) {
             b1(i) += u(j,i) * b(j);
         }
     }
-    for (int i = 1; i <= 3; ++i)
-        b1(i) /= s(i);
-    x = ARRAY<1, double>(3);
-    for (int i = 1; i <= 3; ++i) {
-        for (int j = 1; j <= 3; ++j) {
+    for (int i = 1; i <= m; ++i) {
+        if (s(i) == 0)
+            b1(i) = 0;
+        else
+            b1(i) /= s(i);
+    }
+    x = ARRAY<1, double>(m);
+    for (int i = 1; i <= m; ++i) {
+        for (int j = 1; j <= m; ++j) {
             x(i) += v(i,j) * b1(j);
         }
     }

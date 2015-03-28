@@ -22,6 +22,7 @@ public:
     virtual void initialize();
     Rigid_Geometry *parent, *child;
     Vector3d pPos, cPos;
+    Quatd qt;
 protected:
     virtual Vector3d f(double h, Vector3d& j);
     virtual Quatd ft(double h, Vector3d& jt);
