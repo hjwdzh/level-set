@@ -29,8 +29,9 @@ bool RotJoint::violated() {
         ta += 360;
     if (ta > 180)
         ta -= 360;
-    double dir = tAxis.dotProduct(wc - wp);
-    return ((ta < min_angle && dir < 0) || (ta > max_angle && dir > 0));
+    Vector3d d1 = parent->Transform() * dp;
+    double dir = d1.dotProduct(wc - wp);
+    return ((ta < min_angle && dir > 0) || (ta > max_angle && dir < 0));
 }
 
 void RotJoint::preStabilization(double h) {
@@ -73,17 +74,21 @@ double RotJoint::getAngle() {
     Vector3d a(0.7536, 0.4844, 0.3428);
     Vector3d pa = parent->rotation.rotMatrix() * a;
     Vector3d pc = child->rotation.rotMatrix() * a;
-    pa = tAxis * tAxis.dotProduct(pa);
-    pc = tAxis * tAxis.dotProduct(pc);
+    Vector3d d1 = parent->Transform() * dp;
+    Vector3d d2 = child->Transform() * dc;
+    d1.normalize();
+    d2.normalize();
+    pa = pa - d1 * d1.dotProduct(pa);
+    pc = pc - d2 * d2.dotProduct(pc);
     pa.normalize();
     pc.normalize();
-    return atan2(pa.dotProduct(pc), tAxis.dotProduct(pa.crossProduct(pc))) / 3.141592654 * 180;
+    return atan2(pa.dotProduct(pc), d1.dotProduct(pa.crossProduct(pc))) / 3.141592654 * 180;
 }
 
 void RotJoint::initialize() {
-    angle = getAngle();
     dp = parent->Inv_Transform() * tAxis;
     dc = child->Inv_Transform() * tAxis;
+    angle = getAngle();
 }
 
 bool RotJoint::postStabilization() {
@@ -100,6 +105,8 @@ bool RotJoint::postStabilization() {
         if (!violated()) {
             wrel = wp - wc + child->w - parent->w;
             is_violated = false;
+        } else {
+            wrel = child->w - parent->w;
         }
     }
     Vector3d pPos = parent->rotation.rotMatrix() * this->pPos;
@@ -159,7 +166,6 @@ bool RotJoint::postStabilization() {
             diff = wrel_A2.inverse() * (wrel_A1 * diff);
         }
     }
-    Vector3d t3 = wrel_A1 * j + wrel_A2 * jt;
     if (!(parent->nailed)) {
         parent->v += j * term1;
         parent->w += J1 * (pPos.crossProduct(j) + jt);
