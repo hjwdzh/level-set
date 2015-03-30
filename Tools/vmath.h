@@ -990,9 +990,11 @@ public:
 	void normalize()
 	{
 		T s = length();
-		x /= s;
-		y /= s;
-		z /= s;
+        if (s != 0) {
+            x /= s;
+            y /= s;
+            z /= s;
+        }
 	}
 
 	//------------[ other operations ]---------------------------

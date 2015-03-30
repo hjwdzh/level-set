@@ -12,12 +12,15 @@
 
 using namespace SimLib;
 
+Joint::Joint()
+: kr(0), kf(0), kh(0) {
+}
+
 bool Joint::violated() {
     return false;
 }
 
 void Joint::initialize() {
-    
 }
 
 void Joint::preStabilization(double h) {
@@ -273,4 +276,7 @@ Vector3d Joint::solvejt(double h) {
         ftval = ft(h, jt);
     }
     return jt;
+}
+
+void Joint::ExcertForce() {
 }

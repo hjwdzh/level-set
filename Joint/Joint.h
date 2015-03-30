@@ -16,13 +16,16 @@
 
 class Joint {
 public:
+    Joint();
     virtual bool violated();
     virtual void preStabilization(double h);
     virtual bool postStabilization();
     virtual void initialize();
+    virtual void ExcertForce();
     Rigid_Geometry *parent, *child;
     Vector3d pPos, cPos, dp, dc;
     Quatd qt;
+    double kr, kf, kh;
 protected:
     virtual Vector3d f(double h, Vector3d& j);
     virtual Quatd ft(double h, const Vector3d& jt);

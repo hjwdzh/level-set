@@ -28,6 +28,7 @@ TransJoint::TransJoint(const Vector3d& p1, const Vector3d& p2, const Vector3d& _
 bool TransJoint::violated() {
     Vector3d pPos = parent->rotation.rotMatrix() * this->pPos;
     Vector3d cPos = child->rotation.rotMatrix() * this->cPos;
+    Vector3d tAxis = parent->Transform() * dp;
     vp = parent->v + parent->w.crossProduct(pPos);
     vc = child->v + child->w.crossProduct(cPos);
     Vector4d curDis = dis - getDistance();
@@ -37,10 +38,12 @@ bool TransJoint::violated() {
 }
 
 void TransJoint::preStabilization(double h) {
-    Vector3d j = solvej(h);
+    Vector3d j;
     Vector3d jt = solvejt(h);
-    if (!violated()) {
-        j -= tAxis * j.dotProduct(tAxis);
+    Vector3d pPos = parent->rotation.rotMatrix() * this->pPos;
+    Vector3d cPos = child->rotation.rotMatrix() * this->cPos;
+    if (violated()) {
+        j = solvej(h);
     }
     Matrix3d J1 = Matrix3d::createScale(0, 0, 0);
     Matrix3d J2 = J1;
@@ -56,22 +59,25 @@ void TransJoint::preStabilization(double h) {
     double term2 = child->nailed ? 0 : 1 / child->mass;
     if (!(parent->nailed)) {
         parent->v += j * term1;
-        parent->w += J1 * jt;
+        parent->w += J1 * (pPos.crossProduct(j) + jt);
     }
     if (!(child->nailed)) {
         child->v -= j * term2;
-        child->w -= J2 * jt;
+        child->w -= J2 * (cPos.crossProduct(j) + jt);
     }
 }
 
 bool TransJoint::postStabilization() {
     Vector3d vrel;
     Vector3d wrel = child->w - parent->w;
+    Vector3d tAxis = parent->Transform() * dp;
     if (!violated()) {
         vrel = vc - vp;
         vrel -= tAxis * vrel.dotProduct(tAxis);
     } else {
         vrel = vc - vp;
+        Vector3d vt = vrel - tAxis * vrel.dotProduct(tAxis);
+        vrel = vt + vrel * (1 + kr);
     }
     if ((vrel.length() < 1e-4  && wrel.length() < 1e-4) || (parent->nailed && child->nailed))
         return false;
@@ -129,5 +135,22 @@ Vector4d TransJoint::getDistance() {
 void TransJoint::initialize() {
     pX = parent->Inv_Transform() * Vector4d(pPos[0], pPos[1], pPos[2], 1);
     cX = child->Inv_Transform() * Vector4d(cPos[0], cPos[1], cPos[2], 1);
+    dp = parent->Inv_Transform() * tAxis;
     dis = getDistance();
+}
+
+void TransJoint::ExcertForce() {
+    Vector4d d = (getDistance() - dis);
+    Vector3d f(d[0], d[1], d[2]);
+    Vector3d tAxis = parent->Transform() * dp;
+    f *= -kh;
+    double dir = (vc - vp).dotProduct(tAxis);
+    if (dir > 0) {
+        f += tAxis * kf;
+    }
+    if (dir < 0) {
+        f -= tAxis * kf;
+    }
+    parent->ExcertForce(f);
+    child->ExcertForce(-f);
 }

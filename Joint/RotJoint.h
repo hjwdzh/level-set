@@ -16,6 +16,7 @@ class RotJoint : public Joint {
 public:
     RotJoint();
     RotJoint(const Vector3d& p1, const Vector3d& p2, const Vector3d& _tAxis, double min_angle, double max_angle);
+    virtual void ExcertForce();
     virtual bool violated();
     virtual void preStabilization(double h);
     virtual bool postStabilization();

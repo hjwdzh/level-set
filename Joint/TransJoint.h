@@ -17,6 +17,7 @@ class TransJoint : public Joint {
 public:
     TransJoint();
     TransJoint(const Vector3d& p1, const Vector3d& p2, const Vector3d& _tAxis, double min_dis, double max_dis);
+    virtual void ExcertForce();
     virtual bool violated();
     virtual void preStabilization(double h);
     virtual bool postStabilization();
@@ -26,7 +27,7 @@ public:
     double min_dis, max_dis, k;
     
     Vector4d pX, cX;
-    Vector3d tAxis, vp, vc;
+    Vector3d tAxis, vp, vc, dp;
     Vector4d dis;
 };
 

@@ -43,6 +43,9 @@ public:
         m_objects.updateBVH();
         m_objects.clearForce();
         ForceApply();
+        for (int i = 0; i < joints.size(); ++i) {
+            joints[i]->ExcertForce();
+        }
     }
 
     virtual void preStabilization(double h);

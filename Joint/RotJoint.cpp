@@ -102,6 +102,7 @@ void RotJoint::initialize() {
 
 bool RotJoint::postStabilization() {
     Vector3d wrel;
+    Vector3d tAxis;
     bool is_violated = false;
     if (!(parent->nailed && child->nailed)) {
         is_violated = true;
@@ -109,14 +110,17 @@ bool RotJoint::postStabilization() {
         Vector3d d2 = child->Transform() * dc;
         d1.normalize();
         d2.normalize();
+        tAxis = d1;
         wp = d1 * d1.dotProduct(parent->w);
         wc = d2 * d2.dotProduct(child->w);
         if (!violated()) {
             wrel = wp - wc + child->w - parent->w;
             is_violated = false;
         } else {
-            wrel = child->w - parent->w;
+            wrel = (wp - wc) * -kr + (child->w - parent->w);
         }
+    } else {
+        return false;
     }
     Vector3d pPos = parent->rotation.rotMatrix() * this->pPos;
     Vector3d cPos = child->rotation.rotMatrix() * this->cPos;
@@ -186,3 +190,6 @@ bool RotJoint::postStabilization() {
     return true;
 }
 
+void RotJoint::ExcertForce() {
+    
+}

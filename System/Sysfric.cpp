@@ -88,6 +88,9 @@ void Sysfric::Reset() {
     m_objects.addElement(cube2);
 //    m_objects.addElement(cube3);
     TransJoint* transJoint = new TransJoint(Vector3d(-1.5,-1,-1),Vector3d(1.5,-1,-1),Vector3d(-1,-1,0),-15,5);
+    transJoint->kr = 1;
+    transJoint->kh = 0;
+    transJoint->kf = 5;
     transJoint->parent = cube2;
     transJoint->child = cube1;
     transJoint->initialize();
