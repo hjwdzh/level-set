@@ -12,12 +12,28 @@
 
 using namespace SimLib;
 
+TransJoint::TransJoint() {
+}
+
+TransJoint::TransJoint(const Vector3d& p1, const Vector3d& p2, const Vector3d& _tAxis, double _min_dis, double _max_dis) {
+    pPos = p1;
+    cPos = p2;
+    tAxis = _tAxis;
+    tAxis.normalize();
+    min_dis = _min_dis;
+    max_dis = _max_dis;
+    qt = Quatd(Vector3d());
+}
+
 bool TransJoint::violated() {
+    Vector3d pPos = parent->rotation.rotMatrix() * this->pPos;
+    Vector3d cPos = child->rotation.rotMatrix() * this->cPos;
     vp = parent->v + parent->w.crossProduct(pPos);
     vc = child->v + child->w.crossProduct(cPos);
-    double curDis = getDistance() - dis;
+    Vector4d curDis = dis - getDistance();
+    double dis = curDis[0] * tAxis[0] + curDis[1] * tAxis[1] + curDis[2] * tAxis[2];
     double dir = (vc - vp).dotProduct(tAxis);
-    return ((curDis < min_dis && dir < 0) || (curDis > max_dis && dir > 0));
+    return ((dis < min_dis && dir < 0) || (dis > max_dis && dir > 0));
 }
 
 void TransJoint::preStabilization(double h) {
@@ -61,10 +77,6 @@ bool TransJoint::postStabilization() {
         return false;
     double term1 = parent->nailed ? 0 : 1 / parent->mass;
     double term2 = child->nailed ? 0 : 1 / child->mass;
-    Matrix3d rp = Matrix3d::createCrossProductMatrix(parent->Transform() * pPos);
-    Matrix3d rc = Matrix3d::createCrossProductMatrix(child->Transform() * cPos);
-    Matrix3d rpt = rp.transpose();
-    Matrix3d rct = rp.transpose();
     Matrix3d rot1 = parent->rotation.rotMatrix();
     Matrix3d rot2 = child->rotation.rotMatrix();
     Matrix3d J1 = Matrix3d::createScale(0, 0, 0);
@@ -73,8 +85,12 @@ bool TransJoint::postStabilization() {
         J1 = rot1 * parent->J * rot1.transpose();
     }
     if (!(child->nailed)) {
-        J2 = rot2 * parent->J * rot2.transpose();
+        J2 = rot2 * child->J * rot2.transpose();
     }
+    Matrix3d rp = Matrix3d::createCrossProductMatrix(pPos);
+    Matrix3d rc = Matrix3d::createCrossProductMatrix(cPos);
+    Matrix3d rpt = rp.transpose();
+    Matrix3d rct = rc.transpose();
     Matrix3d vrel_A1 = Matrix3d() * (term1 + term2) + rpt * J1 * rp + rct * J2 * rc;
     Matrix3d vrel_A2 = rpt * J1 + rct * J2;
     Matrix3d wrel_A1 = J1 * rp + J2 * rc;
@@ -86,10 +102,10 @@ bool TransJoint::postStabilization() {
         b(i) = vrel[i-1];
         b(i + 3) = wrel[i-1];
         for (int j = 1; j <= 3; ++j) {
-            a(i,j) = vrel_A1.at(j,i);
-            a(i,j+3) = vrel_A2.at(j,i);
-            a(i+3,j) = wrel_A1.at(j,i);
-            a(i+3,j+3) = wrel_A2.at(j,i);
+            a(i,j) = vrel_A1.at(j-1,i-1);
+            a(i,j+3) = vrel_A2.at(j-1,i-1);
+            a(i+3,j) = wrel_A1.at(j-1,i-1);
+            a(i+3,j+3) = wrel_A2.at(j-1,i-1);
         }
     }
     Solver::LinearSolve(a, b, x);
@@ -106,8 +122,8 @@ bool TransJoint::postStabilization() {
     return true;
 }
 
-double TransJoint::getDistance() {
-    return (parent->Transform() * pX - child->Transform() * cX).length();
+Vector4d TransJoint::getDistance() {
+    return (parent->Transform() * pX - child->Transform() * cX);
 }
 
 void TransJoint::initialize() {

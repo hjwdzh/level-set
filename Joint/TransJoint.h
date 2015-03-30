@@ -15,17 +15,19 @@
 
 class TransJoint : public Joint {
 public:
+    TransJoint();
+    TransJoint(const Vector3d& p1, const Vector3d& p2, const Vector3d& _tAxis, double min_dis, double max_dis);
     virtual bool violated();
     virtual void preStabilization(double h);
     virtual bool postStabilization();
-    virtual double getDistance();
+    virtual Vector4d getDistance();
     virtual void initialize();
     
     double min_dis, max_dis, k;
     
     Vector4d pX, cX;
     Vector3d tAxis, vp, vc;
-    double dis;
+    Vector4d dis;
 };
 
 #endif /* defined(__levelset__TransJoint__) */

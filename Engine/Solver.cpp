@@ -18,7 +18,7 @@ using namespace SimLib;
 void Solver::NRBS(SystemPhy &sys, double h) {
     static int tt = 0;
     tt++;
-    if (tt == 56) {
+    if (tt == 3) {
         tt = tt;
     }
     sys.setSolver(SystemPhy::NRBS);

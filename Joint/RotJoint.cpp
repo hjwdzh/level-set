@@ -19,6 +19,7 @@ RotJoint::RotJoint(const Vector3d& p1, const Vector3d& p2, const Vector3d& _tAxi
     pPos = p1;
     cPos = p2;
     tAxis = _tAxis;
+    tAxis.normalize();
     this->min_angle = min_angle;
     this->max_angle = max_angle;
 }

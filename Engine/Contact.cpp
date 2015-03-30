@@ -9,7 +9,7 @@ bool Contact::collide_handling(double k) {
     Vector3d v1 = a->v + a->w.crossProduct(ra);
     Vector3d v2 = b->v + b->w.crossProduct(rb);
     double vrel = n.dotProduct(v1 - v2);
-    if (vrel >= -1e-4 || (a->nailed && b->nailed))
+    if (vrel >= -1e-6 || (a->nailed && b->nailed))
         return false;
     if (k < -50)
         k = kr;
