@@ -94,6 +94,8 @@ double RotJoint::getAngle() {
 void RotJoint::initialize() {
     dp = parent->Inv_Transform() * tAxis;
     dc = child->Inv_Transform() * tAxis;
+    dp.normalize();
+    dc.normalize();
     angle = getAngle();
 }
 

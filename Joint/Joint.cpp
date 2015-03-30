@@ -119,7 +119,7 @@ Vector3d Joint::f(double h, Vector3d& j) {
     return parent->x - child->x + j * (h * (mp + mc)) + (parent->v * h + Quatd(parent->w * h + (J1 * rp0.crossProduct(j)) * h).rotMatrix() * rp0) - (child->v * h + Quatd(child->w * h - (J2 * rc0.crossProduct(j)) * h).rotMatrix() * rc0);
 }
 
-Quatd Joint::ft(double h, Vector3d& jt) {
+Quatd Joint::ft(double h, const Vector3d& jt) {
     Matrix3d J1 = Matrix3d::createScale(0, 0, 0);
     Matrix3d J2 = J1;
     if (!(parent->nailed)) {
@@ -202,17 +202,18 @@ void Joint::dfjt(double h, const Vector3d& jt, std::pair<Vector3d,Matrix3d>& r) 
     }
     Vector3d dthetap = J1.transpose() * (wp * (h * 0.5));
     Vector3d dthetac = J2.transpose() * (wc * (-h * 0.5));
-    Vector3d ap = dthetap * (-parent->rotation.w * sin(thetap) - parent->rotation.v.dotProduct(wp) * cos(thetap))
-            - dwp.transpose() * parent->rotation.v * sin(thetap);
+    Quatd qp = parent->rotation * qt;
+    Vector3d ap = dthetap * (-qp.w * sin(thetap) - qp.v.dotProduct(wp) * cos(thetap))
+            - dwp.transpose() * qp.v * sin(thetap);
     Vector3d ac = dthetac * (-child->rotation.w * sin(thetac) - child->rotation.v.dotProduct(wc) * cos(thetac))
             - dwc.transpose() * child->rotation.v * sin(thetac);
     r.first = ap - ac;
-    Vector3d t1 = parent->rotation.v * (-sin(thetap)) + wp * (parent->rotation.w * cos(thetap)) - parent->rotation.v.crossProduct(wp) * cos(thetap);
-    Matrix3d t2 = Matrix3d() * (parent->rotation.w * sin(thetap)) - Matrix3d::createCrossProductMatrix(parent->v) * sin(thetap);
+    Vector3d t1 = qp.v * (-sin(thetap)) + wp * (qp.w * cos(thetap)) - qp.v.crossProduct(wp) * cos(thetap);
+    Matrix3d t2 = Matrix3d() * (qp.w * sin(thetap)) - Matrix3d::createCrossProductMatrix(qp.v) * sin(thetap);
     Matrix3d resp = Matrix3d::createDotProductMatrix(dthetap, t1) + t2 * dwp;
     t1 = child->rotation.v * (-sin(thetac)) + wc * (child->rotation.w * cos(thetac)) - child->rotation.v.crossProduct(wc) * cos(thetac);
-    t2 = Matrix3d() * (child->rotation.w * sin(thetac)) - Matrix3d::createCrossProductMatrix(child->v) * sin(thetac);
-    Matrix3d resc = Matrix3d::createDotProductMatrix(dthetap, t1) + t2 * dwp;
+    t2 = Matrix3d() * (child->rotation.w * sin(thetac)) - Matrix3d::createCrossProductMatrix(child->rotation.v) * sin(thetac);
+    Matrix3d resc = Matrix3d::createDotProductMatrix(dthetac, t1) + t2 * dwc;
     r.second = resp - resc;
 }
 

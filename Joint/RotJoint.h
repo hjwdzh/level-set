@@ -22,7 +22,7 @@ public:
     virtual void initialize();
     double getAngle();
     double min_angle, max_angle, k;
-    Vector3d tAxis, wp, wc, dp, dc;
+    Vector3d tAxis, wp, wc;
     double angle;
 };
 

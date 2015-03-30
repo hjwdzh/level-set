@@ -21,11 +21,11 @@ public:
     virtual bool postStabilization();
     virtual void initialize();
     Rigid_Geometry *parent, *child;
-    Vector3d pPos, cPos;
+    Vector3d pPos, cPos, dp, dc;
     Quatd qt;
 protected:
     virtual Vector3d f(double h, Vector3d& j);
-    virtual Quatd ft(double h, Vector3d& jt);
+    virtual Quatd ft(double h, const Vector3d& jt);
     virtual void dfj(double h, const Vector3d& j, Matrix3d& r);
     virtual void dfjt(double h, const Vector3d& jt, std::pair<Vector3d,Matrix3d>& r);
     virtual Vector3d solvej(double h);
