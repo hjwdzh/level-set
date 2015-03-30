@@ -33,7 +33,10 @@ bool RotJoint::violated() {
     Vector3d d1 = parent->Transform() * dp;
     double dir = d1.dotProduct(wc - wp);
     if ((ta < min_angle && dir > 0) || (ta > max_angle && dir < 0)) {
-        qt = Quatd(-tAxis * (min_angle / 180.0 * 3.141592654));
+        if (ta < min_angle)
+            qt = Quatd(-tAxis * (min_angle / 180.0 * 3.141592654));
+        else
+            qt = Quatd(-tAxis * (max_angle / 180.0 * 3.141592654));
         return true;
     }
     return false;
@@ -191,5 +194,16 @@ bool RotJoint::postStabilization() {
 }
 
 void RotJoint::ExcertForce() {
-    
+    double da = (getAngle() - this->angle) * (3.141592654 / 180);
+    Vector3d tAxis = parent->Transform() * dp;
+    Vector3d ft = tAxis * (da * (-kh));
+    double dir = (wc - wp).dotProduct(tAxis);
+    if (dir > 0) {
+        ft += tAxis * kf;
+    }
+    if (dir < 0) {
+        ft -= tAxis * kf;
+    }
+    parent->ExcertMoment(ft);
+    child->ExcertMoment(-ft);
 }

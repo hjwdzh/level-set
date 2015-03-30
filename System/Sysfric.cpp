@@ -5,7 +5,6 @@
 #include "Rigid_Geometry.h"
 #include "PtJoint.h"
 #include "RotJoint.h"
-#include "TransJoint.h"
 #include <stdio.h>
 
 using namespace SimLib;
@@ -67,7 +66,7 @@ void Sysfric::Reset() {
 #endif
 //    Rigid_Geometry* road1 = new Rigid_Geometry("road", (model_path + "cube.obj").c_str(),Vector3d(0,-3,-50),Vector3d(0,0,0),Vector3d(100,3,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
 //    Rigid_Geometry* cube = new Rigid_Geometry("cube0", (model_path + "cube.obj").c_str(),Vector3d(0,-5,-40),Vector3d(0,0,0),Vector3d(100,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
-    Rigid_Geometry* cube1 = new Rigid_Geometry("cube1", (model_path + "cube.obj").c_str(),Vector3d(-3,1,-40),Vector3d(0,0,0),Vector3d(2,2,2),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
+    Rigid_Geometry* cube1 = new Rigid_Geometry("cube1", (model_path + "cube.obj").c_str(),Vector3d(-2.1,1,-40),Vector3d(0,0,0),Vector3d(1,1,1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
     Rigid_Geometry* cube2 = new Rigid_Geometry("cube2", (model_path + "cube.obj").c_str(),Vector3d(0,1,-40),Vector3d(0,0,0),Vector3d(1.1,1,1.1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
 //    Rigid_Geometry* cube3 = new Rigid_Geometry("cube3", (model_path + "cube.obj").c_str(),Vector3d(-4.3,1,-40),Vector3d(0,0,0),Vector3d(1.2,1,1.2),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
 //    cube->LoadTexture((texture_path + "wood.bmp").c_str(), 0.6);
@@ -87,18 +86,18 @@ void Sysfric::Reset() {
     m_objects.addElement(cube1);
     m_objects.addElement(cube2);
 //    m_objects.addElement(cube3);
-    TransJoint* transJoint = new TransJoint(Vector3d(-1.5,-1,-1),Vector3d(1.5,-1,-1),Vector3d(-1,-1,0),-15,5);
-    transJoint->kr = 1;
-    transJoint->kh = 0;
-    transJoint->kf = 5;
-    transJoint->parent = cube2;
-    transJoint->child = cube1;
-    transJoint->initialize();
+    RotJoint* rotJoint = new RotJoint(Vector3d(-1.05,-1,-1),Vector3d(1.05,-1,-1),Vector3d(0,0,-1),-30,45);
+    rotJoint->parent = cube2;
+    rotJoint->child = cube1;
+    rotJoint->initialize();
+    rotJoint->kr = 0;
+    rotJoint->kf = 0;
+    rotJoint->kh = 100;
 //    RotJoint* rotJoint1 = new RotJoint(Vector3d(-1.1,-1,-1),Vector3d(1.1,-1,-1),Vector3d(0,0,1),-45,45);
 //    rotJoint1->parent = cube1;
 //    rotJoint1->child = cube3;
 //    rotJoint1->initialize();
-    joints.push_back(transJoint);
+    joints.push_back(rotJoint);
 //    joints.push_back(rotJoint1);
     game_mode = BEGIN_SHOOT;
 }
