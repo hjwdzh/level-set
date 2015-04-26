@@ -14,9 +14,10 @@ public:
     typedef VECTOR<T,3> TV;
     KDOP();
     KDOP(std::vector<TV>& points);
-    void update(std::vector<TV>& points, Matrix4d* m);
+    void update(std::vector<TV>& points, Matrix4d* m = 0);
     bool intersect(const BV<T>*);
     void include(BV<T>** start, BV<T>** end);
+    BV<T>* transform(const Matrix4d& m);
     T operator()(int x);
     ARRAY<1,T> min;
     ARRAY<1,T> max;

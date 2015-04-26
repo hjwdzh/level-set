@@ -140,5 +140,21 @@ std::pair<typename LEVELSET<T_GRID>::T, typename LEVELSET<T_GRID>::TV> LEVELSET<
     return std::make_pair(depth, normal);
 }
 
+template<class T_GRID>
+std::pair<typename LEVELSET<T_GRID>::T, typename LEVELSET<T_GRID>::TV> LEVELSET<T_GRID>::Intersect(const TV& p1, const TV& p2, float& portion) {
+    std::pair<T, TV> m_intersect;
+    m_intersect.first = 1e30;
+    TV d = (p2 - p1) * grid.one_over_dX;
+    float t = d.Max();
+    for (int i = 0; i < t; ++i) {
+        std::pair<T, TV> intersect = Intersect(p1 + (p2 - p1) * (i / t));
+        if (intersect.first < m_intersect.first) {
+            m_intersect = intersect;
+            portion = i / t;
+        }
+    }
+    return m_intersect;
+}
+
 
 template class SimLib::LEVELSET<GRID<VECTOR<float,3> > >;

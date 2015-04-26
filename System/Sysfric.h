@@ -22,6 +22,7 @@ public:
     void collide_event(Geometric*,Geometric*);
     void setState(double* state, double t);
     double* DerivEval(double* state, double t);
+    void addCube(double x, double y);
     double angle;
     double hit_time;
     int start_angle;

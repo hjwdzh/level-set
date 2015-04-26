@@ -42,8 +42,15 @@ public:
     void updateBoundingVolume();
     void LoadTexture(const char* bmp, double _tex_scale = 1);
 
-    Matrix4d Transform() const;
-    Matrix4d Inv_Transform() const;
+    Matrix4d Transform() {
+        return transform;
+    }
+    Matrix4d Inv_Transform() {
+        return inv_transform;
+    }
+    
+    void updateTransform();
+    
     Vector3d ApplyTransform(const SimLib::VECTOR<float, 3>& p);
     
     SimLib::TRIANGULATED_SURFACE<float>* triangles;
@@ -58,6 +65,8 @@ public:
     
     bool show_levelset;
     Vector3d w, M;
+    
+    Matrix4d transform, inv_transform;
     
     Matrix3<double> J, J0;
     double kf;

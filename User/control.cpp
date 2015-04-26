@@ -9,7 +9,7 @@
 double g_mouseState = 0, g_simTime = 0;
 int g_mouseX, g_mouseY;
 Geometric* g_selectedObject;
-
+extern int stopsign;
 // 响应按键事件
 void KeyboardFunc(unsigned char key, int x, int y)
 {
@@ -18,10 +18,12 @@ void KeyboardFunc(unsigned char key, int x, int y)
 		case 27:
 			exit(0);
 			break;
-        case 's':
-            g_sys->ShootBall();
+        case 'G':
+            for (int i = 0; i < 1; ++i) {
+                g_sys->addCube(((rand() + 0.0) / RAND_MAX - 0.5) * 15, ((rand() + 0.0) / RAND_MAX - 0.5) * 15);
+            }
             break;
-/*        case 'A':
+        case 'A':
             g_camera->Rotate(0, -5);
             break;
         case 'a':
@@ -64,20 +66,26 @@ void KeyboardFunc(unsigned char key, int x, int y)
             g_camera->Rotate(2, 1);
             break;
             
-        case 'R':
-            g_camera->Move(0.1);
+        case 'V':
+            g_camera->Move(-10);
             break;
-        case 'r':
-            g_camera->Move(0.02);
+        case 'v':
+            g_camera->Move(-0.1);
             break;
             
         case 'F':
-            g_camera->Move(-0.1);
+            g_camera->Move(10);
             break;
         case 'f':
-            g_camera->Move(-0.02);
+            g_camera->Move(0.1);
             break;
-*/
+        case 'm':
+        case 'M':
+            stopsign = 1 - stopsign;
+            break;
+        case 'P':
+            stopsign = 2;
+            break;
         default:
             break;
     }
@@ -131,6 +139,10 @@ void Animate(int id)
 	DWORD t1, t2;
 	t1 = GetTickCount();
 #endif
+    if (stopsign == 1) {
+        glutTimerFunc(33, Animate, 1);
+        return;
+    }
     if (g_mouseState && g_selectedObject)
     {
         double mouseX, mouseY;
@@ -145,8 +157,8 @@ void Animate(int id)
         v = g_camera->lookat.inverse() * v;
         g_selectedObject->setUserForce(Vector3d(v[0], v[1], v[2]) * 5);
     }
-    for (int i = 0; i < 9; ++i)
-        Solver::NRBS(*g_sys, 0.005);
+    for (int i = 0; i < 1; ++i)
+        Solver::NRBS(*g_sys, 0.05);
 #ifndef _WINDOWS_PLATFORM_
     gettimeofday(&t2, 0);
     g_simTime = (t2.tv_usec - t1.tv_usec) * 1e-6 + (t2.tv_sec - t1.tv_sec);
@@ -154,5 +166,7 @@ void Animate(int id)
 	t2 = GetTickCount();
 	g_simTime = (t2 - t1) * 1e-3;
 #endif
+    if (stopsign == 2)
+        stopsign = 1;
     glutTimerFunc(33, Animate, 1);
 }

@@ -66,11 +66,11 @@ public:
         bvh->clear();
     }
     void clearRemoveList();
-    void updateBVH();
+    void updateBVHandTransform();
     vector<Geometric*> vp;
     set<int> removeList;
     vector<Contact> contacts;
-    SimLib::BVH<4,float>* bvh;
+    SimLib::BVH<3,float>* bvh;
     SystemPhy* system;
 };
 

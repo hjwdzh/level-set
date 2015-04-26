@@ -21,6 +21,7 @@ public:
     }
     void Fast_Marching_Method(TRIANGULATED_SURFACE<float>& tris, ARRAY<3,int>& closest_index, T stoping_distance = -1e30);
     std::pair<T, TV> Intersect(const TV& p);
+    std::pair<T, TV> Intersect(const TV& p1, const TV& p2, float& portion);
 private:
     void Down_Adjust(int i);
     void Up_Adjust(int i);

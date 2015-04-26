@@ -8,7 +8,7 @@
 
 #include "ForceField.h"
 
-double ForceField::k_drag = 0.1;
+double ForceField::k_drag = 40;
 double ForceField::k_moment_drag = 0;
 
 Vector3d ForceField::gravity(Geometric* p)

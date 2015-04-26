@@ -18,8 +18,9 @@ public:
     : rgd(0)
     {}
     virtual bool intersect(const BV*) = 0;
-    virtual void update(std::vector<TV>& points, Matrix4d* m) = 0;
+    virtual void update(std::vector<TV>& points, Matrix4d* m = 0) = 0;
     virtual void include(BV** start, BV** end) = 0;
+    virtual BV* transform(const Matrix4d& m) = 0;
     virtual T operator()(int x) = 0;
     virtual ~BV() {}
     Rigid_Geometry* rgd;

@@ -212,7 +212,7 @@ void Contact::contact_handling(std::vector<Contact>& contacts) {
                             double t = (-c(j * 3 + 1) - f(2) * a(j * 3 + 1, j * 3 + 2) - f(3) * a(j * 3 + 1, j * 3 + 3)) / a(j*3+1, j*3+1);
                             if (t < 0)
                                 t = 0;
-                            if (abs(t - f(1)) < 1e-6)
+                            if (fabs(t - f(1)) < 1e-6)
                                 break;
                             f(1) = t;
                             if (f(1) <= 0) {

@@ -12,7 +12,7 @@ void BVH<d,T>::updateBVH(std::vector<BV<T>*>& bvs, int dim, int l, int r) {
         r = (int)bvs.size() - 1;
     }
     num = r - l + 1;
-    bv = new KDOP<4, float>();
+    bv = new KDOP<3, float>();
     bv->include(&bvs[l], &bvs[r]);
     if (l == r) {
         bv->rgd = bvs[l]->rgd;
@@ -37,9 +37,9 @@ void BVH<d,T>::updateBVH(std::vector<BV<T>*>& bvs, int dim, int l, int r) {
     if (i > r)
         i = r;
     left = new BVH();
-    left->updateBVH(bvs, dim % d + 1, i, r);
+    left->updateBVH(bvs, dim % d + 1, l, i - 1);
     right = new BVH();
-    right->updateBVH(bvs, dim % d + 1, l, i - 1);
+    right->updateBVH(bvs, dim % d + 1, i, r);
 }
 
 template<int d, class T>
@@ -58,7 +58,7 @@ template<int d, class T>
 void BVH<d,T>::collide_detect(BVH<d, T> *a, BVH<d, T> *b, std::vector<Contact>* contacts) {
     if (!a->bv->intersect(b->bv))
         return;
-    if (a->num == 1 && b->num == 1) {
+    if (a->num == 1 && b->num == 1 && contacts) {
         a->bv->rgd->collide_detection(b->bv->rgd, contacts);
         b->bv->rgd->collide_detection(a->bv->rgd, contacts);
         return;
@@ -80,4 +80,4 @@ void BVH<d,T>::collide_detect(BVH<d, T> *a, BVH<d, T> *b, std::vector<Contact>* 
     }
 }
 
-template class SimLib::BVH<4, float>;
+template class SimLib::BVH<3, float>;

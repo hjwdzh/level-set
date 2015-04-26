@@ -40,7 +40,7 @@ public:
         m_objects.contact_detection(m_objects);
     }
     virtual void updateForce() {
-        m_objects.updateBVH();
+        m_objects.updateBVHandTransform();
         m_objects.clearForce();
         ForceApply();
         for (int i = 0; i < joints.size(); ++i) {

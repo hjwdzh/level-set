@@ -1,7 +1,10 @@
 #include "main.h"
 #include <stdio.h>
+#include <sys/time.h>
+
 
 extern double g_simTime;
+double g_colTime;
 
 // 描绘函数
 void DrawFunc()
@@ -41,20 +44,16 @@ void DrawFunc()
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_DEPTH_TEST);
-    
+//    glEnable(GL_CULL_FACE);
     glPushMatrix();
     g_camera->Render();
     g_sys->Display();
     glPopMatrix();
     
-    // 显示文本信息
-    float x = 10.0f;
-    float y = 20.0f;
-
-    char buf[100];
-    sprintf(buf, "Sim FPS: %.02f", 1 / g_simTime);
+    float x = 20, y = 20;
+    char buf[1000];
+    sprintf(buf, "SimFPS: %f Object: %d ColFPS: %f", 1 / g_simTime, g_sys->m_objects.vp.size(), g_colTime / g_simTime);
     DrawTextHHL(buf, x, y);
-    
     // 交换显示缓冲区
     glutSwapBuffers() ;
 }

@@ -12,8 +12,11 @@
 
 #define PI 3.141592654
 Camera::Camera()
-    : o(Vector3d(0, 8, -90)),dir(Vector3d(0, 0, 1)), up(Vector3d(0, 1, 0))
-{}
+    : o(Vector3d(0, 40, -40)),dir(Vector3d(0, 0, 1)), up(Vector3d(0, 1, 1))
+{
+    up.normalize();
+    dir = up.crossProduct(Vector3d(-1, 0, 0));
+}
 
 void Camera::Move(const double dis)
 {

@@ -11,16 +11,14 @@
 #include "SysDynPtc.h"
 #include <set>
 #include <list>
+#include <sys/time.h>
 #define ANGLE_SCALE 180 / 3.141592654
-
+extern double g_colTime;
 using namespace SimLib;
-
+extern double g_simTime;
 void Solver::NRBS(SystemPhy &sys, double h) {
-    static int tt = 0;
-    tt++;
-    if (tt == 3) {
-        tt = tt;
-    }
+    timeval t1, t2;
+    g_colTime = 0;
     sys.setSolver(SystemPhy::NRBS);
     double t = sys.getTime();
     int n = sys.getDim() / 13 * 6;
@@ -57,7 +55,13 @@ void Solver::NRBS(SystemPhy &sys, double h) {
     }
     sys.setPosState(x_new, t);
     sys.setVelState(v, t);
+
+    gettimeofday(&t1, 0);
     sys.collide_detection();
+    gettimeofday(&t2, 0);
+    
+    g_colTime += (t2.tv_sec - t1.tv_sec) + 1e-6 * (t2.tv_usec - t1.tv_usec);
+
     sys.postStabilization();
     delete[] v;
     delete[] deltaV;
@@ -97,7 +101,9 @@ void Solver::NRBS(SystemPhy &sys, double h) {
         }
     }
     sys.setPosState(x_new, t);
+    
     sys.contact_handling();
+
     delete[] deltaX;
 
     sys.preStabilization(h);
@@ -125,6 +131,7 @@ void Solver::NRBS(SystemPhy &sys, double h) {
     delete[] x_new;
     delete[] deltaX;
     sys.updateForce();
+
 }
 
 

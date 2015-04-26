@@ -2,7 +2,7 @@
 #include "ForceField.h"
 void SetParameters()
 {
-    ForceField::k_drag = 0.1;
+//    ForceField::k_drag = 0.1;
     
 }
 

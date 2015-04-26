@@ -31,6 +31,26 @@ void Sysfric::RemoveBall() {
     m_objects.removeByName("ball");
 }
 
+void Sysfric::addCube(double x, double y) {
+#ifndef _WINDOWS_PLATFORM_
+	string model_path = res_path + "/models/";
+	string texture_path = res_path + "/texture/";
+#else
+	string model_path = res_path + "\\models\\";
+	string texture_path = res_path + "\\texture\\";
+#endif
+    char buf[100];
+    static int t = 0;
+    t += 1;
+    sprintf(buf, "cube%d", t);
+    Rigid_Geometry* cube2 = new Rigid_Geometry(buf, (model_path + "sphere.obj").c_str(),Vector3d(x, 20, y),Vector3d(0,0,0),Vector3d(1,1,1),100,new IMPLICIT_SPHERE<float>(VECTOR<float,3>(0, 0, 0),1));
+    cube2->v = Vector3d((rand()+0.0)/RAND_MAX * 3 - 1.5, 0, (rand()+0.0)/RAND_MAX * 3 - 1.5);
+    cube2->kf = 0.5;
+    cube2->setKr(1);
+    cube2->LoadTexture((texture_path + "wood.bmp").c_str());
+    m_objects.addElement(cube2);
+}
+
 void Sysfric::AddBall() {
 #ifndef _WINDOWS_PLATFORM_
 	string model_path = res_path + "/models/";
@@ -64,28 +84,46 @@ void Sysfric::Reset() {
 	string model_path = res_path + "\\models\\";
 	string texture_path = res_path + "\\texture\\";
 #endif
-//    Rigid_Geometry* road1 = new Rigid_Geometry("road", (model_path + "cube.obj").c_str(),Vector3d(0,-3,-50),Vector3d(0,0,0),Vector3d(100,3,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
-//    Rigid_Geometry* cube = new Rigid_Geometry("cube0", (model_path + "cube.obj").c_str(),Vector3d(0,-5,-40),Vector3d(0,0,0),Vector3d(100,1,100),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
-    Rigid_Geometry* cube1 = new Rigid_Geometry("cube1", (model_path + "cube.obj").c_str(),Vector3d(-2.1,1,-40),Vector3d(0,0,0),Vector3d(1,1,1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
-    Rigid_Geometry* cube2 = new Rigid_Geometry("cube2", (model_path + "cube.obj").c_str(),Vector3d(0,1,-40),Vector3d(0,0,0),Vector3d(1.1,1,1.1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
-//    Rigid_Geometry* cube3 = new Rigid_Geometry("cube3", (model_path + "cube.obj").c_str(),Vector3d(-4.3,1,-40),Vector3d(0,0,0),Vector3d(1.2,1,1.2),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
-//    cube->LoadTexture((texture_path + "wood.bmp").c_str(), 0.6);
-//    cube->setKr(0);
-//    cube->kf = 0.9;
-//    cube->setNailed();
+    double g_w = 8, l_w = 1, h = 7.5;
+    Rigid_Geometry* cube1 = new Rigid_Geometry("cubee", (model_path + "cube.obj").c_str(),Vector3d(0,-10,0),Vector3d(0,0,0),Vector3d(50,10,50),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-50,-10,-50),TV(50,10,50))));
+    cube1->setKr(0.3);
+    cube1->kf = 0.3;
+    cube1->LoadTexture((texture_path + "marble.bmp").c_str(), 1.0);
+    cube1->setNailed();
+    Rigid_Geometry* cube2 = new Rigid_Geometry("W1", (model_path + "cube.obj").c_str(),Vector3d(-g_w, h / 3, 0),Vector3d(0,0,45),Vector3d(l_w,h,g_w * 1.5),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-l_w,-h,-g_w),TV(l_w, h, g_w))));
+    cube2->setKr(0.3);
+    cube2->kf = 0.3;
+    cube2->LoadTexture((texture_path + "ball.bmp").c_str(), 1.0);
+    cube2->setNailed();
+    Rigid_Geometry* cube3 = new Rigid_Geometry("W2", (model_path + "cube.obj").c_str(),Vector3d(g_w, h / 3, 0),Vector3d(0,0,-45),Vector3d(l_w,h,g_w * 1.5),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-l_w,-h,-g_w),TV(l_w, h, g_w))));
+    cube3->setKr(0.3);
+    cube3->kf = 0.3;
+    cube3->LoadTexture((texture_path + "ball.bmp").c_str(), 1.0);
+    cube3->setNailed();
+    Rigid_Geometry* cube4 = new Rigid_Geometry("W3", (model_path + "cube.obj").c_str(),Vector3d(0, h / 3, -g_w),Vector3d(-45,0,0),Vector3d(g_w * 1.5,h,l_w),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-g_w,-h,-l_w),TV(g_w, h, l_w))));
+    cube4->setKr(0.3);
+    cube4->kf = 0.3;
+    cube4->LoadTexture((texture_path + "ball.bmp").c_str(), 1.0);
+    cube4->setNailed();
+    Rigid_Geometry* cube5 = new Rigid_Geometry("W4", (model_path + "cube.obj").c_str(),Vector3d(0, h / 3, g_w),Vector3d(45,0,0),Vector3d(g_w * 1.5,h,l_w),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-g_w,-h,-l_w),TV(g_w, h, l_w))));
+    cube5->setKr(0.3);
+    cube5->kf = 0.3;
+    cube5->LoadTexture((texture_path + "ball.bmp").c_str(), 1.0);
+    cube5->setNailed();
+    m_objects.addElement(cube2);
+    m_objects.addElement(cube3);
+    m_objects.addElement(cube4);
+    m_objects.addElement(cube5);
+    m_objects.addElement(cube1);
+    /*    Rigid_Geometry* cube2 = new Rigid_Geometry("cube2", (model_path + "cube.obj").c_str(),Vector3d(0,1,-40),Vector3d(0,0,0),Vector3d(1.1,1,1.1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
     cube1->LoadTexture((texture_path + "marble.bmp").c_str(), 0.6);
     cube1->setKr(0);
     cube1->kf = 0.9;
     cube2->LoadTexture((texture_path + "marble.bmp").c_str(), 0.6);
     cube2->kf = 0.9;
     cube2->setNailed();
-//    cube3->LoadTexture((texture_path + "marble.bmp").c_str(), 0.6);
-//    cube3->setKr(0);
-//    cube3->kf = 0.9;
-//    m_objects.addElement(cube);
     m_objects.addElement(cube1);
     m_objects.addElement(cube2);
-//    m_objects.addElement(cube3);
     RotJoint* rotJoint = new RotJoint(Vector3d(-1.05,-1,-1),Vector3d(1.05,-1,-1),Vector3d(0,0,-1),-30,45);
     rotJoint->parent = cube2;
     rotJoint->child = cube1;
@@ -93,12 +131,7 @@ void Sysfric::Reset() {
     rotJoint->kr = 0;
     rotJoint->kf = 0;
     rotJoint->kh = 100;
-//    RotJoint* rotJoint1 = new RotJoint(Vector3d(-1.1,-1,-1),Vector3d(1.1,-1,-1),Vector3d(0,0,1),-45,45);
-//    rotJoint1->parent = cube1;
-//    rotJoint1->child = cube3;
-//    rotJoint1->initialize();
-    joints.push_back(rotJoint);
-//    joints.push_back(rotJoint1);
+    joints.push_back(rotJoint);*/
     game_mode = BEGIN_SHOOT;
 }
 

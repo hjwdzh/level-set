@@ -24,6 +24,9 @@ public:
         }
         return make_pair(t - r, d * (1.0f / t));
     }
+    std::pair<T, TV> Intersect(const TV& p1, const TV& P2, float& portion) {
+        return make_pair(T(), TV());
+    }
     TV o;
     T r;
 };

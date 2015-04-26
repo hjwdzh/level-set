@@ -11,15 +11,17 @@
 #include "BVH.h"
 #include "ARRAY.h"
 #include "Solver.h"
-
+#include "main.h"
+#include <sys/time.h>
+extern double g_simTime;
 using namespace SimLib;
 
 Geometrics::Geometrics()
-: bvh(new BVH<4, float>())
+: bvh(new BVH<3, float>())
 {}
 
 Geometrics::Geometrics(int n)
-: bvh(new BVH<4, float>())
+: bvh(new BVH<3, float>())
 {
     vp.resize(n);
 }
@@ -31,8 +33,8 @@ Geometrics::~Geometrics()
 
 void Geometrics::Display()
 {
-    for (vector<Geometric*>::iterator it = vp.begin();
-         it != vp.end(); ++it)
+    for (vector<Geometric*>::reverse_iterator it = vp.rbegin();
+         it != vp.rend(); ++it)
     {
         (*it)->Display();
     }
@@ -103,7 +105,7 @@ void Geometrics::collide_detection(Geometrics& g) {
     while (has_collision) {
         has_collision = false;
         iteration++;
-        if (iteration > 9)
+        if (iteration > 2)
             break;
         for (int i = 0; i < contacts.size(); ++i) {
             if (contacts[i].collide_handling()) {
@@ -133,35 +135,40 @@ void Geometrics::contact_detection(Bounds& b)
 
 void Geometrics::contact_detection(Geometrics& g) {
     if (system->solver == SystemPhy::NRBS) {
-    for (double l = -0.8; l < 1e-3; l += 0.2) {
+        for (double l = -0.6; l < 1e-3; l += 0.3) {
+            for (int i = 0; i < contacts.size(); ++i) {
+                contacts[i].collide_handling(l);
+            }
+        }
         bool has_collision = true;
         int iteration = 0;
         while (has_collision) {
             iteration++;
-            if (iteration > 9)
+            if (iteration > 1)
                 break;
             has_collision = false;
             for (int i = 0; i < contacts.size(); ++i) {
-                if (contacts[i].collide_handling(l)) {
+                if (contacts[i].collide_handling(0)) {
                     has_collision = true;
                 }
             }
         }
-    }
     } else {
         Contact::contact_handling(contacts);
     }
     clearRemoveList();
 }
 
-void Geometrics::updateBVH() {
+void Geometrics::updateBVHandTransform() {
     std::vector<BV<float>*> bvs;
     bvs.reserve(vp.size());
     for (int i = 0; i < vp.size(); ++i) {
         Rigid_Geometry* rgd = dynamic_cast<Rigid_Geometry*>(vp[i]);
         if (rgd) {
-            rgd->updateBoundingVolume();
-            bvs.push_back(rgd->bounding_volume);
+            rgd->updateTransform();
+            BV<float>* bv = rgd->bounding_volume->transform(rgd->transform);
+            bv->rgd = rgd;
+            bvs.push_back(bv);
         }
     }
     bvh->updateBVH(bvs, 1, -1, -1);
