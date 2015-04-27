@@ -52,7 +52,7 @@ void DrawFunc()
     
     float x = 20, y = 20;
     char buf[1000];
-    sprintf(buf, "SimFPS: %f Object: %d ColFPS: %f", 1 / g_simTime, g_sys->m_objects.vp.size(), g_colTime / g_simTime);
+    sprintf(buf, "SimFPS: %f Object: %lu ColFPS: %f", 1 / g_simTime, g_sys->m_objects.vp.size(), g_colTime / g_simTime);
     DrawTextHHL(buf, x, y);
     // 交换显示缓冲区
     glutSwapBuffers() ;

@@ -5,12 +5,14 @@
 #include "bound.h"
 using namespace SimLib;
 
-bool Contact::collide_handling(double k) {
+bool Contact::collide_handling(double k, bool solve) {
     Vector3d v1 = a->v + a->w.crossProduct(ra);
     Vector3d v2 = b->v + b->w.crossProduct(rb);
     double vrel = n.dotProduct(v1 - v2);
     if (vrel >= -1e-6 || (a->nailed && b->nailed))
         return false;
+    if (!solve)
+        return true;
     if (k < -50)
         k = kr;
     double numerator = -(1 + k) * vrel;

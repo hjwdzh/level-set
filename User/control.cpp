@@ -20,7 +20,7 @@ void KeyboardFunc(unsigned char key, int x, int y)
 			break;
         case 'G':
             for (int i = 0; i < 1; ++i) {
-                g_sys->addCube(((rand() + 0.0) / RAND_MAX - 0.5) * 15, ((rand() + 0.0) / RAND_MAX - 0.5) * 15);
+                g_sys->addCube(((rand() + 0.0) / RAND_MAX - 0.5) * 20, ((rand() + 0.0) / RAND_MAX - 0.5) * 20);
             }
             break;
         case 'A':

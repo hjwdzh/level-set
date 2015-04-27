@@ -13,7 +13,7 @@ public:
     : a(0), b(0){
     }
     static void contact_handling(std::vector<Contact>& contacts);
-    bool collide_handling(double k = -100);
+    bool collide_handling(double k = -100, bool solve = true);
     double mu, kr;
     Rigid_Geometry *a, *b;
     Vector3d p, n, ra, rb, u, t1, t2;

@@ -56,11 +56,7 @@ void Solver::NRBS(SystemPhy &sys, double h) {
     sys.setPosState(x_new, t);
     sys.setVelState(v, t);
 
-    gettimeofday(&t1, 0);
     sys.collide_detection();
-    gettimeofday(&t2, 0);
-    
-    g_colTime += (t2.tv_sec - t1.tv_sec) + 1e-6 * (t2.tv_usec - t1.tv_usec);
 
     sys.postStabilization();
     delete[] v;
@@ -83,7 +79,7 @@ void Solver::NRBS(SystemPhy &sys, double h) {
 
     //contact handling
     //use x_new = x + h * v
-    deltaX = sys.DerivPosEval(x, t);
+/*    deltaX = sys.DerivPosEval(x, t);
     if (deltaX != 0) {
         for (int i = 0; i < m; ++i) {
             if (i % 7 < 3) {
@@ -101,10 +97,14 @@ void Solver::NRBS(SystemPhy &sys, double h) {
         }
     }
     sys.setPosState(x_new, t);
-    
+ */
+    gettimeofday(&t1, 0);
     sys.contact_handling();
+    gettimeofday(&t2, 0);
+    
+    g_colTime += (t2.tv_sec - t1.tv_sec) + 1e-6 * (t2.tv_usec - t1.tv_usec);
 
-    delete[] deltaX;
+ //   delete[] deltaX;
 
     sys.preStabilization(h);
     //Integrate x

@@ -12,6 +12,7 @@
 #include "ARRAY.h"
 #include "Solver.h"
 #include "main.h"
+#include "ContactGraph.h"
 #include <sys/time.h>
 extern double g_simTime;
 using namespace SimLib;
@@ -135,7 +136,7 @@ void Geometrics::contact_detection(Bounds& b)
 
 void Geometrics::contact_detection(Geometrics& g) {
     if (system->solver == SystemPhy::NRBS) {
-        for (double l = -0.6; l < 1e-3; l += 0.3) {
+/*        for (double l = -0.6; l < 1e-3; l += 0.3) {
             for (int i = 0; i < contacts.size(); ++i) {
                 contacts[i].collide_handling(l);
             }
@@ -153,6 +154,18 @@ void Geometrics::contact_detection(Geometrics& g) {
                 }
             }
         }
+*/        ContactGraph cg;
+/*        for (double l = -0.6; l < 1e-3; l += 0.3) {
+            for (int i = 0; i < contacts.size(); ++i) {
+                contacts[i].collide_handling(l);
+            }
+        }
+*/        for (int i = 0; i < contacts.size(); ++i) {
+            if (contacts[i].collide_handling(0, false)) {
+                cg.Connect(contacts[i]);
+            }
+        }
+        cg.solveContacts();
     } else {
         Contact::contact_handling(contacts);
     }
