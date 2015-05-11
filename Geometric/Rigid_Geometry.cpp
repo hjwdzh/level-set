@@ -15,7 +15,6 @@
 #include "texture.h"
 #include "TriManager.h"
 #include "KDOP.h"
-#include "GJKDetector.h"
 #include "IMPLICIT_SPHERE.h"
 #include "IMPLICIT_CUBE.h"
 #include <fstream>
@@ -80,6 +79,12 @@ Rigid_Geometry::Rigid_Geometry(const char* _name, const char* filename, const Ve
     }
     J0 = (J * (mass / triangles->vertices.size()));
     J = J0.inverse();
+    if (nailed) {
+        Jr = Matrix3d::createScale(0, 0, 0);
+    } else {
+        Matrix3d rot1 = rotation.rotMatrix();
+        Jr = rot1 * J * rot1.transpose();
+    }
     bounding_volume = new KDOP<3,float>();
     bounding_volume->rgd = this;
     updateBoundingVolume();
@@ -108,12 +113,19 @@ void Rigid_Geometry::updateBoundingVolume() {
 
 double Rigid_Geometry::getMouseDepth(double mouseX, double mouseY)
 {
-    Vector4d v(x[0], x[1], x[2], 1);
-    v = g_camera->lookat * v;
-    v = v / v[3];
-    double dx = (v[0] / v[2] * (-g_d) - mouseX) / g_right * g_WindowWidth * 0.5;
-    double dy = (v[1] / v[2] * (-g_d) - mouseY) / g_top * g_WindowHeight * 0.5;
-    if (sqrt(dx * dx + dy * dy) < 10)
+    Vector4d vx(x[0], x[1], x[2], 1);
+    double fov = 35.0, zNear = 1, aspectRatio = (double)g_WindowWidth / g_WindowHeight, zFar = 1000;
+    GLdouble rFov = fov * 3.14159265 / 180.0;
+    Matrix4d m = Matrix4d::createFrustum(-zNear * tan( rFov / 2.0 ) * aspectRatio,
+                            zNear * tan( rFov / 2.0 ) * aspectRatio,
+                            -zNear * tan( rFov / 2.0 ),
+                            zNear * tan( rFov / 2.0 ),
+                            zNear, zFar);
+    vx = m * g_camera->lookat * vx;
+    vx = vx / vx[3];
+    double dx = (vx[0] - mouseX) * g_WindowWidth * 0.5;
+    double dy = (vx[1] - mouseY) * g_WindowHeight * 0.5;
+    if (sqrt(dx * dx + dy * dy) < 50)
     {
         return v[2];
     }
@@ -126,7 +138,23 @@ void Rigid_Geometry::ExcertForce(const Vector3d &force)
         f += force;
 }
 
+void Rigid_Geometry::setNailed() {
+    Geometric::setNailed();
+    if (nailed) {
+        Jr = Matrix3d::createScale(0, 0, 0);
+    } else {
+        Matrix3d rot1 = rotation.rotMatrix();
+        Jr = rot1 * J * rot1.transpose();
+    }
+}
+
 void Rigid_Geometry::ExcertForceField(Vector3d (*forcefunc)(Geometric*))
+{
+    if (!nailed)
+        f += forcefunc((Geometric*)this);
+}
+
+void Rigid_Geometry::ExcertMomentField(Vector3d (*forcefunc)(Geometric*))
 {
     if (!nailed)
         f += forcefunc((Geometric*)this);
@@ -227,13 +255,17 @@ void Rigid_Geometry::Display()
     }
     if (userForce.length() > 0)
     {
-        glColor3f(1.0f, 1.0, 1.0);
+        glDisable(GL_LIGHTING);
+        glDisable(GL_TEXTURE_2D);
+        glColor3f(1.0f, 0.0, 0.0);
         glBegin(GL_LINES);
         glVertex3d(0, 0, 0);
         glVertex3d(userForce[0], userForce[1], userForce[2]);
         glEnd();
         glTranslated(userForce[0], userForce[1], userForce[2]);
         glutSolidSphere(0.01f, 15, 15);
+        glEnable(GL_LIGHTING);
+        glEnable(GL_TEXTURE_2D);
     }
     glPopMatrix();
 }
@@ -250,13 +282,17 @@ void Rigid_Geometry::updateTransform() {
     Quaternion<double> q = rotation;
     q.w = -q.w;
     inv_transform = Matrix4d::createTranslation(gravity_center(1), gravity_center(2), gravity_center(3)) * Matrix4d::createScale(1 / scale[0], 1 / scale[1], 1 / scale[2]) * q.transform() * Matrix4d::createTranslation(-x[0], -x[1], -x[2]);
+    if (nailed) {
+        Jr = Matrix3d::createScale(0, 0, 0);
+    } else {
+        Matrix3d rot1 = rotation.rotMatrix();
+        Jr = rot1 * J * rot1.transpose();
+    }
 }
 
 void Rigid_Geometry::collide_detection(Geometric* g, std::vector<Contact>* contact) {
     Rigid_Geometry* rgb = dynamic_cast<Rigid_Geometry*>(g);
-    timeval tt1, tt2;
     if (rgb) {
-        gettimeofday(&tt1, 0);
         IMPLICIT_SPHERE<float> *t1, *t2;
         IMPLICIT_CUBE<float> *t3;
         t1 = dynamic_cast<IMPLICIT_SPHERE<float>* >(rgb->implicit_object);
@@ -317,37 +353,37 @@ void Rigid_Geometry::collide_detection(Geometric* g, std::vector<Contact>* conta
             if (o.x - t1->r < t3->box.min(1)) {
                 if ((o.x + t1->r > t3->box.min(1)) && (o.y + t1->r > t3->box.min(2)) && (o.y - t1->r < t3->box.max(2)) && (o.z + t1->r > t3->box.min(3)) && (o.z - t1->r < t3->box.max(3))) {
                     N = Vector3d(-1, 0, 0);
-                    pp = op + Vector4d(t1->r, 0, 0, 0);
+                    pp = op + Vector4d(t1->r / cube->scale[0], 0, 0, 0);
                 }
             } else
             if (o.x + t1->r > t3->box.max(1)) {
                 if ((o.x - t1->r < t3->box.max(1)) && (o.y + t1->r > t3->box.min(2)) && (o.y - t1->r < t3->box.max(2)) && (o.z + t1->r > t3->box.min(3)) && (o.z - t1->r < t3->box.max(3))) {
                     N = Vector3d(1, 0, 0);
-                    pp = op - Vector4d(t1->r, 0, 0, 0);
+                    pp = op - Vector4d(t1->r / cube->scale[0], 0, 0, 0);
                 }
             } else
             if (o.y - t1->r < t3->box.min(2)) {
                 if ((o.y + t1->r > t3->box.min(2)) && (o.x + t1->r > t3->box.min(1)) && (o.x - t1->r < t3->box.max(1)) && (o.z + t1->r > t3->box.min(3)) && (o.z - t1->r < t3->box.max(3))) {
                     N = Vector3d(0, -1, 0);
-                    pp = op + Vector4d(0, t1->r, 0, 0);
+                    pp = op + Vector4d(0, t1->r / cube->scale[1], 0, 0);
                 }
             } else
             if (o.y + t1->r > t3->box.max(2)) {
                 if ((o.y - t1->r < t3->box.max(2)) && (o.x + t1->r > t3->box.min(1)) && (o.x - t1->r < t3->box.max(1)) && (o.z + t1->r > t3->box.min(3)) && (o.z - t1->r < t3->box.max(3))) {
                     N = Vector3d(0, 1, 0);
-                    pp = op - Vector4d(0, t1->r, 0, 0);
+                    pp = op - Vector4d(0, t1->r / cube->scale[1], 0, 0);
                 }
             } else
             if (o.z - t1->r < t3->box.min(3)) {
                 if ((o.z + t1->r > t3->box.min(3)) && (o.y + t1->r > t3->box.min(2)) && (o.y - t1->r < t3->box.max(2)) && (o.x + t1->r > t3->box.min(1)) && (o.x - t1->r < t3->box.max(1))) {
                     N = Vector3d(0, 0, -1);
-                    pp = op + Vector4d(0, 0, t1->r, 0);
+                    pp = op + Vector4d(0, 0, t1->r / cube->scale[2], 0);
                 }
             } else
             if (o.z + t1->r > t3->box.max(3)) {
                 if ((o.z - t1->r < t3->box.max(3)) && (o.y + t1->r > t3->box.min(2)) && (o.y - t1->r < t3->box.max(2)) && (o.x + t1->r > t3->box.min(1)) && (o.x - t1->r < t3->box.max(1))) {
                     N = Vector3d(0, 0, 1);
-                    pp = op - Vector4d(0, 0, t1->r, 0);
+                    pp = op - Vector4d(0, 0, t1->r / cube->scale[2], 0);
                 }
             }
             N = cube->Transform() * N;
@@ -374,7 +410,6 @@ void Rigid_Geometry::collide_detection(Geometric* g, std::vector<Contact>* conta
                 }
             }
         }
-        gettimeofday(&tt2, 0);
         return;
         Matrix4d tr = rgb->Inv_Transform() * Transform();
         // face-point

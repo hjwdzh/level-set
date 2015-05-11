@@ -288,6 +288,7 @@ void SysDynPtc::ForceApply()
 {
     m_objects.ExcertForceField(ForceField::gravity);
     m_objects.ExcertForceField(ForceField::viscous);
+    m_objects.ExcertMomentField(ForceField::viscousMoment);
     for (int i = 0; i < m_objects.size(); ++i) {
         Rigid_Geometry* rgd = dynamic_cast<Rigid_Geometry*>(m_objects.vp[i]);
         if (rgd) {
@@ -303,7 +304,7 @@ void SysDynPtc::postStabilization() {
     int iteration = 0;
     while (has_collision) {
         iteration++;
-        if (iteration > 9)
+        if (iteration > 3)
             break;
         has_collision = false;
         for (int i = 0; i < joints.size(); ++i) {

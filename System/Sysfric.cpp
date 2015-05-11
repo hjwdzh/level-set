@@ -10,6 +10,7 @@
 using namespace SimLib;
 
 extern string res_path;
+extern int g_demo;
 
 Sysfric::Sysfric()
 {
@@ -84,12 +85,65 @@ void Sysfric::Reset() {
 	string model_path = res_path + "\\models\\";
 	string texture_path = res_path + "\\texture\\";
 #endif
-    double g_w = 12, l_w = 1, h = 7.5;
     Rigid_Geometry* cube1 = new Rigid_Geometry("cubee", (model_path + "cube.obj").c_str(),Vector3d(0,-10,0),Vector3d(0,0,0),Vector3d(50,10,50),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-50,-10,-50),TV(50,10,50))));
     cube1->setKr(0.6);
     cube1->kf = 0.3;
     cube1->LoadTexture((texture_path + "marble.bmp").c_str(), 1.0);
     cube1->setNailed();
+    if (g_demo == 1) {
+        double w = 0.95;
+        Rigid_Geometry* frame = new Rigid_Geometry("frame", (model_path + "frame.obj").c_str(),Vector3d(0,0,0),Vector3d(0,0,0),Vector3d(1,1,1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-5,-5,-5),TV(-5,-5,-5))));
+        frame->LoadTexture((texture_path + "wood.bmp").c_str(), 1.0);
+        frame->setNailed();
+        m_objects.addElement(frame);
+        
+        for (int i = -2; i <= 2; ++i) {
+            Rigid_Geometry* stick31 = new Rigid_Geometry("single_stick", (model_path + "single_stick.obj").c_str(),Vector3d(w * i,5.6,0),Vector3d(0,0,0),Vector3d(0.5,0.5,1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-5,-5,-5),TV(-5,-5,-5))));
+            stick31->LoadTexture((texture_path + "ball.bmp").c_str(), 1.0);
+            m_objects.addElement(stick31);
+            
+            Rigid_Geometry* stick32 = new Rigid_Geometry("single_stick", (model_path + "single_stick.obj").c_str(),Vector3d(w * i,5.6,0),Vector3d(0,0,0),Vector3d(0.5,0.5,-1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-5,-5,-5),TV(-5,-5,-5))));
+            stick32->LoadTexture((texture_path + "ball.bmp").c_str(), 1.0);
+            m_objects.addElement(stick32);
+            
+
+            Rigid_Geometry* ball = new Rigid_Geometry("ball", (model_path + "sphere.obj").c_str(),Vector3d(0.05 + i * w,3.88 - w/2,0),Vector3d(0,0,0),Vector3d(w/2,w/2,w/2),50,new IMPLICIT_SPHERE<float>(VECTOR<float,3>(),w/2));
+            ball->setKr(1);
+            ball->LoadTexture((texture_path + "iron.bmp").c_str());
+            m_objects.addElement(ball);
+
+            Vector3d pt = Vector3d(w * i, 5.6, 0.8);
+            PtJoint* ptJoint = new PtJoint(pt - cube1->x, pt - stick31->x);
+            ptJoint->parent = cube1;
+            ptJoint->child = stick31;
+            joints.push_back(ptJoint);
+            
+            pt = Vector3d(w * i, 5.6, -0.8);
+            ptJoint = new PtJoint(pt - cube1->x, pt - stick32->x);
+            ptJoint->parent = cube1;
+            ptJoint->child = stick32;
+            joints.push_back(ptJoint);
+
+            pt = Vector3d(w * i, 3.88, -0.01);
+            ptJoint = new PtJoint(pt - stick31->x, pt - ball->x);
+            ptJoint->parent = stick31;
+            ptJoint->child = ball;
+            joints.push_back(ptJoint);
+            pt = Vector3d(w * i, 3.88, 0.01);
+            ptJoint = new PtJoint(pt - stick32->x, pt - ball->x);
+            ptJoint->parent = stick32;
+            ptJoint->child = ball;
+            joints.push_back(ptJoint);
+            pt = Vector3d(w * i, 4.5, 0);
+            ptJoint = new PtJoint(pt - stick31->x, pt - ball->x);
+            ptJoint->parent = stick31;
+            ptJoint->child = ball;
+            joints.push_back(ptJoint);
+        }
+        
+    } else {
+
+    double g_w = 12, l_w = 1, h = 10.5;
     Rigid_Geometry* cube2 = new Rigid_Geometry("W1", (model_path + "cube.obj").c_str(),Vector3d(-g_w, h / 3, 0),Vector3d(0,0,45),Vector3d(l_w,h,g_w * 1.5),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-l_w,-h,-g_w * 1.5),TV(l_w, h, g_w * 1.5))));
     cube2->setKr(0.6);
     cube2->kf = 0.3;
@@ -114,7 +168,9 @@ void Sysfric::Reset() {
     m_objects.addElement(cube3);
     m_objects.addElement(cube4);
     m_objects.addElement(cube5);
+    }
     m_objects.addElement(cube1);
+
     /*    Rigid_Geometry* cube2 = new Rigid_Geometry("cube2", (model_path + "cube.obj").c_str(),Vector3d(0,1,-40),Vector3d(0,0,0),Vector3d(1.1,1,1.1),1,new IMPLICIT_CUBE<float>(RANGE<TV>(TV(-1,-1,-1),TV(1,1,1))));
     cube1->LoadTexture((texture_path + "marble.bmp").c_str(), 0.6);
     cube1->setKr(0);

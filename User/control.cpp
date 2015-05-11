@@ -1,5 +1,6 @@
 #include "main.h"
 #include "Solver.h"
+#include "ForceField.h"
 #ifndef _WINDOWS_PLATFORM_
 #include <sys/time.h>
 #else
@@ -8,8 +9,13 @@
 
 double g_mouseState = 0, g_simTime = 0;
 int g_mouseX, g_mouseY;
+
+int g_Solver = SystemPhy::NRBS;
+int g_useContactGraph = 1;
+int g_useBoundingVolume = 1;
+
 Geometric* g_selectedObject;
-extern int stopsign;
+extern int stopsign, g_demo;
 // 响应按键事件
 void KeyboardFunc(unsigned char key, int x, int y)
 {
@@ -19,7 +25,7 @@ void KeyboardFunc(unsigned char key, int x, int y)
 			exit(0);
 			break;
         case 'G':
-            for (int i = 0; i < 1; ++i) {
+            for (int i = 0; i < 10; ++i) {
                 g_sys->addCube(((rand() + 0.0) / RAND_MAX - 0.5) * 20, ((rand() + 0.0) / RAND_MAX - 0.5) * 20);
             }
             break;
@@ -86,6 +92,22 @@ void KeyboardFunc(unsigned char key, int x, int y)
         case 'P':
             stopsign = 2;
             break;
+        case 'z':
+            if (g_Solver == SystemPhy::NRBS) {
+                g_Solver = SystemPhy::LCP;
+            } else {
+                g_Solver = SystemPhy::NRBS;
+            }
+            break;
+        case 'x':
+            g_useContactGraph = 1 - g_useContactGraph;
+            break;
+        case 'c':
+            g_useBoundingVolume = 1 - g_useBoundingVolume;
+            break;
+        case 'l':
+            ForceField::k_drag = 40 - ForceField::k_drag;
+            break;
         default:
             break;
     }
@@ -100,8 +122,8 @@ void MouseFunc(int button, int state, int x, int y)
         g_mouseY = y;
         double mouseX = 2 * (double)x / g_WindowWidth - 1;
         double mouseY = 2 * (double)(g_WindowHeight - y) / g_WindowHeight - 1;
-        g_selectedObject = g_sys->mouseSelect(mouseX * g_right, mouseY * g_top);
-        if (button == GLUT_RIGHT_BUTTON)
+        g_selectedObject = g_sys->mouseSelect(mouseX, mouseY);
+        if (button == GLUT_RIGHT_BUTTON && g_selectedObject)
         {
             g_selectedObject->setNailed();
         }
@@ -155,10 +177,20 @@ void Animate(int id)
         double hitY = v[1];
         v = Vector4d(mouseX - hitX, mouseY - hitY, 0, 0);
         v = g_camera->lookat.inverse() * v;
-        g_selectedObject->setUserForce(Vector3d(v[0], v[1], v[2]) * 5);
+        g_selectedObject->setUserForce(Vector3d(v[0], v[1], v[2]) * 20);
     }
-    for (int i = 0; i < 1; ++i)
-        Solver::NRBS(*g_sys, 0.05);
+    if (g_Solver == SystemPhy::NRBS) {
+        if (g_demo == 1) {
+            for (int i = 0; i < 10; ++i)
+                Solver::NRBS(*g_sys, 0.01);
+        } else {
+            for (int i = 0; i < 1; ++i)
+                Solver::NRBS(*g_sys, 0.05);
+        }
+    } else {
+        for (int i = 0; i < 3; ++i)
+            Solver::EulersStep(*g_sys, 0.05 / 3);
+    }
 #ifndef _WINDOWS_PLATFORM_
     gettimeofday(&t2, 0);
     g_simTime = (t2.tv_usec - t1.tv_usec) * 1e-6 + (t2.tv_sec - t1.tv_sec);

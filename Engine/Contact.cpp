@@ -18,16 +18,8 @@ bool Contact::collide_handling(double k, bool solve) {
     double numerator = -(1 + k) * vrel;
     double term1 = a->nailed ? 0 : 1 / a->mass;
     double term2 = b->nailed ? 0 : 1 / b->mass;
-    Matrix3d J1 = Matrix3d::createScale(0, 0, 0);
-    Matrix3d J2 = J1;
-    if (!(a->nailed)) {
-        Matrix3d rot1 = a->rotation.rotMatrix();
-        J1 = rot1 * a->J * rot1.transpose();
-    }
-    if (!(b->nailed)) {
-        Matrix3d rot2 = b->rotation.rotMatrix();
-        J2 = rot2 * b->J * rot2.transpose();
-    }
+    Matrix3d& J1 = a->Jr;
+    Matrix3d& J2 = b->Jr;
     double term3 = n.dotProduct((J1 * (ra.crossProduct(n))).crossProduct(ra));
     double term4 = n.dotProduct((J2 * (rb.crossProduct(n))).crossProduct(rb));
     double j = numerator / (term1 + term2 + term3 + term4);
@@ -207,8 +199,6 @@ void Contact::contact_handling(std::vector<Contact>& contacts) {
                         int t = 0;
                         while (true) {
                             t++;
-                            if (t == 100)
-                                t = t;
                             f(2) /= len;
                             f(3) /= len;
                             double t = (-c(j * 3 + 1) - f(2) * a(j * 3 + 1, j * 3 + 2) - f(3) * a(j * 3 + 1, j * 3 + 3)) / a(j*3+1, j*3+1);
@@ -226,11 +216,7 @@ void Contact::contact_handling(std::vector<Contact>& contacts) {
                             f(3) = (a(j * 3 + 2, j * 3 + 2) * c2 - a(j * 3 + 3, j * 3 + 2) * c1) / (a(j * 3 + 2, j * 3 + 2) * a(j * 3 + 3, j * 3 + 3) - a(j * 3 + 2, j * 3 + 3) * a(j * 3 + 3, j * 3 + 2));
                             f(2) = (c1 - f(3) * a(j * 3 + 2, j * 3 + 3)) / a(j * 3 + 2, j * 3 + 2);
                             len = sqrt(f(2) * f(2) + f(3) * f(3)) / (f(1) * contacts[j].mu);
-                            Vector3d v1 = mm * Vector3d(f(1),f(2),f(3)) + Vector3d(c(j*3+1),c(j*3+2),c(j*3+3));
-                            v1 = v1;
                         }
-                        Vector3d v1 = mm * Vector3d(f(1),f(2),f(3)) + Vector3d(c(j*3+1),c(j*3+2),c(j*3+3));
-                        v1 = v1;
                     }
                 }
             }

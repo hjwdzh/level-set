@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "main.h"
 
+extern int g_demo;
 
 #define PI 3.141592654
 Camera::Camera()
@@ -16,6 +17,12 @@ Camera::Camera()
 {
     up.normalize();
     dir = up.crossProduct(Vector3d(-1, 0, 0));
+    
+    if (g_demo == 1) {
+    up = Vector3d(0, 1, 0);
+    dir = Vector3d(0, 0, 1);
+    o = Vector3d(0, 5, -20);
+    }
 }
 
 void Camera::Move(const double dis)

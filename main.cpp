@@ -27,7 +27,7 @@
 //=============================================================
 // 函数声明
 //=============================================================
-
+#include "Solver.h"
 void ReshapeFunc(int width, int height);            // glut窗口重置回调函数
 void KeyboardFunc(unsigned char key, int x, int y);    // glut键盘回调函数
 void MouseFunc(int button, int state, int x, int y);// glut鼠标按下与释放回调函数
@@ -45,8 +45,10 @@ void DrawTextHHL(const char* text, float x, float y);  // 在屏幕上显示文�
 const static int g_WindowPosX = 240;
 const static int g_WindowPosY = 200;
 
-int g_WindowWidth = 512;
-int g_WindowHeight = 384;
+int g_WindowWidth = 1280;
+int g_WindowHeight = 800;
+int g_demo = 1;
+
 double g_d = 1.0;
 Sysfric* g_sys = 0;
 Camera* g_camera = 0;
@@ -66,7 +68,10 @@ double g_right = g_top * (double)g_WindowWidth / g_WindowHeight;
 int main(int argc, char** argv)
 {
     if (argc >= 2) {
-        res_path = string(argv[1]);
+        g_demo = atoi(argv[1]);
+    }
+    if (argc >= 3) {
+        res_path = string(argv[2]);
     } else {
         res_path = "/Users/jingweihuang/Desktop/projects/levelset/Resources";
     }

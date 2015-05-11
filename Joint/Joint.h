@@ -27,7 +27,7 @@ public:
     Quatd qt;
     double kr, kf, kh;
 protected:
-    virtual Vector3d f(double h, Vector3d& j);
+    virtual Vector3d f(double h, const Vector3d& j);
     virtual Quatd ft(double h, const Vector3d& jt);
     virtual void dfj(double h, const Vector3d& j, Matrix3d& r);
     virtual void dfjt(double h, const Vector3d& jt, std::pair<Vector3d,Matrix3d>& r);

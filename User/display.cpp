@@ -3,9 +3,8 @@
 #include <sys/time.h>
 
 
-extern double g_simTime;
-double g_colTime;
-
+extern double g_simTime, g_jointTime;
+extern int g_Solver, g_useContactGraph, g_useBoundingVolume;
 // 描绘函数
 void DrawFunc()
 {
@@ -52,8 +51,17 @@ void DrawFunc()
     
     float x = 20, y = 20;
     char buf[1000];
-    sprintf(buf, "SimFPS: %f Object: %lu ColFPS: %f", 1 / g_simTime, g_sys->m_objects.vp.size(), g_colTime / g_simTime);
+    sprintf(buf, "SimFPS: %f Object: %lu", 1 / g_simTime, g_sys->m_objects.vp.size());
     DrawTextHHL(buf, x, y);
+
+    sprintf(buf, "Solver: %s", (g_Solver == SystemPhy::NRBS) ? "Impulse + NRBS" : "Force + LCP");
+    DrawTextHHL(buf, x, y + 20);
+
+    sprintf(buf, "Contact Graph: %s", g_useContactGraph ? "Yes" : "No");
+    DrawTextHHL(buf, x, y + 40);
+
+    sprintf(buf, "Bounding Volume: %s", g_useBoundingVolume ? "Yes" : "No");
+    DrawTextHHL(buf, x, y + 60);
     // 交换显示缓冲区
     glutSwapBuffers() ;
 }

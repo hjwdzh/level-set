@@ -13,12 +13,11 @@
 #include <list>
 #include <sys/time.h>
 #define ANGLE_SCALE 180 / 3.141592654
-extern double g_colTime;
 using namespace SimLib;
 extern double g_simTime;
+double g_jointTime;
+
 void Solver::NRBS(SystemPhy &sys, double h) {
-    timeval t1, t2;
-    g_colTime = 0;
     sys.setSolver(SystemPhy::NRBS);
     double t = sys.getTime();
     int n = sys.getDim() / 13 * 6;
@@ -57,7 +56,7 @@ void Solver::NRBS(SystemPhy &sys, double h) {
     sys.setVelState(v, t);
 
     sys.collide_detection();
-
+    g_jointTime = 0;
     sys.postStabilization();
     delete[] v;
     delete[] deltaV;
@@ -79,7 +78,7 @@ void Solver::NRBS(SystemPhy &sys, double h) {
 
     //contact handling
     //use x_new = x + h * v
-/*    deltaX = sys.DerivPosEval(x, t);
+    deltaX = sys.DerivPosEval(x, t);
     if (deltaX != 0) {
         for (int i = 0; i < m; ++i) {
             if (i % 7 < 3) {
@@ -97,12 +96,8 @@ void Solver::NRBS(SystemPhy &sys, double h) {
         }
     }
     sys.setPosState(x_new, t);
- */
-    gettimeofday(&t1, 0);
+ 
     sys.contact_handling();
-    gettimeofday(&t2, 0);
-    
-    g_colTime += (t2.tv_sec - t1.tv_sec) + 1e-6 * (t2.tv_usec - t1.tv_usec);
 
  //   delete[] deltaX;
 

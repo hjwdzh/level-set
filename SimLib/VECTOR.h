@@ -54,7 +54,9 @@ public:
         return (*this) * (1 / Magnitude());
     }
     void Normalize() {
-        (*this) /= Magnitude();
+        double t = Magnitude();
+        for (int i = 0; i < d; ++i)
+            data[i] /= t;
     }
 	VECTOR(const T& a, const T& b, const T& c) {
 		assert(d == 3);

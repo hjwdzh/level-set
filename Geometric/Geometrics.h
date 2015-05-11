@@ -40,6 +40,7 @@ public:
     
     void clearForce();
     void ExcertForceField(Vector3d (*forcefunc)(Geometric*));
+    void ExcertMomentField(Vector3d (*forcefunc)(Geometric*));
     
     int size() const;
     std::vector<Geometric*> findByName(const char* name) {

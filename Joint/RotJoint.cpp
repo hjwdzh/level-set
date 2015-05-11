@@ -9,9 +9,9 @@
 #include "RotJoint.h"
 #include "ARRAY.h"
 #include "Solver.h"
-
+#include <sys/time.h>
 using namespace SimLib;
-
+extern double g_jointTime;
 RotJoint::RotJoint() {
 }
 
@@ -43,6 +43,8 @@ bool RotJoint::violated() {
 }
 
 void RotJoint::preStabilization(double h) {
+    timeval t1, t2;
+    gettimeofday(&t1, 0);
     Vector3d pPos = parent->rotation.rotMatrix() * this->pPos;
     Vector3d cPos = child->rotation.rotMatrix() * this->cPos;
     Vector3d j = solvej(h);
@@ -78,6 +80,8 @@ void RotJoint::preStabilization(double h) {
             child->w -= J2 * jt;
         }
     }
+    gettimeofday(&t2, 0);
+    g_jointTime += (t2.tv_sec - t1.tv_sec) + 1e-6 * (t2.tv_usec - t1.tv_usec);
 }
 
 double RotJoint::getAngle() {
@@ -104,6 +108,8 @@ void RotJoint::initialize() {
 }
 
 bool RotJoint::postStabilization() {
+    timeval t1, t2;
+    gettimeofday(&t1, 0);
     Vector3d wrel;
     Vector3d tAxis;
     bool is_violated = false;
@@ -123,6 +129,8 @@ bool RotJoint::postStabilization() {
             wrel = (wp - wc) * -kr + (child->w - parent->w);
         }
     } else {
+        gettimeofday(&t2, 0);
+        g_jointTime += (t2.tv_sec - t1.tv_sec) + 1e-6 * (t2.tv_usec - t1.tv_usec);
         return false;
     }
     Vector3d pPos = parent->rotation.rotMatrix() * this->pPos;
@@ -130,8 +138,11 @@ bool RotJoint::postStabilization() {
     Vector3d v1 = parent->v + parent->w.crossProduct(pPos);
     Vector3d v2 = child->v + child->w.crossProduct(cPos);
     Vector3d vrel = v2 - v1;
-    if ((vrel.length() < 1e-4 && wrel.length() < 1e-4) || (parent->nailed && child->nailed))
+    if ((vrel.length() < 1e-4 && wrel.length() < 1e-4) || (parent->nailed && child->nailed)) {
+        gettimeofday(&t2, 0);
+        g_jointTime += (t2.tv_sec - t1.tv_sec) + 1e-6 * (t2.tv_usec - t1.tv_usec);
         return false;
+    }
     double term1 = parent->nailed ? 0 : 1 / parent->mass;
     double term2 = child->nailed ? 0 : 1 / child->mass;
     Matrix3d rot1 = parent->rotation.rotMatrix();
@@ -166,6 +177,8 @@ bool RotJoint::postStabilization() {
         }
     }
     Solver::LinearSolve(a, b, x);
+    gettimeofday(&t2, 0);
+    g_jointTime += (t2.tv_sec - t1.tv_sec) + 1e-6 * (t2.tv_usec - t1.tv_usec);
     Vector3d j(x(1), x(2), x(3));
     Vector3d jt(x(4), x(5), x(6));
     if (!is_violated) {

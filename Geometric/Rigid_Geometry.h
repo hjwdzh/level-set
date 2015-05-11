@@ -38,9 +38,11 @@ public:
     void ExcertMoment(const Vector3d& force, const Vector3d& p);
     void ExcertMoment(const Vector3d& moment);
     void ExcertForceField(Vector3d (*forcefunc)(Geometric*));
+    void ExcertMomentField(Vector3d (*forcefunc)(Geometric*));
     void collide_detection(Geometric* b, std::vector<Contact>* contact = 0);
     void updateBoundingVolume();
     void LoadTexture(const char* bmp, double _tex_scale = 1);
+    virtual void setNailed();
 
     Matrix4d Transform() {
         return transform;
@@ -68,7 +70,7 @@ public:
     
     Matrix4d transform, inv_transform;
     
-    Matrix3<double> J, J0;
+    Matrix3<double> J, J0, Jr;
     double kf;
     
     double tex_scale;

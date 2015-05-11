@@ -18,6 +18,7 @@ class ForceField
 public:
     static Vector3d gravity(Geometric* p);
     static Vector3d viscous(Geometric* p);
+    static Vector3d viscousMoment(Geometric* p);
     static double k_drag;
     static double k_moment_drag;
 };

@@ -60,7 +60,7 @@ void BVH<d,T>::collide_detect(BVH<d, T> *a, BVH<d, T> *b, std::vector<Contact>* 
         return;
     if (a->num == 1 && b->num == 1 && contacts) {
         a->bv->rgd->collide_detection(b->bv->rgd, contacts);
-        b->bv->rgd->collide_detection(a->bv->rgd, contacts);
+//        b->bv->rgd->collide_detection(a->bv->rgd, contacts);
         return;
     }
     if (a->num > b->num) {

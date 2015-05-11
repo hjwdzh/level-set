@@ -9,9 +9,10 @@
 #include "Joint.h"
 #include "ARRAY.h"
 #include "Solver.h"
+#include <sys/time.h>
 
 using namespace SimLib;
-
+extern double g_jointTime;
 Joint::Joint()
 : kr(0), kf(0), kh(0) {
 }
@@ -27,16 +28,8 @@ void Joint::preStabilization(double h) {
     return;
     Vector3d j = solvej(h);
     Vector3d jt = solvejt(h);
-    Matrix3d J1 = Matrix3d::createScale(0, 0, 0);
-    Matrix3d J2 = J1;
-    if (!(parent->nailed)) {
-        Matrix3d rot1 = parent->rotation.rotMatrix();
-        J1 = rot1 * parent->J * rot1.transpose();
-    }
-    if (!(child->nailed)) {
-        Matrix3d rot2 = child->rotation.rotMatrix();
-        J2 = rot2 * child->J * rot2.transpose();
-    }
+    Matrix3d& J1 = parent->Jr;
+    Matrix3d& J2 = child->Jr;
     double term1 = parent->nailed ? 0 : 1 / parent->mass;
     double term2 = child->nailed ? 0 : 1 / child->mass;
     if (!(parent->nailed)) {
@@ -58,16 +51,8 @@ bool Joint::postStabilization() {
         return false;
     double term1 = parent->nailed ? 0 : 1 / parent->mass;
     double term2 = child->nailed ? 0 : 1 / child->mass;
-    Matrix3d J1 = Matrix3d::createScale(0, 0, 0);
-    Matrix3d J2 = J1;
-    if (!(parent->nailed)) {
-        Matrix3d rot1 = parent->rotation.rotMatrix();
-        J1 = rot1 * parent->J * rot1.transpose();
-    }
-    if (!(child->nailed)) {
-        Matrix3d rot2 = child->rotation.rotMatrix();
-        J2 = rot2 * child->J * rot2.transpose();
-    }
+    Matrix3d& J1 = parent->Jr;
+    Matrix3d& J2 = child->Jr;
     Matrix3d rp = Matrix3d::createCrossProductMatrix(parent->Transform() * pPos);
     Matrix3d rc = Matrix3d::createCrossProductMatrix(child->Transform() * cPos);
     Matrix3d rpt = rp.transpose();
@@ -104,35 +89,20 @@ bool Joint::postStabilization() {
     return false;
 }
 
-Vector3d Joint::f(double h, Vector3d& j) {
+Vector3d Joint::f(double h, const Vector3d& j) {
     double mp = parent->nailed ? 0 : 1 / parent->mass;
     double mc = child->nailed ? 0 : 1 / child->mass;
-    Matrix3d J1 = Matrix3d::createScale(0, 0, 0);
-    Matrix3d J2 = J1;
-    if (!(parent->nailed)) {
-        Matrix3d rot1 = parent->rotation.rotMatrix();
-        J1 = rot1 * parent->J * rot1.transpose();
-    }
-    if (!(child->nailed)) {
-        Matrix3d rot2 = child->rotation.rotMatrix();
-        J2 = rot2 * child->J * rot2.transpose();
-    }
+    Matrix3d& J1 = parent->Jr;
+    Matrix3d& J2 = child->Jr;
     Vector3d rp0 = parent->rotation.rotMatrix() * pPos;
     Vector3d rc0 = child->rotation.rotMatrix() * cPos;
-    return parent->x - child->x + j * (h * (mp + mc)) + (parent->v * h + Quatd(parent->w * h + (J1 * rp0.crossProduct(j)) * h).rotMatrix() * rp0) - (child->v * h + Quatd(child->w * h - (J2 * rc0.crossProduct(j)) * h).rotMatrix() * rc0);
+    Vector3d res = parent->x - child->x + j * (h * (mp + mc)) + (parent->v * h + Quatd(parent->w * h + (J1 * rp0.crossProduct(j)) * h).rotMatrix() * rp0) - (child->v * h + Quatd(child->w * h - (J2 * rc0.crossProduct(j)) * h).rotMatrix() * rc0);
+    return res;
 }
 
 Quatd Joint::ft(double h, const Vector3d& jt) {
-    Matrix3d J1 = Matrix3d::createScale(0, 0, 0);
-    Matrix3d J2 = J1;
-    if (!(parent->nailed)) {
-        Matrix3d rot1 = parent->rotation.rotMatrix();
-        J1 = rot1 * parent->J * rot1.transpose();
-    }
-    if (!(child->nailed)) {
-        Matrix3d rot2 = child->rotation.rotMatrix();
-        J2 = rot2 * child->J * rot2.transpose();
-    }
+    Matrix3d& J1 = parent->Jr;
+    Matrix3d& J2 = child->Jr;
     return (Quatd(parent->w * h + J1 * jt * h) * parent->rotation * qt) - (Quatd(child->w * h - J2 * jt * h) * child->rotation);
 }
 
@@ -141,16 +111,8 @@ void Joint::dfj(double h, const Vector3d &j, Matrix3d &r) {
     Vector3d rc0 = child->rotation.rotMatrix() * cPos;
     Matrix3d rp = Matrix3d::createCrossProductMatrix(rp0);
     Matrix3d rc = Matrix3d::createCrossProductMatrix(rc0);
-    Matrix3d J1 = Matrix3d::createScale(0, 0, 0);
-    Matrix3d J2 = J1;
-    if (!(parent->nailed)) {
-        Matrix3d rot1 = parent->rotation.rotMatrix();
-        J1 = rot1 * parent->J * rot1.transpose();
-    }
-    if (!(child->nailed)) {
-        Matrix3d rot2 = child->rotation.rotMatrix();
-        J2 = rot2 * child->J * rot2.transpose();
-    }
+    Matrix3d& J1 = parent->Jr;
+    Matrix3d& J2 = child->Jr;
     Vector3d wp0 = (parent->w + J1 * (rp * j)) * h;
     Vector3d wc0 = (child->w - J2 * (rc * j)) * h;
     double thetap = wp0.length() * 0.5;
@@ -179,16 +141,8 @@ void Joint::dfj(double h, const Vector3d &j, Matrix3d &r) {
 }
 
 void Joint::dfjt(double h, const Vector3d& jt, std::pair<Vector3d,Matrix3d>& r) {
-    Matrix3d J1 = Matrix3d::createScale(0, 0, 0);
-    Matrix3d J2 = J1;
-    if (!(parent->nailed)) {
-        Matrix3d rot1 = parent->rotation.rotMatrix();
-        J1 = rot1 * parent->J * rot1.transpose();
-    }
-    if (!(child->nailed)) {
-        Matrix3d rot2 = child->rotation.rotMatrix();
-        J2 = rot2 * child->J * rot2.transpose();
-    }
+    Matrix3d& J1 = parent->Jr;
+    Matrix3d& J2 = child->Jr;
     Vector3d wp0 = (parent->w + J1 * jt) * h;
     Vector3d wc0 = (child->w - J2 * jt) * h;
     double thetap = wp0.length() * 0.5;
@@ -224,14 +178,19 @@ Vector3d Joint::solvej(double h) {
     Vector3d j, dj;
     Matrix3d dfjval;
     Vector3d fval = f(h, j);
-    double epsilon = 0.1;
+    double epsilon = 0;
     while (fval.length() > 1e-3) {
         dfj(h, j, dfjval);
         dj = dfjval.inverse() * fval;
         j -= dj * epsilon;
-        if (epsilon < 1 - 1e-6)
-            epsilon += 0.05;
-        fval = f(h, j);
+        epsilon += 0.2;
+        Vector3d fvalbuf = f(h, j - dj * epsilon);
+        while (fvalbuf.length() > fval.length()) {
+            epsilon *= 0.5;
+            fvalbuf = f(h, j - dj * epsilon);
+        }
+        fval = fvalbuf;
+        j -= dj * epsilon;
     }
     return j;
 }
@@ -241,7 +200,7 @@ Vector3d Joint::solvejt(double h) {
     std::pair<Vector3d, Matrix3d> dfjtval;
     Quatd ftval = ft(h, jt);
     double epsilon = 0.1;
-    while (ftval.length() > 1e-6) {
+    while (ftval.length() > 1e-3) {
         dfjt(h, jt, dfjtval);
         ARRAY<2, double> A(4,3);
         ARRAY<1, double> B(4), X, C;
@@ -270,10 +229,16 @@ Vector3d Joint::solvejt(double h) {
         for (int i = 1; i <= 3; ++i) {
             djt[i-1] = X(i);
         }
-        jt -= djt * epsilon;
+//        jt -= djt * epsilon;
         if (epsilon < 1 - 1e-6)
             epsilon += 0.05;
-        ftval = ft(h, jt);
+        Quatd ftvalbuf = ft(h, jt - djt * epsilon);
+        while (ftvalbuf.length() > ftval.length()) {
+            epsilon *= 0.5;
+            ftvalbuf = ft(h, jt - djt * epsilon);
+        }
+        ftval = ftvalbuf;
+        jt -= djt * epsilon;
     }
     return jt;
 }

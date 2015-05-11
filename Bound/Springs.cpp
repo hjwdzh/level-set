@@ -26,12 +26,16 @@ int Springs::size() const
 
 void Springs::Display()
 {
-    glColor3f(1.0f, 0.6f, 0.0f);
+    glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
+    glColor3f(1.0f, 0.0f, 0.0f);
     glBegin(GL_LINES);
     for (vector<Spring>::iterator it = vs.begin();
          it != vs.end(); ++it)
         it->Display();
     glEnd();
+    glEnable(GL_LIGHTING);
+    glEnable(GL_TEXTURE_2D);
 }
 
 void Springs::ForceApply(double ks, double kd)

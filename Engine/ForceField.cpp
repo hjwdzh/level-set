@@ -7,8 +7,8 @@
 //
 
 #include "ForceField.h"
-
-double ForceField::k_drag = 40;
+#include "Rigid_Geometry.h"
+double ForceField::k_drag = 0;
 double ForceField::k_moment_drag = 0;
 
 Vector3d ForceField::gravity(Geometric* p)
@@ -19,4 +19,11 @@ Vector3d ForceField::gravity(Geometric* p)
 Vector3d ForceField::viscous(Geometric* p)
 {
     return -p->v * k_drag;
+}
+
+Vector3d ForceField::viscousMoment(Geometric* p) {
+    Rigid_Geometry* rgd = dynamic_cast<Rigid_Geometry*>(p);
+    if (rgd)
+        return -rgd->w * k_moment_drag;
+    return Vector3d();
 }

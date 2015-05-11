@@ -15,6 +15,8 @@
 #include "ContactGraph.h"
 #include <sys/time.h>
 extern double g_simTime;
+extern int g_useContactGraph;
+extern int g_useBoundingVolume;
 using namespace SimLib;
 
 Geometrics::Geometrics()
@@ -59,6 +61,13 @@ void Geometrics::ExcertForceField(Vector3d (*forcefunc)(Geometric*))
         (*it)->ExcertForceField(forcefunc);
 }
 
+void Geometrics::ExcertMomentField(Vector3d (*forcefunc)(Geometric*))
+{
+    for (vector<Geometric*>::iterator it = vp.begin();
+         it != vp.end(); ++it)
+        (*it)->ExcertMomentField(forcefunc);
+}
+
 void Geometrics::clearForce()
 {
     for (vector<Geometric*>::iterator it = vp.begin();
@@ -100,13 +109,21 @@ void Geometrics::collide_detection(Bounds& b)
 void Geometrics::collide_detection(Geometrics& g) {
     contacts.clear();
     contacts.reserve(100);
-    bvh->collide_detection(&contacts);
+    if (g_useBoundingVolume) {
+        bvh->collide_detection(&contacts);
+    } else {
+        for (vector<Geometric*>::iterator it = vp.begin(); it != vp.end(); ++it) {
+            for (vector<Geometric*>::iterator it1 = it + 1; it1 != vp.end(); ++it1) {
+                (*it1)->collide_detection(*it, &contacts);
+            }
+        }
+    }
     bool has_collision = true;
     int iteration = 0;
     while (has_collision) {
         has_collision = false;
         iteration++;
-        if (iteration > 2)
+        if (iteration > 9)
             break;
         for (int i = 0; i < contacts.size(); ++i) {
             if (contacts[i].collide_handling()) {
@@ -136,36 +153,38 @@ void Geometrics::contact_detection(Bounds& b)
 
 void Geometrics::contact_detection(Geometrics& g) {
     if (system->solver == SystemPhy::NRBS) {
-/*        for (double l = -0.6; l < 1e-3; l += 0.3) {
-            for (int i = 0; i < contacts.size(); ++i) {
-                contacts[i].collide_handling(l);
-            }
-        }
-        bool has_collision = true;
-        int iteration = 0;
-        while (has_collision) {
-            iteration++;
-            if (iteration > 1)
-                break;
-            has_collision = false;
-            for (int i = 0; i < contacts.size(); ++i) {
-                if (contacts[i].collide_handling(0)) {
-                    has_collision = true;
+        if (g_useContactGraph == 0) {
+            for (double l = -0.6; l < 1e-3; l += 0.3) {
+                for (int i = 0; i < contacts.size(); ++i) {
+                    contacts[i].collide_handling(l);
                 }
             }
-        }
-*/        ContactGraph cg;
-/*        for (double l = -0.6; l < 1e-3; l += 0.3) {
+            bool has_collision = true;
+            int iteration = 0;
+            while (has_collision) {
+                iteration++;
+                if (iteration > 1)
+                    break;
+                has_collision = false;
+                for (int i = 0; i < contacts.size(); ++i) {
+                    if (contacts[i].collide_handling(0)) {
+                        has_collision = true;
+                    }
+                }
+            }
+        } else {
+            ContactGraph cg;
+            /*        for (double l = -0.6; l < 1e-3; l += 0.3) {
+             for (int i = 0; i < contacts.size(); ++i) {
+             contacts[i].collide_handling(l);
+             }
+             }
+             */
             for (int i = 0; i < contacts.size(); ++i) {
-                contacts[i].collide_handling(l);
-            }
+                 cg.Connect(contacts[i]);
+             }
+            cg.solveContacts();
         }
-*/        for (int i = 0; i < contacts.size(); ++i) {
-            if (contacts[i].collide_handling(0, false)) {
-                cg.Connect(contacts[i]);
-            }
-        }
-        cg.solveContacts();
     } else {
         Contact::contact_handling(contacts);
     }

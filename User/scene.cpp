@@ -1,9 +1,13 @@
 #include "main.h"
 #include "ForceField.h"
+
+extern int g_demo;
 void SetParameters()
 {
-//    ForceField::k_drag = 0.1;
-    
+    if (g_demo == 0) {
+        ForceField::k_drag = 0;
+        ForceField::k_moment_drag = 0;
+    }
 }
 
 // 初始化应用程序
